@@ -143,10 +143,10 @@
                                           <div id="drop">
                                               Arrastra la Imagen del CI aqui
                                               <p style="margin-top: 30px;">
-                                                  <input type="hidden" name="imagenactual" id="imagenactual">
+                                                  <input type="hidden" name="imagenactual" id="imagenactual" value="idcard.jpg">
                                                   <span class="btn btn-primary btn-file">
-                                                      <i class="fas fa-upload"></i> Subir archivo <input name="imagenCI"
-                                                          id="imagenCI" type="file"  onchange="validarImagen(this,'barraCI');">
+                                                      <i class="fas fa-upload"></i> Subir archivo <input name="imagenCII"
+                                                          id="imagenCII" type="file"  onchange="validarImagen(this,'barraCI');">
                                                   </span>
                                                   <p></p>
                                                   <div class="myProgress">

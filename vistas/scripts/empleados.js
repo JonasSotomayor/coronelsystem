@@ -1,6 +1,95 @@
 var tabla;
 var table;
 var familia= new Object();
+window.onload =()=>
+{
+    const fechaNacimiento=document.getElementById("fechaNacimiento")
+    fechaNacimiento.addEventListener('change', (e)=>{
+         let fechaDeaful
+         //fecha por defecto, que implica que la persona tendria 18 años
+         let f = new Date();
+         mes=(f.getMonth() +1)
+         console.log(mes)
+         if (parseInt(mes)<10) {
+             fechaDeaful=f.getFullYear()+"-0"+(f.getMonth() +1)+"-"+f.getDate() 
+         } else {
+             fechaDeaful=f.getFullYear()+"-"+(f.getMonth() +1)+"-"+f.getDate() 
+         }
+         let fechaActual = (fechaNacimiento.value).substr(0,10)
+         console.log(new Date(fechaActual).getTime())
+         console.log(fechaActual)
+        if ((new Date(fechaActual).getTime() > new Date(fechaDeaful).getTime())) {
+             fechaNacimiento.value=''
+             alertify.error('Ingrese una fecha que no sea mayor al dia de hoy!')
+         }
+
+     });
+
+     const cinEmpleado=document.getElementById("cinEmpleado")
+     cinEmpleado.addEventListener('keydown', (e)=>{
+        if(!controlNumeroRuc(e)){
+            alertify.error('Solo admite numeros!');
+            e.preventDefault()
+        }
+    });
+
+    const nombreEmpleado=document.getElementById("nombreEmpleado")
+    nombreEmpleado.addEventListener('keydown', (e)=>{
+        if(!controlTexto(e)){
+            alertify.error('Error solo se admite texto!');
+            e.preventDefault()
+        }
+    });
+    
+    const profesion=document.getElementById("profesion")
+    profesion.addEventListener('keydown', (e)=>{
+        if(!controlTexto(e)){
+            alertify.error('Error solo se admite texto!');
+            e.preventDefault()
+        }
+    });
+
+    const telefonoEmpleado=document.getElementById("telefonoEmpleado")
+    telefonoEmpleado.addEventListener('keydown', (e)=>{
+        if(!controlNumeroCelular(e)){
+            alertify.error('Error en formato!');
+            e.preventDefault()
+        }
+    });
+    
+    const ciudadEmpleado=document.getElementById("ciudadEmpleado")
+    ciudadEmpleado.addEventListener('keydown', (e)=>{
+        if(!controlTexto(e)){
+            alertify.error('Error solo se admite texto!');
+            e.preventDefault()
+        }
+    });
+    
+    const direccionEmpleado=document.getElementById("direccionEmpleado")
+    direccionEmpleado.addEventListener('keydown', (e)=>{
+        if(!controlTextoyNumero(e)){
+            alertify.error('Error solo se admite texto!');
+            e.preventDefault()
+        }
+    });
+
+    const cifamily=document.getElementById("cifamily")
+    cifamily.addEventListener('keydown', (e)=>{
+        if(!controlNumeroPuro(e)){
+            alertify.error('Solo admite numeros!');
+            e.preventDefault()
+        }
+    });
+
+    const nombrefamiliar=document.getElementById("nombrefamiliar")
+    nombrefamiliar.addEventListener('keydown', (e)=>{
+        if(!controlTexto(e)){
+            alertify.error('Error solo se admite texto!');
+            e.preventDefault()
+        }
+    });
+
+}
 //Función que se ejecuta al inicio
 function init() {
   $("#familiares").DataTable( {
@@ -127,7 +216,9 @@ function limpiar() {
     $("#emailEmpleado").val("");
     $("#fechaIngreso").val("");
     $("#estadocivil option[value='SOLTERO'").attr("selected",true);
-    $("#nacionalidad").val("");
+    nacionalidad=document.getElementById("fechaNacimiento")
+    nacionalidad.value=''
+    document.getElementById("cinEmpleado").disabled = false;
 }
 //Función mostrar formulario
 function mostrarform(flag) {
@@ -202,10 +293,10 @@ function listar() {
 function guardaryeditar(e) {
     $("#btnCarga").show();
     $("#btnGuardar").hide();
-    e.preventDefault(); //No se activará la acción predeterminada del evento
+    
     $("#btnGuardar").prop("disabled", true);
 
-
+    e.preventDefault(); //No se activará la acción predeterminada del evento
     var jsodata=JSON.stringify(familia);
     console.log(jsodata);
     $("#pariente").val(jsodata);
@@ -220,7 +311,7 @@ function guardaryeditar(e) {
         success: function(datos) {
           respuesta=datos;
             console.log(datos);
-            //datos=1;
+            
             if (datos == 1) {
                 swal("Error", "Se ha Producido un Error"+respuesta, "error");
                 mostrarform(false);
@@ -236,7 +327,7 @@ function guardaryeditar(e) {
         }
 
     });
-    limpiar();
+   limpiar();
 }
 
 function mostrar(codigoEmpleado) {
@@ -256,7 +347,7 @@ function mostrar(codigoEmpleado) {
         } else{
             imagen.setAttribute("src", "../files/Empleados/" + data.imagenRazonSocial);
         }
-
+        document.getElementById("cinEmpleado").disabled = true;
         $("#imagenactual").val(data.imagenRazonSocial);
         $("#codigoEmpleado").val(data.idrazonsocial);
         $("#nombreEmpleado").val(data.razonsocial);

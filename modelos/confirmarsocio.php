@@ -14,21 +14,114 @@ Class SolicitudSocio
 	//Implementamos un método para insertar registros
 	public function confirmar($idrazonsocial, $razonsocial, $ci,$idtiposocio,$proponente,$fecha,$tipopago,$imagenCI,$SocioNro,$idsesioncomision,$idsolicitudsocio)
 	{
+		$sqltiposocio="select tiposocio.* from tiposocio, solicitantesocio 
+		where solicitantesocio.idtiposocio=tiposocio.idtiposocio
+		and solicitantesocio.idrazonsocial=$idrazonsocial";
+		$tiposoci=ejecutarConsultaSimpleFilaObject($sqltiposocio);
 		$sw=true;
 		$usuario=$ci;
-		$password="cco"+$ci;
+		$password="cco".$ci;
 		$idsocio=0;
 		$fecha=date("Y-m-d");
-		$sql="INSERT INTO socio	VALUES ('','$SocioNro','$idrazonsocial','$idtiposocio','$usuario','$password','$idsesioncomision','$tipopago','ACTIVO','$imagenCI')";
+		$sql="INSERT INTO socio	VALUES (0,'$SocioNro','$idrazonsocial','$idtiposocio','$usuario','$password','$idsesioncomision','$tipopago','ACTIVO','$imagenCI')";
 		$idsocio=ejecutarConsulta_retornarID($sql);
 
 		$sql3="SELECT nroContrato FROM contrato ORDER BY nroContrato DESC LIMIT 1";
 		$row=ejecutarConsultaSimpleFila($sql3);
 		$nroContrato=$row['nroContrato']+1;
-		$sql2="INSERT INTO contrato VALUES('', '$nroContrato', '$fecha', '$idrazonsocial', '$idsocio', '$idtiposocio' ,'$idsesioncomision', 'ACTIVO');";
+		$sql2="INSERT INTO contrato(`nroContrato`,
+		`idrazonsocial`,
+		`idsocio`,
+		`idtiposocio`,
+		`idasamblea`,
+		`estado`) VALUES('$nroContrato', '$idrazonsocial', '$idsocio', '$idtiposocio' ,'$idsesioncomision', 'ACTIVO');";
 		ejecutarConsulta($sql2);
 		$sql1="UPDATE solicitantesocio SET estado='CONFIRMADO' WHERE idsolicitantesocio='$idsolicitudsocio'";
 		ejecutarConsulta($sql1);
+		
+		//echo $sqltiposocio."\n";
+		//var_dump($tiposoci);
+		$dia=date('d');
+		$mes=date('m');
+		$anho=date('Y');
+		$dia=$dia-1;
+		$hoy ="$anho-$mes-$dia";
+		if ($tipopago=='ANUAL') {//venta al contado
+			//echo "la venta es contado \n";
+			$sql_cuenta="INSERT INTO `cuentas_cobrar`
+			(`idrazonsocial`,
+			`tipocuenta`,
+			`contrato`,
+			`numerocuota`,
+			`totalcuota`,
+			`montoCobrar`,
+			`fechaCobro`,
+			`estado`)
+			VALUES
+			('$idrazonsocial',
+			'socio',
+			'$nroContrato',
+			0,
+			'$tiposoci->costoanual',
+			'$tiposoci->costoanual',
+			'$hoy',
+			'PENDIENTE');
+			";
+			//echo $sql_cuenta."\n";
+			//en una venta al contado el numero de cuotas es 0
+			ejecutarConsulta($sql_cuenta);
+		}else{
+			if ($tipopago=='MENSUAL') {
+				$cuota=12;
+				$totalCuota=$tiposoci->costomensual;
+				$totalVenta=$tiposoci->costomensual*$cuota;
+			}else{
+				$cuota=2;
+				$totalCuota=$tiposoci->costosemestral;
+				$totalVenta=$tiposoci->costomensual*$cuota;
+			}
+			//echo "la venta es credito \n\n\n\n";
+			
+			//echo "Cuota: $cuota \n";
+			//echo "Total Venta: $totalVenta \n";
+			//echo "Total Cuota con recargos: $totalCuota \n";
+			
+			//seguido generamos las cuotas
+			for ($nroCuota=1; $nroCuota <= $cuota; $nroCuota++) {
+				//echo "CUOTA NRO $nroCuota \n";
+				if ($mes>12) {
+					$mes=abs(12-$mes);
+					$anho++;
+				}
+				$fecha="$anho-$mes-15"; //generamos fecha de pago
+				$sql_cuenta="INSERT INTO `cuentas_cobrar`
+				(`idrazonsocial`,
+				`tipocuenta`,
+				`contrato`,
+				`numerocuota`,
+				`totalcuota`,
+				`montoCobrar`,
+				`fechaCobro`,
+				`estado`)
+				VALUES
+				('$idrazonsocial',
+				'socio',
+				'$nroContrato',
+				'$nroCuota',
+				'$totalVenta',
+				'$totalCuota',
+				'$fecha',
+				'PENDIENTE');
+				";
+				//echo $sql_cuenta."\n";
+				ejecutarConsulta($sql_cuenta);
+				if ($tipopago=='MENSUAL') {
+					$mes++;
+				}else{
+					$mes=$mes+6;
+				}
+			}	
+		}
 		$sw=false;
 		return $sw;
 	}

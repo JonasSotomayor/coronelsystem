@@ -143,7 +143,7 @@
 </div><!---------fin app-main__inner------>
 
 <!---------fin registro empleado------>
-
+<script type="text/javascript" src="scripts/funcionesControl.js"></script>
 <script type="text/javascript" src="scripts/tiposocio.js"></script>
 <!-- Optional: include a polyfill for ES6 Promises for IE11 and Android browser -->
 <script src="https://cdn.jsdelivr.net/npm/promise-polyfill"></script>

@@ -16,7 +16,7 @@ Class Deporte
 	{
 		$sw=true;
 		$sql="INSERT INTO `deporte`(`iddeporte`, `deporte`, `costoMensual`, `mesinicio`, `duracion`, `estado`) VALUES
-		('','$deporte', '$costoMensual','$duracion','$mesinicio','ACTIVO');";
+		(0,'$deporte', '$costoMensual','$duracion','$mesinicio','ACTIVO');";
 		ejecutarConsulta($sql) or $sw = false;
 		//return $sw;
 		return $sw;

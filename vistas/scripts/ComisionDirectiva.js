@@ -1,5 +1,42 @@
 var tabla;
-
+window.onload =()=>
+{
+    const presidente=document.getElementById("presidente")
+    presidente.addEventListener('keydown', (e)=>{
+        if(!controlTexto(e)){
+            alertify.error('Error solo se admite texto!');
+            e.preventDefault()
+        }
+    });
+    const vicepresidente=document.getElementById("vicepresidente")
+    vicepresidente.addEventListener('keydown', (e)=>{
+        if(!controlTexto(e)){
+            alertify.error('Error solo se admite texto!');
+            e.preventDefault()
+        }
+    });
+    const secretario=document.getElementById("secretario")
+    secretario.addEventListener('keydown', (e)=>{
+        if(!controlTexto(e)){
+            alertify.error('Error solo se admite texto!');
+            e.preventDefault()
+        }
+    });
+    const tesorero=document.getElementById("tesorero")
+    tesorero.addEventListener('keydown', (e)=>{
+        if(!controlTexto(e)){
+            alertify.error('Error solo se admite texto!');
+            e.preventDefault()
+        }
+    });
+    const miembros=document.getElementById("miembros")
+    miembros.addEventListener('keydown', (e)=>{
+        if(!controlTexto(e)){
+            alertify.error('Error solo se admite texto!');
+            e.preventDefault()
+        }
+    });
+}
 //Función que se ejecuta al inicio
 function init() {
     mostrarform(false);

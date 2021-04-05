@@ -42,12 +42,16 @@ switch ($_GET["op"]){
 			$estadoDetalle='';
 			switch ($reg->estado) {
 				case 'ACTIVO':
-					$estado='<a title="VER CONTRATO" class="btn-shadow btn btn-warning" href="contrato_socio.php?idcontrato='.$reg->idcontrato.'" target="_blank"><i class="fas fa-file-alt"></i></a>';
+					$estado='<a title="VER CONTRATO" class="btn-shadow btn btn-success" href="contrato_socio.php?idcontrato='.$reg->idcontrato.'" target="_blank"><i class="fas fa-file-alt"></i></a>';
 					$estadoDetalle='<span class="badge badge-success mr-2 ml-0">Activo</span>';
 					break;
 					case 'MODIFICADO':
-            $estado='<a title="VER CONTRATO" class="btn-shadow btn btn-warning" href="contrato_socio.php?idcontrato='.$reg->idcontrato.'" target="_blank"><i class="fas fa-file-alt"></i></a>';
-            $estadoDetalle='<span class="badge badge-danger mr-2 ml-0">MODIFICADO</span>';
+						$estado='<a title="VER CONTRATO" class="btn-shadow btn btn-warning" href="contrato_socio.php?idcontrato='.$reg->idcontrato.'" target="_blank"><i class="fas fa-file-alt"></i></a>';
+						$estadoDetalle='<span class="badge badge-warning mr-2 ml-0">MODIFICADO</span>';
+						break;
+					case 'CANCELADO':
+						$estado='<a title="VER CONTRATO" class="btn-shadow btn btn-danger" href="contrato_cancelacion.php?idcontrato='.$reg->idcontrato.'" target="_blank"><i class="fas fa-file-alt"></i></a>';
+						$estadoDetalle='<span class="badge badge-danger mr-2 ml-0">CANCELADO</span>';
 						break;
 			}
 

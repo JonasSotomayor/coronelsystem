@@ -16,7 +16,7 @@ Class Inmueble
 	{
 		$sw=true;
 		$sql="INSERT INTO `inmueble`(`idinmueble`, `determinacion`, `ubicacion`, `cuentacatastral`, `costomensual`, `costosemestral`, `costoanual`, `estado`) VALUES
-		('','$determinacion', '$ubicacion','$cuentacatastral','$costomensual', '$costosemestral', '$costoanual','ACTIVO');";
+		(0,'$determinacion', '$ubicacion','$cuentacatastral','$costomensual', '$costosemestral', '$costoanual','ACTIVO');";
 		ejecutarConsulta($sql) or $sw = false;
 		return $sw;
 	}

@@ -48,8 +48,8 @@ switch ($_GET["op"]){
 //nombreEmpleado $cinEmpleado  $equipoEmpleado $fechaNacimiento $ciudadEmpleado  $telefonoEmpleado  $emailEmpleado   $direccionEmpleado   $emailEmpleado $cargoEmpleado  $codigoSucursal_Empleado
 		if (empty($codigoEmpleado)){
 			$rspta=$Empleados->insertar($nombreEmpleado, $profesion, $cinEmpleado, $imagenEmpleado, $fechaNacimiento,$telefonoEmpleado, $direccionEmpleado,$ciudadEmpleado, $emailEmpleado,$nacionalidad, $estadocivil,$familia);
-			echo $rspta ? "El Empleado se ha Registrado con Exito" : "1";
-			//echo $rspta;
+			//echo $rspta ? "El Empleado se ha Registrado con Exito" : "1";
+			echo $rspta;
 		} else {
 			$rspta=$Empleados->editar($codigoEmpleado,$nombreEmpleado, $profesion, $cinEmpleado, $imagenEmpleado, $fechaNacimiento,$telefonoEmpleado, $direccionEmpleado,$ciudadEmpleado, $emailEmpleado,$nacionalidad, $estadocivil,$familia);
 			echo $rspta ? "El Empleado se Actualizo con Exito" : "1";

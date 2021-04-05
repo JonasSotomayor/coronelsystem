@@ -15,7 +15,7 @@ Class SesionComision
 	{
 		$sw=true;
 		$sql="INSERT INTO `sesioncomision`(`idsesioncomision`, `fecha`, `participantes`, `idcomisiondirectiva`, `periodo`, `fotoacta`)
-		VALUES('', '$fecha' ,'$participantes','$idcomisiondirectiva', '$periodo', '$acta')";
+		VALUES(0, '$fecha' ,'$participantes','$idcomisiondirectiva', '$periodo', '$acta')";
 
 		ejecutarConsulta($sql) or $sw = false;
 

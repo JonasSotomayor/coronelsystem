@@ -15,7 +15,7 @@ Class Usuarios
 	{
 
 		$sql="INSERT INTO usuario (`idusuario`, `idrazonsocial`, `razonsocial`, `ci`, `usuario`, `password`, `cargo`, `estado`, `imagenUsuario`)
-		VALUES('', '$idrazonSocial' ,'$razonSocial','$ci', '$loginUsuario', '$claveUsuario', '$cargoUsuario', 'ACTIVO' ,'$imagenUsuario')";
+		VALUES(0, '$idrazonSocial' ,'$razonSocial','$ci', '$loginUsuario', '$claveUsuario', '$cargoUsuario', 'ACTIVO' ,'$imagenUsuario')";
 		$idusuarionew =  ejecutarConsulta_retornarID($sql);
 
 		$sw=true;

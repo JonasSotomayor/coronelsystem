@@ -16,7 +16,7 @@ Class Categoria
 	{
 		$sw=true;
 		$sql="INSERT INTO `categoria`(`idcategoria`, `categoria`, `deporte`, `estado`) VALUES
-		('','$categoria', '$iddeporte','ACTIVO');";
+		(0,'$categoria', '$iddeporte','ACTIVO');";
 		ejecutarConsulta($sql) or $sw = false;
 		//return $sw;
 		return $sw;

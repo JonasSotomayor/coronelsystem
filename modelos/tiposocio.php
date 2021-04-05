@@ -16,7 +16,7 @@ Class Tiposocio
 	{
 		$sw=true;
 		$sql="INSERT INTO `tiposocio`(`idtiposocio`, `tiposocio`, `beneficios`, `costomensual`, `costosemestral`, `costoanual`, `estado`) VALUES
-		('','$tiposocio','$beneficios','$costomensual', '$costosemestral', '$costoanual','ACTIVO');";
+		(0,'$tiposocio','$beneficios','$costomensual', '$costosemestral', '$costoanual','ACTIVO');";
 		ejecutarConsulta($sql) or $sw = false;
 		//return $sw;
 		return $sw;

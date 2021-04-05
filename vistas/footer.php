@@ -30,7 +30,8 @@
  </div><!-- /app main -->
 
  </div><!--/app container app-theme-white body-tabs-shadow fixed -->
-
+<!-- ALERTIFY -->
+<script src="../public/alertifyjs/alertify.min.js"></script>
  </body>
 
  </html>

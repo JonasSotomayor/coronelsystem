@@ -13,29 +13,29 @@ $proponente=isset($_POST["idproponente"])? limpiarCadena($_POST["idproponente"])
 $tipopago=isset($_POST["tipopago"])? limpiarCadena($_POST["tipopago"]):"";
 $fecha=date("Y-m-d");
 $SocioNro=isset($_POST["SocioNro"])? limpiarCadena($_POST["SocioNro"]):"";;
-$imagenCI=isset($_POST["imagenCI"])? limpiarCadena($_POST["imagenCI"]):"";
+$imagenCII=isset($_POST["imagenCII"])? limpiarCadena($_POST["imagenCII"]):"";
 switch ($_GET["op"]){
 	case 'guardaryeditar':
 			//IMAGEN DE USUARIO
-			if (!file_exists($_FILES['imagenCI']['tmp_name']) || !is_uploaded_file($_FILES['imagenCI']['tmp_name']))
+			if (!file_exists($_FILES['imagenCII']['tmp_name']) || !is_uploaded_file($_FILES['imagenCII']['tmp_name']))
 			{
-				$imagenCI=$_POST["imagenCI"];
+				$imagenCII=$_POST["imagenactual"];
 			}
 			else
 			{
-				$ext = explode(".", $_FILES["imagenCI"]["name"]);
-				if ($_FILES['imagenCI']['type'] == "image/jpg" || $_FILES['imagenCI']['type'] == "image/jpeg" || $_FILES['imagenCI']['type'] == "image/png")
+				$ext = explode(".", $_FILES["imagenCII"]["name"]);
+				if ($_FILES['imagenCII']['type'] == "image/jpg" || $_FILES['imagenCII']['type'] == "image/jpeg" || $_FILES['imagenCII']['type'] == "image/png")
 				{
-					$imagenCI = round(microtime(true)) . '.' . end($ext);
-					move_uploaded_file($_FILES["imagenCI"]["tmp_name"], "../files/ciSocios/" . $imagenCI);
+					$imagenCII = round(microtime(true)) . '.' . end($ext);
+					move_uploaded_file($_FILES["imagenCII"]["tmp_name"], "../files/ciSocios/" . $imagenCII);
 				}
 			}
 
-			if(empty($imagenCI)){
-				$imagenCI="idcard.jpg";
+			if(empty($imagenCII)){
+				$imagenCII="idcard.jpg";
 			}
 //nombresolicitudsocio $cinsolicitudsocio  $equiposolicitudsocio $fechaNacimiento $ciudadsolicitudsocio  $telefonosolicitudsocio  $emailsolicitudsocio   $direccionsolicitudsocio   $emailsolicitudsocio $cargosolicitudsocio  $codigoSucursal_solicitudsocio
-			$rspta=$SolicitudSocio->confirmar( $idrazonsocial, $razonsocial, $ci,$idtiposocio,$proponente,$fecha,$tipopago,$imagenCI,$SocioNro,$idsesioncomision, $idsolicitudsocio);
+			$rspta=$SolicitudSocio->confirmar( $idrazonsocial, $razonsocial, $ci,$idtiposocio,$proponente,$fecha,$tipopago,$imagenCII,$SocioNro,$idsesioncomision, $idsolicitudsocio);
 			//echo $rspta ? "la solicitud socio se ha Registrado con Exito" : "1";
 
 			echo $rspta;

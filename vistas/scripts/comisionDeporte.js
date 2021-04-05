@@ -1,13 +1,63 @@
 var tabla;
 
+window.onload =()=>
+{
+    const presidente=document.getElementById('presidente')
+    presidente.addEventListener('keydown', (e)=>{
+        if(!controlTexto(e)){
+            alertify.error('Solo debe ingresar letras!')
+            e.preventDefault()
+        }
+        presidente.value=capitalizarPalabras(presidente.value)
+    });
+    
+    ///CAMPO CI
+    const CIPresidente=document.getElementById("CIPresidente")
+    CIPresidente.addEventListener('keydown', (e)=>{
+        if(!controlNumeroPuro(e)){
+            alertify.error('Solo admite numeros!');
+            e.preventDefault()
+        }
+    });
+    ///CAMPO CI
+    const CISecretario=document.getElementById("CISecretario")
+    CISecretario.addEventListener('keydown', (e)=>{
+        if(!controlNumeroPuro(e)){
+            alertify.error('Solo admite numeros!');
+            e.preventDefault()
+        }
+    });
+    const secretario=document.getElementById('secretario')
+    secretario.addEventListener('keydown', (e)=>{
+        if(!controlTexto(e)){
+            alertify.error('Solo debe ingresar letras!')
+            e.preventDefault()
+        }
+        secretario.value=capitalizarPalabras(secretario.value)
+    });
+    ///CAMPO CI
+    const CItesorero=document.getElementById("CItesorero")
+    CItesorero.addEventListener('keydown', (e)=>{
+        if(!controlNumeroPuro(e)){
+            alertify.error('Solo admite numeros!');
+            e.preventDefault()
+        }
+    });
+    ///CAMPO CI
+    const tesorero=document.getElementById('tesorero')
+    tesorero.addEventListener('keydown', (e)=>{
+        if(!controlTexto(e)){
+            alertify.error('Solo debe ingresar letras!')
+            e.preventDefault()
+        }
+        secretario.value=capitalizarPalabras(secretario.value)
+    });
+}
+
 //Función que se ejecuta al inicio
 function init() {
     mostrarform(false);
     listar();
-
-
-
-
     $("#formulario").on("submit", function(e) {
         guardaryeditar(e);
     })
@@ -17,12 +67,21 @@ function init() {
 
 //Función limpiar
 function limpiar() {
-    $("#idcomisiondirectiva").val("");
+    $("#idcomisiondeporte").val("");
     $("#presidente").val("");
-    $("#vicepresidente").val("");
-    $("#tesorero").val("");
+    $("#CIPresidente").val("");
+    $("#usuarioPresidente").val("");
+    $("#passwordPresidente").val("");
     $("#secretario").val("");
-    $("#miembros").val("");
+    $("#CISecretario").val("");
+    $("#usuarioSecretario").val("");
+    $("#passwordSecretario").val("");
+    $("#tesorero").val("");
+    $("#CItesorero").val("");
+    $("#usuariotesorero").val("");
+    $("#passwordtesorero").val("");
+    $("#iddeporte").val("");
+    $("#deporte").val("");
     var fecha = new Date();
     var ano = fecha.getFullYear();
     fechaHoy=ano+1;
@@ -34,6 +93,7 @@ function mostrarform(flag) {
     limpiar();
     if (flag) {
         $("#lista").hide();
+        listarDeporte();
         $("#add_bt").hide();
         $("#formularioregistros").show();
         $("#btnGuardar").prop("disabled", false);
@@ -67,7 +127,7 @@ function selectall(form) {
 }
 
 function listar() {
-  $.post("../ajax/ComisionDirectiva.php?op=listar", function(r) {
+  $.post("../ajax/comisionDeporte.php?op=listar", function(r) {
       console.log(r);
   });
 
@@ -83,7 +143,7 @@ function listar() {
           'pdf'
       ],
       "ajax": {
-          url: '../ajax/ComisionDirectiva.php?op=listar',
+          url: '../ajax/comisionDeporte.php?op=listar',
           type: "get",
           dataType: "json",
           error: function(e) {
@@ -107,7 +167,7 @@ function guardaryeditar(e) {
     var formData = new FormData($("#formulario")[0]);
 
     $.ajax({
-        url: "../ajax/ComisionDirectiva.php?op=guardaryeditar",
+        url: "../ajax/comisionDeporte.php?op=guardaryeditar",
         type: "POST",
         data: formData,
         contentType: false,
@@ -135,29 +195,86 @@ function guardaryeditar(e) {
     limpiar();
 }
 
-function mostrar(idcomisiondirectiva) {
+function mostrar(idcomisiondeporte) {
     $("#lista").hide();
     $("#formularioregistros").hide();
     $("#cargando-div").show();
 
-    $.post("../ajax/ComisionDirectiva.php?op=mostrar", { idcomisiondirectiva: idcomisiondirectiva }, function(data, status) {
-        //console.log(data);
+    $.post("../ajax/comisionDeporte.php?op=mostrar", { idcomisiondeporte: idcomisiondeporte }, function(data, status) {
+        console.log(data);
         data = JSON.parse(data);
         mostrarform(true);
-        $("#idcomisiondirectiva").val(data.idcomisiondirectiva);
-        $("#presidente").val(data.presidente);
-        $("#vicepresidente").val(data.vicepresidente);
-        $("#tesorero").val(data.tesorero);
-        $("#secretario").val(data.secretario);
-        $("#miembros").val(data.miembros);
-        $("#periodo option[value='"+data.periodo+"'").attr("selected",true);
+        
+        $("#idcomisiondeporte").val(data[0].idcomisionDeporte);
+        $("#idcomisiondeporte").val(data[0].idcomisionDeporte);
+        $("#periodo option[value='"+data[0].periodo+"'").attr("selected",true);
+        $("#iddeporte").val(data[0].iddeporte);
+        $("#deporte").val(data[0].deporte);
+        data.forEach(miembro => {
+            switch (miembro.cargo) {
+                case 'PRESIDENTE':
+                    $("#presidente").val(miembro.nombre);
+                    $("#CIPresidente").val(miembro.ci);
+                    $("#usuarioPresidente").val(miembro.usuario);
+                    $("#passwordPresidente").val(miembro.password);
+                    break;
+                case 'SECRETARIO':
+                    $("#secretario").val(miembro.nombre);
+                    $("#CISecretario").val(miembro.ci);
+                    $("#usuarioSecretario").val(miembro.usuario);
+                    $("#passwordSecretario").val(miembro.password);
+                break;
+                case 'TESORERO':
+                    $("#tesorero").val(miembro.nombre);
+                    $("#CItesorero").val(miembro.ci);
+                    $("#usuariotesorero").val(miembro.usuario);
+                    $("#passwordtesorero").val(miembro.password);
+                    break;
+            }
+        });
     });
 
 }
 
+function listarDeporte() {
+    $.post("../ajax/categoria.php?op=listarDeporte", {  }, function(data, status) {
+        console.log(data);
+    });
+
+
+  tabla = $('#tbDeporte').dataTable({
+      "aProcessing": true, //Activamos el procesamiento del datatables
+      "aServerSide": true, //Paginación y filtrado realizados por el servidor
+      dom: 'Bfrtip', //Definimos los elementos del controlc de tabla
+      buttons: [
+
+      ],
+      "ajax": {
+          url: '../ajax/categoria.php?op=listarDeporte',
+          type: "get",
+          dataType: "json",
+          error: function(e) {
+              console.log(e.responseText);
+          }
+      },
+      "bDestroy": true,
+      "iDisplayLength": 5, //Paginación
+      "order": [
+              [0, "desc"]
+          ] //Ordenar (columna,orden)
+  }).DataTable();
+
+}
+function AgregarDeporte(idDeporte, deporte) {
+
+    $('#detallesdeporte').show();
+    $("#btnGuardar").show();
+    $("#iddeporte").val(idDeporte);
+    $("#deporte").val(deporte);
+}
 
 //Función para activar registros
-function activar(idcomisiondirectiva) {
+function activar(idcomisiondeporte) {
 
     swal({
             title: "Atención",
@@ -169,7 +286,7 @@ function activar(idcomisiondirectiva) {
             closeOnConfirm: false
         },
         function() {
-            $.post("../ajax/ComisionDirectiva.php?op=activar", { idcomisiondirectiva: idcomisiondirectiva }, function(e) {
+            $.post("../ajax/comisionDeporte.php?op=activar", { idcomisiondeporte: idcomisiondeporte }, function(e) {
                 swal("Informacion", "El Registro se Activo con Exito.", "success");
                 tabla.ajax.reload();
 
@@ -180,7 +297,7 @@ function activar(idcomisiondirectiva) {
 }
 
 
-function desactivar(idcomisiondirectiva) {
+function desactivar(idcomisiondeporte) {
 
   swal({
           title: "Atención",
@@ -192,7 +309,7 @@ function desactivar(idcomisiondirectiva) {
           closeOnConfirm: false
       },
       function() {
-        $.post("../ajax/ComisionDirectiva.php?op=desactivar", { idcomisiondirectiva: idcomisiondirectiva }, function(e) {
+        $.post("../ajax/comisionDeporte.php?op=desactivar", { idcomisiondeporte: idcomisiondeporte }, function(e) {
 
               swal("Informacion", "El Registro se desactivo con Exito."+e, "success");
               tabla.ajax.reload();
@@ -201,17 +318,32 @@ function desactivar(idcomisiondirectiva) {
 
 }
 
-function mostrarDetalle(idcomisiondirectiva){
+function mostrarDetalle(idcomisiondeporte){
 
-      $.post("../ajax/ComisionDirectiva.php?op=mostrar", { idcomisiondirectiva: idcomisiondirectiva }, function(data, status) {
+      $.post("../ajax/comisionDeporte.php?op=mostrar", { idcomisiondeporte: idcomisiondeporte }, function(data, status) {
           //console.log(data);
           data = JSON.parse(data);
-          $("#presidente1").val(data.presidente);
-          $("#vicepresidente1").val(data.vicepresidente);
-          $("#tesorero1").val(data.tesorero);
-          $("#secretario1").val(data.secretario);
-          $("#miembros1").val(data.miembros);
-          $("#periodo1").val(data.periodo);
+        $("#vistaperiodo").val(data[0].periodo);
+        $("#vistadeporte").val(data[0].deporte);
+        data.forEach(miembro => {
+            switch (miembro.cargo) {
+                case 'PRESIDENTE':
+                    $("#vistapresidente").val(miembro.nombre);
+                    $("#vistaCIPresidente").val(miembro.ci);
+                    $("#vistausuarioPresidente").val(miembro.usuario);
+                    break;
+                case 'SECRETARIO':
+                    $("#vistasecretario").val(miembro.nombre);
+                    $("#vistaCISecretario").val(miembro.ci);
+                    $("#vistausuarioSecretario").val(miembro.usuario);
+                break;
+                case 'TESORERO':
+                    $("#vistatesorero").val(miembro.nombre);
+                    $("#vistaCItesorero").val(miembro.ci);
+                    $("#vistausuariotesorero").val(miembro.usuario);
+                    break;
+            }
+        });
       });
 
 }

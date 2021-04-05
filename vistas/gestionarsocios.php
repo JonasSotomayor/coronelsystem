@@ -46,7 +46,6 @@
                                   <th width="30%">SOCIO</th>
                                   <th width="10%">CI</th>
                                   <th width="20%">NRO DE SOCIO</th>
-                                  <th width="10%">FECHA</th>
                                   <th width="10%">TIPO MEMBRECIA</th>
                                   <th width="10%">ESTADO</th>
                               </tr>
@@ -70,115 +69,210 @@
     <div id="formularioregistros" name="formularioregistros">
           <form name="formulario" id="formulario" method="POST">
               <div class="tab-pane tabs-animation fade show active" id="tab-content-0" role="tabpanel">
-                <div class="main-card mb-3 card">
-                    <div class="card-body">
-                          <h5 class="card-title" align="center">CONFIRMAR SOLICITUD DE SOCIO <i  class="fas fa-parking-circle-slash"></i></h5>
+                  <div class="main-card mb-3 card">
+                  <div class="card-body">
+                          <h5 class="card-title" align="center">Mantenimiento de Razon social <i  class="fas fa-parking-circle-slash"></i></h5>
                           <div class="form-row" align="center">
-                              <div class="col-md-12">
+                              <div class="col-md-3">
+                                  <div class=" position-relative card-body " >
+                                      <input type="hidden" name="codigoEmpleado" id="codigoEmpleado">
+                                      <input type="hidden" name="imagenactual" id="imagenactual">
+                                      <img src="" width="150" height="150" id="img_actual" class="rounded-circle">
+                                      <span class="btn btn-primary btn-file" style="left: 8px;">
+                                          <i class="fas fa-upload"></i> Subir Fotografia <input name="imagenEmpleado" id="imagenEmpleado" type="file">
+                                      </span>
+                                  </div>
+                              </div>
+                              <div class="col-md-9">
                                 <div class="form-row" align="center">
-                                    <div class="col-md-6">
-                                      <div class="position-relative form-group">
-                                        <input name="idsolicitudsocio" id="idsolicitudsocio" placeholder="" type="hidden" class="form-control" required>
-
-                                          <div class="form-row" id="detallesRazonSocial">
-                                              <input name="idrazonsocial" id="idrazonsocial" placeholder="" type="hidden" class="form-control" required>
-                                              <label for="loginUsuario" class=""><b>Razon Social:</b></label>
-                                              <input name="razonsocial" id="razonsocial" placeholder="" type="text" class="form-control"  required readonly>
-                                              <label for="ci"  class=""><b>C.ID.:</b></label>
-                                              <input name="ci" id="ci"  placeholder="" type="text"  class="form-control" required readonly>
-                                          </div>
-                                      </div>
+                                    <div class="col-md-8">
+                                        <div class="position-relative form-group"><label for="nombreEmpleado" class=""><b>Razon Social:</b></label>
+                                            <input name="nombreEmpleado" id="nombreEmpleado" placeholder="" type="text" class="form-control"required>
+                                         </div>
                                     </div>
-                                    <div class="col-md-6">
-                                      <div class="position-relative form-group">
-
-                                          <div class="form-row" id="detallesMembrecia">
-                                              <input name="idtiposocio" id="idtiposocio" placeholder="" type="hidden" class="form-control" required>
-                                                  <label for="tiposocio" class=""><b>Tipo Membrecia:</b></label>
-                                                  <input name="tiposocio" id="tiposocio"
-                                                      placeholder="" type="text" class="form-control"
-                                                      required readonly>
-                                                  <label for="Nro. Socio"  class=""><b>Nro. Socio:</b></label>
-                                                  <input name="SocioNro" id="SocioNro"  placeholder="" type="number"  class="form-control" required>
-                                          </div>
-                                      </div>
+                                    <div class="col-md-2">
+                                           <div class="position-relative form-group"><label for="cinEmpleado" class=""><b>Nro. Ced. de Identidad:</b></label>
+                                            <input name="cinEmpleado" id="cinEmpleado" placeholder="" type="text" class="form-control" readonly></div>
+                                    </div>
+                                    <div class="col-md-2">
+                                         <div class="position-relative form-group"><label for="fechaNacimiento" class=""><b>Fecha de Nacimiento:</b></label>
+                                         <input name="fechaNacimiento" id="fechaNacimiento" type="date" class="form-control" required></div>
                                     </div>
 
                                 </div>
                                 <div class="form-row" align="center">
-                                    <div class="col-md-6">
-                                      <div class="position-relative form-group">
-
-                                          <div class="form-row" id="detallesProponente">
-                                              <input name="idproponente" id="idproponente" placeholder="" type="hidden" class="form-control" required>
-
-                                                    <label for="loginUsuario"
-                                                          class=""><b>Socio:</b></label>
-                                                      <input name="proponente" id="proponente"
-                                                          placeholder="" type="text" class="form-control"
-                                                          required readonly>
-
-
-                                                    <label for="ci"
-                                                          class=""><b>C.ID. SOCIO:</b></label>
-                                                      <input name="ciproponente" id="ciproponente"
-                                                          placeholder="" type="text"
-                                                          class="form-control" required readonly>
-
-
-                                          </div>
-                                      </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                           <div class="position-relative form-group">
-                                             <label for="mesinicio" class=""><b>TIPO DE PAGO:</b></label>
-                                             <input name="tipopago" id="tipopago"
-                                                 placeholder="" type="text"
-                                                 class="form-control" required readonly>
+                                    <div class="col-md-4">
+                                          <div class="position-relative form-group"><label for="cargoEmpleado" class=""><b>Profesion:</b></label>
+                                            <input name="profesion" id="profesion" type="text" class="form-control">
                                           </div>
                                     </div>
+                                    <div class="col-md-4">
+                                          <div class="position-relative form-group"> <label for="codigoSucursal_Empleado" class=""><b>Estado Civil:</b></label>
+                                            <select name="estadocivil" id="estadocivil"class="form-control" >
+                                                      <option value="SOLTERO">SOLTERO</option>
+                                                      <option value="CASADO">CASADO</option>
+                                                      <option value="VIUDO/A">VIUDO/A</option>
+                                                      <option value="DIVORSIADO">DIVORSIADO</option>
+                                            </select>
+                                         </div>
+                                    </div>
+                                    
+                                    <div class="col-md-4">
+                                         <div class="position-relative form-group"><label for="nacionalidad" class=""><b>Nacionalidad:</b></label>
+                                            <select name="nacionalidad" id="nacionalidad"class="form-control" required> 
+                                                <option value="">Selecione una Nacionalidad</option>
+                                                <option value="paraguayo">paraguayo</option>
+                                                <option value="afgano">afgano</option>
+                                                <option value="alemán">alemán</option>
+                                                <option value="árabe">árabe</option>
+                                                <option value="argentino">argentino</option>
+                                                <option value="australiano">australiano</option>
+                                                <option value="belga">belga</option>
+                                                <option value="boliviano">boliviano</option>
+                                                <option value="brasileño">brasileño</option>
+                                                <option value="camboyano">camboyano</option>
+                                                <option value="canadiense">canadiense</option>
+                                                <option value="chileno">chileno</option>
+                                                <option value="chino">chino</option>
+                                                <option value="colombiano">colombiano</option>
+                                                <option value="coreano">coreano</option>
+                                                <option value="costarricense">costarricense</option>
+                                                <option value="cubano">cubano</option>
+                                                <option value="danés">danés</option>
+                                                <option value="ecuatoriano">ecuatoriano</option>
+                                                <option value="egipcio">egipcio</option>
+                                                <option value="salvadoreño">salvadoreño</option>
+                                                <option value="escocés">escocés</option>
+                                                <option value="español">español</option>
+                                                <option value="estadounidense">estadounidense</option>
+                                                <option value="estonio">estonio</option>
+                                                <option value="etiope">etiope</option>
+                                                <option value="filipino">filipino</option>
+                                                <option value="finlandés">finlandés</option>
+                                                <option value="francés">francés</option>
+                                                <option value="galés">galés</option>
+                                                <option value="griego">griego</option>
+                                                <option value="guatemalteco">guatemalteco</option>
+                                                <option value="haitiano">haitiano</option>
+                                                <option value="holandés">holandés</option>
+                                                <option value="hondureño">hondureño</option>
+                                                <option value="indonés">indonés</option>
+                                                <option value="inglés">inglés</option>
+                                                <option value="iraquí">iraquí</option>
+                                                <option value="iraní">iraní</option>
+                                                <option value="irlandés">irlandés</option>
+                                                <option value="israelí">israelí</option>
+                                                <option value="italiano">italiano</option>
+                                                <option value="japonés">japonés</option>
+                                                <option value="jordano">jordano</option>
+                                                <option value="laosiano">laosiano</option>
+                                                <option value="letón">letón</option>
+                                                <option value="letonés">letonés</option>
+                                                <option value="malayo">malayo</option>
+                                                <option value="marroquí">marroquí</option>
+                                                <option value="mexicano">mexicano</option>
+                                                <option value="nicaragüense">nicaragüense</option>
+                                                <option value="noruego">noruego</option>
+                                                <option value="neozelandés">neozelandés</option>
+                                                <option value="panameño">panameño</option>
+                                                <option value="peruano">peruano</option>
+                                                <option value="polaco">polaco</option>
+                                                <option value="portugués">portugués</option>
+                                                <option value="puertorriqueño">puertorriqueño</option>
+                                                <option value="dominicano">dominicano</option>
+                                                <option value="rumano">rumano</option>
+                                                <option value="ruso">ruso</option>
+                                                <option value="sueco">sueco</option>
+                                                <option value="suizo">suizo</option>
+                                                <option value="tailandés">tailandés</option>
+                                                <option value="taiwanes">taiwanes</option>
+                                                <option value="turco">turco</option>
+                                                <option value="ucraniano">ucraniano</option>
+                                                <option value="uruguayo">uruguayo</option>
+                                                <option value="venezolano">venezolano</option>
+                                                <option value="vietnamita">vietnamita</option>
+                                                        
+                                            </select>
+                                         </div>
+                                    </div>
+
                                 </div>
-                                <div class="form-row">
-                                  <div class="col-md-6">
-                                      <div class="position-relative form-group">
-                                          <div id="drop">
-                                              Arrastra la Imagen del CI aqui
-                                              <p style="margin-top: 30px;">
-                                                  <input type="hidden" name="imagenactual" id="imagenactual">
-                                                  <span class="btn btn-primary btn-file">
-                                                      <i class="fas fa-upload"></i> Subir archivo <input name="imagenCI"
-                                                          id="imagenCI" type="file"  onchange="validarImagen(this,'barraCI');">
-                                                  </span>
-                                                  <p></p>
-                                                  <div class="myProgress">
-                                                      <div class="myBar" id="barraCI"></div>
-                                                  </div>
-                                          </div>
-                                      </div>
-                                  </div>
-                                  <div class="col-md-6">
-                                    <div class="position-relative form-group">
-                                      <label for="nombreUsuario" class=""><b>SESION DE LA COMISION:</b></label>
-                                        <button class="mb-3 mr-3 btn btn-outline-primary btn-lg btn-block"
-                                                    type="button" id="BtnAddRazon" data-toggle="modal"
-                                                    data-target="#modal_sesioncomision"><i class="fa fa-plus"></i>
-                                                    SESION DE LA COMISION
-                                        </button>
-                                        <div class="form-row" id="detallesesioncomision">
-                                            <input name="idsesioncomision" id="idsesioncomision" placeholder="" type="hidden" class="form-control" required>
-                                            <label for="fecha" class=""><b>fecha:</b></label>
-                                            <input name="fecha" id="fecha" placeholder="" type="date" class="form-control"  required readonly>
-                                            <label for="periodo"  class=""><b>PERIODO:</b></label>
-                                            <input name="periodo" id="periodo"  placeholder="" type="text"  class="form-control" required readonly>
-                                        </div>
+
+                                <div class="form-row" align="center">
+                                    <div class="col-md-2">
+                                         <div class="position-relative form-group"><label for="telefonoEmpleado" class=""><b>Celular:</b></label>
+                                         <input name="telefonoEmpleado" id="telefonoEmpleado" placeholder="" type="text" class="form-control" >
+                                         </div>
                                     </div>
-                                  </div>
+                                    <div class="col-md-3">
+                                         <div class="position-relative form-group"><label for="emailEmpleado" class=""><b>Correo Electrónico:</b></label>
+                                         <input name="emailEmpleado" id="emailEmpleado" type="text" class="form-control" >
+                                         </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                         <div class="position-relative form-group"><label for="emailEmpleado" class=""><b>Ciudad:</b></label>
+                                         <input name="ciudadEmpleado" id="ciudadEmpleado" type="text" class="form-control" required>
+                                         </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                         <div class="position-relative form-group"><label for="direccionEmpleado" class=""><b>Dirección:</b></label>
+                                           <textarea name="direccionEmpleado" id="direccionEmpleado" type="text" rows="5" class="form-control">
+                                             </textarea>
+                                         </div>
+                                    </div>
+                                    <input type="hidden" name="pariente" id="pariente">
+                                </div>
+                              </div>
+                            </div>
+                              <h5 class="card-title" align="center">FAMILIARES <i  class="fas fa-parking-circle-slash"></i></h5>
+                              <div class="row">
+                                <div class="col-md-2">
+                                       <div class="position-relative form-group"><label for="cifamily" class=""><b>Nro. Ced. de Identidad:</b></label>
+                                        <input name="cifamily" id="cifamily" placeholder="" type="text" class="form-control" ></div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group"><label for="nombrefamiliar" class=""><b>NOMBRE Y APELLIDO:</b></label>
+                                        <input name="nombrefamiliar" id="nombrefamiliar" placeholder="" type="text" class="form-control">
+                                     </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="position-relative form-group"><label for="parentesco" class=""><b>PARENTESCO:</b></label>
+                                       <select class="form-control" id="parentesco">
+                                         <option VALUE="OTRO">OTRO</option>
+                                         <option VALUE="ESPOSO/A, COMPAÑERO/A">ESPOSO/A, COMPAÑERO/A</option>
+                                         <option VALUE="HIJO/A">HIJO/A</option>
+                                         <option VALUE="HERMANO/A">HERMANO/A</option>
+                                         <option VALUE="PADRE/MADRE">PADRE/MADRE</option>
+                                       </select>
+                                     </div>
+                                </div>
+                                <div class="col-md-1">
+                                  <br>
+                                    <button type="button" id="agregarfamiliar" class="btn btn-primary">AGREGAR MIEMBRO</button>
+                                    <button type="button" id="actualizarfamiliar" class="btn btn-primary">EDITAR MIEMBRO</button>
                                 </div>
 
                               </div>
-                            </div>
-                          </div><!----cierre card-body---->
-                      </div><!---------main-card mb-3 card------>
+                              <div class="row">
+                                <div class="col-md-12">
+                                    <table class="table table-striped" whith="100%"  id="familiares">
+                                      <thead>
+                                        <tr>
+                                          <th width="10%">#</th>
+                                          <th width="10%">OPCIONES</th>
+                                          <th width="10%">CI</th>
+                                          <th width="50%">NOMBRE Y APELLIDO</th>
+                                          <th width="20%">PARENTESCO</th>
+                                        </tr>
+                                      </thead>
+                                      <tbody>
+
+                                      </tbody>
+                                    </table>
+                                  </div>
+                              </div>
+                      </div><!----cierre card-body---->
+                  </div><!---------main-card mb-3 card------>
                    <center>
                           <button class="btn btn-success" type="submit" id="btnGuardar"><i class="fa fa-save"></i>
                               Guardar</button>
@@ -246,74 +340,95 @@
       <div class="modal-body">
         <div class="form-row" align="center">
             <div class="col-md-12">
-              <h5 class="card-title" align="center">DETALLE SOLICITANTE <i  class="fas fa-parking-circle-slash"></i></h5>
-              <div class="form-row" align="center">
-                  <div class="col-md-6">
-                    <div class="position-relative form-group">
-                        <div class="form-row" >
-                            <label for="loginUsuario" class=""><b>NOMBRE:</b></label>
-                            <input name="razonsocial1" id="razonsocial1" placeholder="" type="text" class="form-control"  required readonly>
+                <div class="form-row" align="center">
+                    <div class="col-md-12">
+                    <div class="form-row" align="center">
+                        <div class="col-md-6">
+                            <div class="position-relative form-group">
+                            <input name="idsolicitudsocio" id="idsolicitudsocio" placeholder="" type="hidden" class="form-control" required>
 
-                        </div>
-                    </div>
-                  </div>
-                  <div class="col-md-6">
-                      <div class="form-row">
-                        <label for="ci"  class=""><b>C.ID.:</b></label>
-                        <input name="ci1" id="ci1"  placeholder="" type="text"  class="form-control" required readonly>
-                      </div>
-                  </div>
-              </div>
-              <h5 class="card-title" align="center">DETALLE MEMBRECIA SELECIONADA <i  class="fas fa-parking-circle-slash"></i></h5>
-              <div class="form-row" align="center">
-                <div class="position-relative form-group">
-                    <div class="form-row">
-                            <label for="tiposocio" class=""><b>Tipo Membrecia:</b></label>
-                            <input name="tiposocio1" id="tiposocio1"
-                                placeholder="" type="text" class="form-control"
-                                required readonly>
-                    </div>
-                </div>
-              </div>
-              <h5 class="card-title" align="center">DETALLE SOCIO PROPONENTE <i  class="fas fa-parking-circle-slash"></i></h5>
-              <div class="form-row" align="center">
-                  <div class="col-md-6">
-                    <div class="position-relative form-group">
-                        <div class="form-row" id="">
-                            <div class="form-row">
-                                <label for="loginUsuario"
-                                      class=""><b>NOMBRE:</b></label>
-                                  <input name="proponente1" id="proponente1"
-                                      placeholder="" type="text" class="form-control"
-                                      required readonly>
+                                <div class="form-row" id="detallesRazonSocial">
+                                    <input name="idrazonsocial1" id="idrazonsocial1" placeholder="" type="hidden" class="form-control" required>
+                                    <label for="loginUsuario1" class=""><b>Razon Social:</b></label>
+                                    <input name="razonsocial1" id="razonsocial1" placeholder="" type="text" class="form-control"  required readonly>
+                                    <label for="ci1"  class=""><b>C.ID.:</b></label>
+                                    <input name="ci1" id="ci1"  placeholder="" type="text"  class="form-control" required readonly>
+                                </div>
                             </div>
                         </div>
+                        <div class="col-md-6">
+                            <div class="position-relative form-group">
+
+                                <div class="form-row" id="detallesMembrecia">
+                                    <input name="idtiposocio1" id="idtiposocio1" placeholder="" type="hidden" class="form-control" required>
+                                        <label for="tiposocio1" class=""><b>Tipo Membrecia:</b></label>
+                                        <input name="tiposocio1" id="tiposocio1"
+                                            placeholder="" type="text" class="form-control"
+                                            required readonly>
+                                        <label for="Nro. Socio"  class=""><b>Nro. Socio:</b></label>
+                                        <input name="SocioNro1" id="SocioNro1"  placeholder="" type="number"  class="form-control" required readonly>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
-                  </div>
-                  <div class="col-md-6">
-                    <div class="form-row">
-                      <label for="ci"
-                            class=""><b>C.ID.:</b></label>
-                        <input name="ciproponente1" id="ciproponente1"
-                            placeholder="" type="text"
-                            class="form-control" required readonly>
+                    <div class="form-row" align="center">
+                        <div class="col-md-6">
+                            <div class="position-relative form-group">
+
+                                <div class="form-row" id="detallesProponente">
+                                    <input name="idproponente" id="idproponente" placeholder="" type="hidden" class="form-control" required>
+
+                                        <label for="loginUsuario"
+                                                class=""><b>Socio:</b></label>
+                                            <input name="proponente1" id="proponente1"
+                                                placeholder="" type="text" class="form-control"
+                                                required readonly>
+
+
+                                        <label for="ci"
+                                                class=""><b>C.ID. SOCIO:</b></label>
+                                            <input name="ciproponente1" id="ciproponente1"
+                                                placeholder="" type="text"
+                                                class="form-control" required readonly>
+
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                                <div class="position-relative form-group">
+                                    <label for="mesinicio" class=""><b>TIPO DE PAGO:</b></label>
+                                    <input name="tipopago1" id="tipopago1"
+                                        placeholder="" type="text"
+                                        class="form-control" required readonly>
+                                </div>
+                        </div>
                     </div>
-                  </div>
-              </div>
-              <h5 class="card-title" align="center">DETALLE TIPO DE PAGO <i  class="fas fa-parking-circle-slash"></i></h5>
-              <div class="form-row" align="center">
-                <div class="position-relative form-group">
                     <div class="form-row">
-                      <div class="position-relative form-group">
-                        <input name="tipopago1" id="tipopago1"
-                            placeholder="" type="text"
-                            class="form-control" required readonly>
-                     </div>
+                        <div class="col-md-6">
+                            <div class="position-relative form-group">
+                                <div id="drop">
+                                    <img src="../src/images/cedulas/idcard.png" width="292" height="230" id="img_frontal"></img>   
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                        <div class="position-relative form-group">
+                            <label for="nombreUsuario" class=""><b>SESION DE LA COMISION:</b></label>
+                            <div class="form-row" id="detallesesioncomision">
+                                <input name="idsesioncomision1" id="idsesioncomision1" placeholder="" type="hidden" class="form-control" required>
+                                <label for="fecha" class=""><b>fecha:</b></label>
+                                <input name="fecha1" id="fecha1" placeholder="" type="date" class="form-control"  required readonly>
+                                <label for="periodo"  class=""><b>PERIODO:</b></label>
+                                <input name="periodo1" id="periodo1"  placeholder="" type="text"  class="form-control" required readonly>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+
                     </div>
                 </div>
-              </div>
-
-            </div>
           </div>
       </div>
 

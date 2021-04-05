@@ -16,7 +16,7 @@ Class ComisionDirectiva
 	{
 		$sw=true;
 		$sql="INSERT INTO `comisiondirectiva`(`idcomisiondirectiva`, `presidente`, `vicepresidente`, `secretario`, `tesorero`, `miembros`, `periodo`, `estado`) VALUES
-		('','$presidente', '$vicepresidente','$secretario','$tesorero', '$miembros', '$periodo','ACTIVO');";
+		(0,'$presidente', '$vicepresidente','$secretario','$tesorero', '$miembros', '$periodo','ACTIVO');";
 		ejecutarConsulta($sql) or $sw = false;
 		//return $sw;
 		return $sw;

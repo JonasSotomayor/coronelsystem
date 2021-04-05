@@ -2,10 +2,10 @@
 session_start();
 require_once "../modelos/Usuarios.php";
 include '../public/sha256/SED.php';
-
+require_once "../modelos/controlCuenta.modelo.php";
 
 $Usuarios=new Usuarios();
-
+$controlCuenta=new controlCuenta();
 $idusuario=isset($_POST["idusuario"])? limpiarCadena($_POST["idusuario"]):"";
 $imagenUsuario=isset($_POST["imagenUsuario"])? limpiarCadena($_POST["imagenUsuario"]):"";
 $razonSocial=isset($_POST["razonsocial"])? limpiarCadena($_POST["razonsocial"]):"";
@@ -152,6 +152,7 @@ switch ($_GET["op"]){
 
 
 	case 'verificar':
+		//$controlCuentasResp=$controlCuenta->cuentaControl();
 		$login=$_POST['login'];
 	  $clavea=$_POST['clavea'];
 

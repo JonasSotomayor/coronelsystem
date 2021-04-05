@@ -38,7 +38,7 @@ if (strlen(session_id()) < 1)
     <link href="../public/select2/dist/css/select2.min.css" rel="stylesheet" />
     <link href='../public/css/fullcalendar.css' rel='stylesheet' />
 
-
+    
 
     <link rel="stylesheet" type="text/css" href="../public/css/bootstrap-select.min.css">
     <link rel="stylesheet" type="text/css" href="../public/css/bootstrap-datepicker.css">
@@ -46,8 +46,8 @@ if (strlen(session_id()) < 1)
     <!-- <link rel="stylesheet" type="text/css" href="../public/css/datepicker.css"> -->
 
     <script src="../public/js/jquery-3.4.1.js"></script>
-
-
+    
+    <link href="../public/alertifyjs/css/alertify.min.css" rel="stylesheet" type="text/css" />
 
 
     <!-- DATATABLES -->
@@ -417,6 +417,11 @@ if (strlen(session_id()) < 1)
                                         <i class="metismenu-icon fa fa-layer-group"></i>CATEGORIA
                                     </a>
                                 </li>
+                                <li  class="">
+                                    <a href="comisiondeporte.php">
+                                        <i class="metismenu-icon fa fa-layer-group"></i>COMISIÓN DEPORTIVA
+                                    </a>
+                                </li>
           <li class="app-sidebar__heading">SESION COMISION</li>
           <li  class="">
                <a href="sesioncomision.php">
@@ -447,7 +452,73 @@ if (strlen(session_id()) < 1)
                      <i class="metismenu-icon fas fa-file-signature"></i> CONTRATOS SOCIOS
                  </a>
              </li>
-          <li class="app-sidebar__heading">Modulo 4 - En desarrollo</li>
+             <li class="app-sidebar__heading">GESTION DE IMMUEBLE</li>
+          <li  class="">
+               <a href="solicitudInmueble.php">
+                   <i class="metismenu-icon fa fa-user-circle"></i> SOLICITAR ALQUILER               </a>
+           </li>
+            <?php if ($_SESSION['Administrador']==1): ?>
+             <li  class="">
+                  <a href="confirmarAlquiler.php">
+                      <i class="metismenu-icon fa fa-users"></i> CONFIRMAR ALQUILER
+                  </a>
+              </li>
+              <li  class="">
+                   <a href="gestionAlquiler.php">
+                       <i class="metismenu-icon fa fa-users-cog"></i> GESTIONAR ALQUILER
+                   </a>
+               </li>
+            <?php endif; ?>
+            <li  class="">
+                 <a href="contratossocios.php">
+                     <i class="metismenu-icon fas fa-file-signature"></i> CONTRATOS ALQUILER
+                 </a>
+             </li>
+          <li class="app-sidebar__heading">COBRANZA</li>
+            <li class="">
+                <a href="#">
+                    <i class="metismenu-icon fa fa-cash-register"></i> CAJA
+                    <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
+                </a>
+                <ul class="">
+                    <li>
+                        <a href="aperturaycierre.php">
+                            <i class="fa fa-user-alt">
+                            </i> APERTURA Y CIERRE
+                        </a>
+                    </li>
+                    <li>
+                        <a href="cajas.php">
+                            <i class="fa fa-user-alt">
+                            </i> GESTION DE CAJA
+                        </a>
+                    </li>
+                </ul>
+                <a href="#">
+                    <i class="metismenu-icon fa fa-cash-register"></i> COBROS
+                    <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
+                </a>
+                <ul class="">
+                    <li>
+                        <a href="cuenta_cobrar.php">
+                            <i class="fa fa-cash-register">
+                            </i> COBRANZA
+                        </a>
+                    </li>
+                    <li>
+                        <a href="FACTURAS.php">
+                            <i class="fa fa-money-check">
+                            </i> FACTURAS
+                        </a>
+                    </li>
+                    <li>
+                        <a href="FACTURAS.php">
+                            <i class="fa fa-credit-card">
+                            </i> RECIBOS
+                        </a>
+                    </li>
+                </ul>
+            </li>
           <li class="app-sidebar__heading">Modulo 5 - En desarrollo</li>
           <li class="app-sidebar__heading">Modulo 6 - En desarrollo</li>
           <li class="app-sidebar__heading">Modulo 7 - En desarrollo</li>

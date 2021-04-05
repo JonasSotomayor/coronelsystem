@@ -438,4 +438,37 @@ function AgregarSesionComision(idsesioncomision, fecha, periodo) {
     }
 }
 
+//Validaciones de Archivos
+function validarImagen(obj, value) {
+
+    var uploadFile = obj.files[0];
+    var name = value;
+    console.log(name);
+    if (!window.FileReader) {
+        alert('El navegador no soporta la lectura de archivos');
+        return;
+    }
+
+    if (!(/\.(jpg|png|gif|jpeg)$/i).test(uploadFile.name)) {
+        toastr.warning("El Archivo no es una imagen");
+    } else {
+        var img = new Image();
+        img.onload = function() {
+            var elem = document.getElementById(name);
+            var width = 1;
+            var id = setInterval(frame, 10);
+
+            function frame() {
+                if (width >= 100) {
+                    clearInterval(id);
+                } else {
+                    width++;
+                    elem.style.width = width + '%';
+                }
+            }
+        };
+        img.src = URL.createObjectURL(uploadFile);
+    }
+}
+
 init();

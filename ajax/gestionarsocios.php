@@ -32,7 +32,7 @@ switch ($_GET["op"]){
 			}
 
 			if(empty($imagenCI)){
-				$imagenCI="idcard.jpg";
+				$imagenCI="idcard.png";
 			}
 //nombresolicitudsocio $cinsolicitudsocio  $equiposolicitudsocio $fechaNacimiento $ciudadsolicitudsocio  $telefonosolicitudsocio  $emailsolicitudsocio   $direccionsolicitudsocio   $emailsolicitudsocio $cargosolicitudsocio  $codigoSucursal_solicitudsocio
 			$rspta=$gestionarsocio->confirmar( $idrazonsocial, $razonsocial, $ci,$idtiposocio,$proponente,$fecha,$tipopago,$imagenCI,$SocioNro,$idsesioncomision, $idsolicitudsocio);
@@ -68,8 +68,9 @@ switch ($_GET["op"]){
 			}
 
  			$data[]=array(
-				"0"=>'<button type="button" data-toggle="tooltip" title="MODIFICAR MEMBRECIA" data-placement="bottom" class="btn-shadow btn btn-warning" onclick="mostrar('.$reg->idsocio.')"><i class="fa fa fa-pen"></i></button>'.
+				"0"=>$estado?'<button type="button" data-toggle="tooltip" title="MODIFICAR DATOS SOCIO" data-placement="bottom" class="btn-shadow btn btn-warning" onclick="mostrar('.$reg->idrazonsocial.')"><i class="fa fa fa-pen"></i></button>'.
 				' <button type="button" class="btn-shadow btn btn-danger" data-toggle="tooltip" title="CANCELAR MEMBRECIA" data-placement="bottom"  onclick="desactivar('.$reg->idsocio.')"><i class="fa fa-times-circle"></i></button>'.
+				' <a type="button" class="btn-shadow btn btn-info" data-toggle="modal" data-target="#detalleSolicitudsocio"  onclick="mostrarDetalle('.$reg->idsocio.')"><i class="fa fa-eye" ></i></a>':
 				' <a type="button" class="btn-shadow btn btn-info" data-toggle="modal" data-target="#detalleSolicitudsocio"  onclick="mostrarDetalle('.$reg->idsocio.')"><i class="fa fa-eye" ></i></a>',
 				"1"=>($reg->razonsocial),
 				 "2"=>($reg->ci),
@@ -171,6 +172,9 @@ switch ($_GET["op"]){
 			"aaData"=>$data);
 		echo json_encode($results);
 	break;
+
+	
+
 
 	case 'UltimoNroSocio':
 			$sql="SELECT nrosocio FROM socio ORDER BY nrosocio DESC LIMIT 1";

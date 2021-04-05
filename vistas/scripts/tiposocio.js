@@ -1,5 +1,45 @@
 var tabla;
+window.onload =()=>
+{
+    const costomensual=document.getElementById("costomensual")
+    costomensual.addEventListener('keydown', (e)=>{
+        if(!controlNumeroPuro(e)){
+            alertify.error('Solo admite numeros!');
+            e.preventDefault()
+        }
+    });
+    
+    const costosemestral=document.getElementById("costosemestral")
+    costosemestral.addEventListener('keydown', (e)=>{
+        if(!controlNumeroPuro(e)){
+            alertify.error('Solo admite numeros!');
+            e.preventDefault()
+        }
+    });
+    const costoanual=document.getElementById("costoanual")
+    costoanual.addEventListener('keydown', (e)=>{
+        if(!controlNumeroPuro(e)){
+            alertify.error('Solo admite numeros!');
+            e.preventDefault()
+        }
+    });
+    const tiposocio=document.getElementById("tiposocio")
+    tiposocio.addEventListener('keydown', (e)=>{
+        if(!controlTexto(e)){
+            alertify.error('Error solo se admite texto!');
+            e.preventDefault()
+        }
+    });
+     
+    const beneficios=document.getElementById("beneficios")
+    beneficios.addEventListener('keydown', (e)=>{
+        if(!controlTextoyNumero(e)){
+            alertify.error('Error solo se admite texto!');
+            e.preventDefault()
+        }
+    });
 
+}
 //Función que se ejecuta al inicio
 function init() {
     mostrarform(false);

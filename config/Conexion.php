@@ -29,6 +29,13 @@ if (!function_exists('ejecutarConsulta'))
 		return $row;
 	}
 
+	function ejecutarConsultaSimpleFilaObject($sql)
+	{
+		global $conexion;
+		$query = $conexion->query($sql);
+		$row = $query->fetch_object();
+		return $row;
+	}
 	function ejecutarConsulta_retornarID($sql)
 	{
 		global $conexion;

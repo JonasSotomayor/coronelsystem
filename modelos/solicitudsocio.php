@@ -16,7 +16,7 @@ Class SolicitudSocio
 	{
 		$sw=true;
 		$sql="INSERT INTO `solicitantesocio`(`idsolicitantesocio`, `idrazonsocial`, `razonsocial`, `ci`, `idtiposocio`, `proponente`, `fecha`, `tipopago`, `estado`) VALUES
-		('','$idrazonsocial', '$razonsocial','$ci','$idtiposocio','$proponente','$fecha','$tipopago','ACTIVO');";
+		(0,'$idrazonsocial', '$razonsocial','$ci','$idtiposocio','$proponente','$fecha','$tipopago','ACTIVO');";
 		ejecutarConsulta($sql) or $sw = false;
 		//return $sw;
 		return $sw;

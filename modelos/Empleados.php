@@ -14,9 +14,10 @@ Class Empleados
 	public function insertar($nombreEmpleado, $profesion, $cinEmpleado, $imagenEmpleado, $fechaNacimiento,$telefonoEmpleado, $direccionEmpleado,$ciudadEmpleado, $emailEmpleado,$nacionalidad, $estadocivil,$familia)
 	{
 		$sql="INSERT INTO `razonsocial`(`idrazonsocial`, `razonsocial`, `ci`, `direccion`, `celular`, `correo`, `nacionalidad`, `fechanacimiento`, `estadocivil`, `profesion`, `ciudad`, `estado`, `imagenRazonSocial`)
-		VALUES('','$nombreEmpleado', '$cinEmpleado','$direccionEmpleado',  '$telefonoEmpleado',   '$emailEmpleado', '$nacionalidad',   '$fechaNacimiento', '$estadocivil'  , '$profesion',  '$ciudadEmpleado','ACTIVO','$imagenEmpleado');";
+		VALUES(0,'$nombreEmpleado', '$cinEmpleado','$direccionEmpleado',  '$telefonoEmpleado',   '$emailEmpleado', '$nacionalidad',   '$fechaNacimiento', '$estadocivil'  , '$profesion',  '$ciudadEmpleado','ACTIVO','$imagenEmpleado');";
 		$idRazonsocial=ejecutarConsulta_retornarID($sql);
 		$sw=true;
+		//echo $idRazonsocial;
 		foreach ($familia as $fami) {
 			$sql1="INSERT INTO familia VALUES ('$idRazonsocial','$fami->ci','$fami->nombre','$fami->parentesco')";
 			$rsFami=ejecutarConsulta($sql1);
