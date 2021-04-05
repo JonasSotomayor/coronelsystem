@@ -470,7 +470,7 @@ if (strlen(session_id()) < 1)
                </li>
             <?php endif; ?>
             <li  class="">
-                 <a href="contratossocios.php">
+                 <a href="contratosAlquiler.php">
                      <i class="metismenu-icon fas fa-file-signature"></i> CONTRATOS ALQUILER
                  </a>
              </li>
