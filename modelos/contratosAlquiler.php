@@ -10,7 +10,15 @@ Class ContratosAlquiler
 	{
 
 	}
-
+	
+	//Implementamos un método para desactivar categorías
+	public function actualizar($idcontratoAlquiler,$escaneo){
+		$sw=true;
+		$sql="UPDATE `contratoalquiler` SET contratoScaneo='$escaneo' WHERE idcontratoAlquiler='$idcontratoAlquiler'";
+		echo $sql;
+		ejecutarConsulta($sql) or $sw = false;
+		return $sw;
+	}
 	//Implementamos un método para desactivar categorías
 	public function desactivar($idsolicitantesocio){
 		$sw=true;
@@ -27,7 +35,7 @@ Class ContratosAlquiler
 	}
 
 	//Implementar un método para mostrar los datos de un registro a modificar
-	public function mostrar($idsolicitantesocio)
+	public function mostrar($idcontratoAlquiler)
 	{
 		$sql="SELECT solicitantesocio.*, razonsocial.ci AS 'cisocio',
 		razonsocial.razonsocial AS 'socio',

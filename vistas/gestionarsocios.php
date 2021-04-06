@@ -46,6 +46,7 @@
                                   <th width="30%">SOCIO</th>
                                   <th width="10%">CI</th>
                                   <th width="20%">NRO DE SOCIO</th>
+                                  <th width="10%">FECHA</th>
                                   <th width="10%">TIPO MEMBRECIA</th>
                                   <th width="10%">ESTADO</th>
                               </tr>

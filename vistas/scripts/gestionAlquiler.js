@@ -329,7 +329,7 @@ function desactivar(idsolicitudalquiler) {
       },
       function() {
         $.post("../ajax/gestionAlquiler.php?op=desactivar", { idsolicitudalquiler: idsolicitudalquiler }, function(e) {
-
+            console.log(e)
               swal("Informacion", "El Registro se desactivo con Exito."+e, "success");
               tabla.ajax.reload();
         });

@@ -55,11 +55,51 @@ Class Alquiler
 	}
 
 	//Implementamos un método para desactivar categorías
-	public function desactivar($idsolicitudalquiler){
+	public function desactivar($idalquiler){
 		$sw=true;
-		$sql="UPDATE `solicitudalquiler` SET estado='INACTIVO' WHERE idsolicitudalquiler='$idsolicitudalquiler'";
+		
+		$sql="UPDATE `alquiler` SET estado='CANCELADO' WHERE idalquiler=".$idalquiler;
 		ejecutarConsulta($sql) or $sw = false;
-		return $sw;
+		//echo $sql;
+		$sql1="SELECT * FROM `contratoAlquiler` WHERE idalquiler='".$idalquiler."' ORDER BY idalquiler DESC LIMIT 1";
+		$contratoAlquiler=ejecutarConsultaSimpleFila($sql1);
+		//echo $sql1;
+		$sql2="UPDATE contratoAlquiler SET estado='MODIFICADO' WHERE idcontratoAlquiler=".$contratoAlquiler["idcontratoAlquiler"];
+		ejecutarConsulta($sql2);
+		//echo $sql2;
+		$sql3="SELECT nroContrato FROM `contratoAlquiler` WHERE idalquiler=".$idalquiler." ORDER BY nroContrato DESC LIMIT 1";
+		$contratoAlquiler1=ejecutarConsultaSimpleFila($sql3);
+		//echo $sql3;
+		$nrocontratoAlquiler=intval($contratoAlquiler1["nroContrato"])+1;
+		$fecha=date("Y-m-d");
+		//echo $nrocontratoAlquiler;
+		$sql4="INSERT INTO `coronelsystem`.`contratoalquiler`
+		(`idcontratoAlquiler`,
+		`nroContrato`,
+		`idrazonsocial`,
+		`razonsocial`,
+		`idalquiler`,
+		`denominacion`,
+		`idasamblea`,
+		`estado`)
+		VALUES
+		(0,
+		$nrocontratoAlquiler,
+		'".$contratoAlquiler["idrazonsocial"]."',
+		'".$contratoAlquiler["razonsocial"]."',
+		$idalquiler,
+		'".$contratoAlquiler["denominacion"]."',
+		'".$contratoAlquiler["idasamblea"]."',
+		'CANCELADO');";
+		ejecutarConsulta($sql4);
+		//echo $sql4;
+		$sql1="SELECT * FROM `cuentas_cobrar` WHERE contrato='".$contratoAlquiler["idcontratoAlquiler"]."' AND tipocuenta='alquiler' AND estado='PENDIENTE'";
+		$respCuentacobrar=ejecutarConsulta($sql1);	
+		while ($reg=$respCuentacobrar->fetch_object()){
+			$sql2="UPDATE cuentas_cobrar SET estado='CANCELADO' WHERE id_cuenta_cobrar=".$reg->id_cuenta_cobrar;
+			//echo $sql2;
+			ejecutarConsulta($sql2);
+		}
 	}
 
 	//Implementamos un método para activar categorías
@@ -79,7 +119,7 @@ Class Alquiler
 	//Implementar un método para listar los registros
 	public function listar()
 	{
-		$sql="SELECT * FROM solicitudalquiler where estado<>'ACTIVO' AND  estado<>'CANCELADO'";
+		$sql="SELECT * FROM alquiler";
 		return ejecutarConsulta($sql);
 	}
 

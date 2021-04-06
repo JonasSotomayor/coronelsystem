@@ -67,6 +67,11 @@ if (strlen(session_id()) < 1)
     <script src="../public/sweetalert/dist/sweetalert.js"></script>
     <script src="../public/sweetalert/dist/sweetalert.min.js"></script>
 
+    <!-- DROPIFY -->
+    <link href="../public/plugins/dropify/css/dropify.min.css" rel="stylesheet" />
+
+  <!-- APEXCHARTS -->
+  <link href="../public/plugins/apexcharts/apexcharts.css" rel="stylesheet" />
 
     <!-- jQuery -->
     <script src="../public/select2/dist/js/select2.full.js"></script>

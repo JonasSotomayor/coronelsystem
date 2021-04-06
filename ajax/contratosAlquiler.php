@@ -3,7 +3,7 @@ session_start();
 require_once "../modelos/contratosAlquiler.php";
 $contratosAlquiler=new ContratosAlquiler();
 //nombresolicitudsocio cinsolicitudsocio  equiposolicitudsocio fechaNacimiento fechaIngreso  telefonosolicitudsocio ciudadsolicitudsocio  emailsolicitudsocio   direccionsolicitudsocio   emailsolicitudsocio cargosolicitudsocio  codigoSucursal_solicitudsocio
-$idcontratoAlquiler=isset($_POST["idcontratoAlquiler"])? limpiarCadena($_POST["idcontratoAlquiler"]):"";
+$idcontratoAlquiler=isset($_POST["idcontrato"])? limpiarCadena($_POST["idcontrato"]):"";
 $idrazonsocial=isset($_POST["idrazonsocial"])? limpiarCadena($_POST["idrazonsocial"]):"";
 $razonsocial=isset($_POST["razonsocial"])? limpiarCadena($_POST["razonsocial"]):"";
 $idtiposocio=isset($_POST["idtiposocio"])? limpiarCadena($_POST["idtiposocio"]):"";
@@ -14,6 +14,30 @@ $fecha=date("Y-m-d");
 
 switch ($_GET["op"]){
 
+	case 'guardaryeditar':
+		if (!file_exists($_FILES['escaneoContrato']['tmp_name']) || !is_uploaded_file($_FILES['escaneoContrato']['tmp_name']))
+		{
+			if (isset($_POST["escaneoContrato_cargados"])) {
+				$escaneoContrato=$_POST["escaneoContrato_cargados"];
+			} else {
+				$escaneoContrato='';
+			}
+		}
+		else 
+		{
+			$ext = explode(".", $_FILES["escaneoContrato"]["name"]);
+			if ($_FILES['escaneoContrato']['type'] == "application/pdf" )
+			{
+				//$escaneoContrato = $mesaEntrada->CEDULA_IDENTIDAD_NUMERO. '.' . end($ext);
+				$escaneoContrato = round(microtime(true)) . '.' . end($ext);
+				move_uploaded_file($_FILES["escaneoContrato"]["tmp_name"],"../files/contratosAlquiler/".$escaneoContrato);
+			}
+		}  
+		$escaneo=$escaneoContrato;
+		$rspta=$contratosAlquiler->actualizar($idcontratoAlquiler,$escaneo);
+		echo $rspta ? "El deporte se ha Registrado con Exito" : "1";
+	break;
+	
 	case 'desactivar':
 		$rspta=$contratosAlquiler->desactivar($idcontratoAlquiler);
  		echo $rspta ? "solicitudsocio Desactivado" : "solicitudsocio no se puede desactivar";
@@ -52,12 +76,17 @@ switch ($_GET["op"]){
 					
 					break;
 				case 'MODIFICADO':
-					$estado='<a title="VER CONTRATO" class="btn-shadow btn btn-warning" href="contrato_alquiler.php?idcontratoAlquiler='.$reg->idcontratoAlquiler.'" target="_blank"><i class="fas fa-file-alt"></i></a>';
+					$estado='<a title="VER CONTRATO" class="btn-shadow btn btn-warning"  href="../files/contratosAlquiler/'.$reg->contratoScaneo.'" target="_blank"><i class="fas fa-file-alt"></i></a>';
 					$estadoDetalle='<span class="badge badge-warning mr-2 ml-0">MODIFICADO</span>';
 					break;
 				case 'CANCELADO':
-					$estado='<a title="VER CONTRATO" class="btn-shadow btn btn-danger" href="contrato_cancelacion_alquiler.php?idcontratoAlquiler='.$reg->idcontratoAlquiler.'" target="_blank"><i class="fas fa-file-alt"></i></a>';
-					$estadoDetalle='<span class="badge badge-danger mr-2 ml-0">CANCELADO</span>';
+					if ($reg->contratoScaneo!='') {
+						$estado='<a title="VER CONTRATO" class="btn-shadow btn btn-danger" href="../files/contratosAlquiler/'.$reg->contratoScaneo.'" target="_blank"><i class="fas fa-file-alt"></i></a>';
+						$estadoDetalle='<span class="badge badge-danger mr-2 ml-0">CANCELADO</span>';
+					}else{
+						$estado='<button type="button" data-toggle="tooltip" title="CARGAR CONTRATO" data-placement="bottom" class="btn-shadow btn btn-danger" onclick="mostrar('.$reg->idcontratoAlquiler.')"><i class="fas fa-arrow-alt-circle-down"></i></button>';
+						$estadoDetalle='<span class="badge badge-danger mr-2 ml-0">CANCELADO</span>';
+					}
 					break;
 			}
 

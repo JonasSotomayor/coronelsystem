@@ -2,14 +2,22 @@ var tabla;
 idSocioo=0;
 idTiposocioo=0;
 idRazonsociallll=0;
+window.onload =()=>
+{
+    $('.dropify').dropify({
+        messages: {
+            'default': 'Arrastre y suelte un archivo aquí o haga clic ',
+            'replace': 'Arrastre y suelte o click para reemplazar',
+            'remove':  'Quitar',
+            'error':   'Ooops, algo malo paso.'
+        }
+    });
+}
 //Función que se ejecuta al inicio
 function init() {
     mostrarform(false);
     listar();
 
-    $('#detallesRazonSocial').hide();
-    $('#detallesProponente').hide();
-    $('#detallesMembrecia').hide();
 
     $("#formulario").on("submit", function(e) {
         guardaryeditar(e);
@@ -18,23 +26,7 @@ function init() {
 
 //Función limpiar
 function limpiar() {
-    $("#idsolicitudsocio").val("");
-    $("#ciproponente").val("");
-    $("#proponente").val("");
-    $("#idproponente").val("");
-    $("#idtiposocio").val("");
-    $("#ci").val("");
-    $("#razonsocial").val("");
-    $("#idrazonsocial").val("");
-    $("#tiposocio").val("");
-    $("#tipopago option[value='MENSUAL'").attr("selected",true);
-    idSocioo=0;
-    idTiposocioo=0;
-    idRazonsociallll=0;
-
-    $('#detallesRazonSocial').hide();
-    $('#detallesProponente').hide();
-    $('#detallesMembrecia').hide();
+    $("#idcontratoAlquiler").val("");
 
 }
 //Función mostrar formulario
@@ -111,70 +103,66 @@ function listar() {
 }
 
 function guardaryeditar(e) {
-    $("#btnCarga").show();
-    $("#btnGuardar").hide();
     e.preventDefault(); //No se activará la acción predeterminada del evento
-    $("#btnGuardar").prop("disabled", true);
 
     var formData = new FormData($("#formulario")[0]);
+    console.log(formData.get('idcontratoAlquiler'))
+    if(formData.get('escaneoContrato').name!=''){
+        $("#btnCarga").show();
+        $("#btnGuardar").hide();
+        
+        $("#btnGuardar").prop("disabled", true);
+    
+        $.ajax({
+            url: "../ajax/contratosAlquiler.php?op=guardaryeditar",
+            type: "POST",
+            data: formData,
+            contentType: false,
+            processData: false,
 
-    $.ajax({
-        url: "../ajax/solicitudsocio.php?op=guardaryeditar",
-        type: "POST",
-        data: formData,
-        contentType: false,
-        processData: false,
-
-        success: function(datos) {
-          respuesta=datos;
-            console.log(datos);
-            //datos=1;
-            if (datos == 1) {
-                swal("Error", "Se ha Producido un Error"+respuesta, "error");
+            success: function(datos) {
+            respuesta=datos;
+                console.log(datos);
+                //datos=1;
+                if (datos == 1) {
+                    swal("Error", "Se ha Producido un Error"+respuesta, "error");
+                    mostrarform(false);
+                    tabla.ajax.reload();
+                    listar();
+                } else {
+                    swal("Información", datos, "success");
+                    mostrarform(false);
+                    tabla.ajax.reload();
+                    listar();
+                }
                 mostrarform(false);
-                tabla.ajax.reload();
-                listar();
-            } else {
-                swal("Información", datos, "success");
-                mostrarform(false);
-                tabla.ajax.reload();
-                listar();
             }
-            mostrarform(false);
-        }
 
-    });
-    limpiar();
+        });
+        limpiar();
+    }else{
+        swal("ERROR", "NO SE HA CARGADO NINGUN DOCUMENTO", "error");
+
+    }
+    
+    
 }
 
-function mostrar(idsolicitudsocio) {
+function mostrar(idcontratoAlquiler) {
+    alert(idcontratoAlquiler)
     $("#lista").hide();
     $("#formularioregistros").hide();
     $("#cargando-div").show();
-
-    $.post("../ajax/solicitudsocio.php?op=mostrar", { idsolicitudsocio: idsolicitudsocio }, function(data, status) {
+    $("#idcontrato").val(idcontratoAlquiler);
+    mostrarform(true);
+    $("#btnGuardar").show();
+    /*$.post("../ajax/contratosAlquiler.php?op=mostrar", { idcontratoAlquiler: idcontratoAlquiler }, function(data, status) {
         //console.log(data);
         data = JSON.parse(data);
         mostrarform(true);
-        $("#idsolicitudsocio").val(data.idsolicitantesocio);
-        $("#ciproponente").val(data.cisocio);
-        $("#proponente").val(data.socio);
-        $("#idproponente").val(data.idsocio);
-        $("#idtiposocio").val(data.idtiposocio);
-        $("#ci").val(data.ci);
-        $("#razonsocial").val(data.razonsocial);
-        $("#idrazonsocial").val(data.idrazonsocial);
-        $("#tiposocio").val(data.tiposocio);
-        $("#tipopago option[value='"+data.tipopago+"'").attr("selected",true);
-        idSocioo=data.idsocio;
-        idTiposocioo=data.idtiposocio;
-        idRazonsociallll=data.idrazonsocial;
-        $('#detallesRazonSocial').show();
-        $('#detallesProponente').show();
-        $('#detallesMembrecia').show();
+        $("#idcontratoAlquiler").val(data.idsolicitantesocio);
         $("#btnGuardar").show();
-    });
-
+    });*/
 }
 
 

@@ -82,15 +82,15 @@ switch ($_GET["op"]){
 			$estado='';
 			$estadoDetalle='';
 			switch ($reg->estado) {
-				case 'CONFIRMADO':
+				case 'ACTIVO':
 					$estado='<button type="button" data-toggle="tooltip" title="Editar registro" data-placement="bottom" class="btn-shadow btn btn-warning" onclick="mostrar('.$reg->idsolicitudalquiler.')"><i class="fa fa-pen"></i></button>'.
 					' <button type="button" class="btn-shadow btn btn-danger" data-toggle="tooltip" title="Desactivar" data-placement="bottom"  onclick="desactivar('.$reg->idsolicitudalquiler.')"><i class="fa fa-times-circle"></i></button>'.
 					' <a type="button" class="btn-shadow btn btn-info" data-toggle="modal" data-target="#detalleSolicitudsocio"  onclick="mostrarDetalle('.$reg->idsolicitudalquiler.')"><i class="fa fa-eye" ></i></a>';
 					$estadoDetalle='<span class="badge badge-success mr-2 ml-0">Activo</span>';
 					break;
-					case 'INACTIVO':
+					case 'CANCELADO':
 						$estado='<a type="button" class="btn-shadow btn btn-info" data-toggle="modal" data-target="#detalleSolicitudsocio" onclick="mostrarDetalle('.$reg->idsolicitudalquiler.')"><i class="fa fa-eye" ></i></a>';
-						$estadoDetalle='<span class="badge badge-danger mr-2 ml-0">Cancelado la solicitud</span>';
+						$estadoDetalle='<span class="badge badge-danger mr-2 ml-0">Cancelado</span>';
 						break;
 					case 'CONFIRMADO':
 						$estado='<a type="button" class="btn-shadow btn btn-info" data-toggle="modal" data-target="#detalleSolicitudsocio" onclick="mostrarDetalle('.$reg->idsolicitudalquiler.')"><i class="fa fa-eye" ></i></a>';
@@ -105,13 +105,12 @@ switch ($_GET["op"]){
  			$data[]=array(
 				"0"=>$estado,
 				"1"=>($reg->razonsocial),
-				 "2"=>($reg->ci),
-				 "3"=>($reg->fechaSolicitud),
-				 "4"=>($reg->denominacion),
-				 "5"=>number_format($reg->costoAlquiler),
- 				"6"=>($reg->tipopago),
-				 "7"=>($reg->plazoContrato).' '.$reg->tiempoContrato,
- 				"8"=>$estadoDetalle
+				 "2"=>($reg->fechainicio),
+				 "3"=>($reg->denominacion),
+				 "4"=>number_format($reg->costoAlquiler),
+ 				"5"=>($reg->tipopago),
+				 "6"=>($reg->plazoContrato).' '.$reg->tiempoContrato,
+ 				"7"=>$estadoDetalle
  				);
  		}
 		$results = array(

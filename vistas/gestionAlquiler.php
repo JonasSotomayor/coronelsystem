@@ -46,7 +46,6 @@
                               <tr>
                                   <th width="10%">OPCIONES</th>
                                   <th width="20%">ARRENDADOR</th>
-                                  <th width="10%">CI</th>
                                   <th width="10%">FECHA</th>
                                   <th width="10%">INMUEBLE</th>
                                   <th width="10%">COSTO</th>
