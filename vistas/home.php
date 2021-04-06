@@ -62,7 +62,7 @@
                  <div class="col-lg-12">
                      <div class="main-card mb-12 card">
                        <div class="card-header">
-                         <h5 class="card-title" align="center" >RESUMENES</h5>
+                         <h5 class="card-title" align="center" >RESUMENES SOCIO</h5>
                        </div>
                        <div class="card-body" >
                         <div class="row justify-content-center">
@@ -80,58 +80,122 @@
                                                         count(idsocio) as cantidad
                                                         FROM socio";
                                                         $nrosocio=ejecutarConsultaSimpleFila($sqlsocio);
-                                                    echo $nrosocio['cantidad'];
-                                                ?>
-                                            </h3>
-                                            <p class="mb-0 text-truncate"><span class="text-success"><i class="mdi mdi-trending-up"></i>
-                                            <?php
-                                                    require "../config/Conexion.php";
-                                                    $sqlsocio="SELECT
+                                                        echo $nrosocio['cantidad'];
+                                                        $sqlsocio="SELECT
                                                         count(idsocio) as cantidad
                                                         FROM socio where estado='ACTIVO'";
-                                                        $nrosocioactivo=ejecutarConsultaSimpleFila($sqlsocio);
-                                                    echo $nrosocioactivo['cantidad'];
+                                                        $nrosocioActivo=ejecutarConsultaSimpleFila($sqlsocio);
                                                 ?>
+                                            </h3>
+                                            <p class="mb-0 text-truncate"><span class="text-success"><i class="mdi mdi-trending-up"> <?php ECHO $nrosocioActivo['cantidad'] ?></i>
                                             </span>ESTAN ACTIVOS</p>
                                         </div><!--end card-body--> 
                                     </div><!--end card--> 
-                                </div> <!--end col--> 
+                                </div> <!--end col-->
+                                            <?php
+                                                    require "../config/Conexion.php";
+                                                    $sqlTipoSocio="SELECT * FROM tiposocio WHERE estado='ACTIVO' ";
+                                                    $tiposocio=ejecutarConsulta($sqlTipoSocio);
+                                                    $n=1;
+                                                    while($tipo=$tiposocio->fetch_object()){
+                                                        if($n==4){
+                                                            $n=0;
+                                                            
+                                                            echo ' </div><br>
+                                                            <div class="row justify-content-center">';
+                                                        }else{
+                                                            $n++;
+                                                        }
+                                                        $sqlsocio="SELECT
+                                                        count(idsocio) as cantidad
+                                                        FROM socio where tiposocio=$tipo->idtiposocio";
+                                                        $nrosocio=ejecutarConsultaSimpleFila($sqlsocio);
+                                                        $sqlsocioAct="SELECT
+                                                        count(idsocio) as cantidad
+                                                        FROM socio where tiposocio=$tipo->idtiposocio and estado='ACTIVO'";
+                                                        $nrosocioActivo=ejecutarConsultaSimpleFila($sqlsocioAct);
+                                                        echo '<div class="col-md-6 col-lg-3">
+                                                                <div class="card report-card bg-danger-gradient shadow-danger">
+                                                                    <div class="card-body">
+                                                                        <div class="float-right">
+                                                                            <i class="dripicons-clock report-main-icon bg-icon-danger"></i>
+                                                                        </div> 
+                                                                        <span class="badge badge-light text-danger">CANTIDAD DE SOCIOS '.$tipo->tiposocio.'</span>
+                                                                        <h3 class="my-3">'.$nrosocio['cantidad'].'</h3>
+                                                                        <p class="mb-0 text-truncate"><span class="text-success">
+                                                                             <i class="mdi mdi-trending-up"></i>'.$nrosocioActivo['cantidad'].'</span> estan activos
+                                                                        </p>
+                                                                    </div><!--end card-body--> 
+                                                                </div><!--end card--> 
+                                                            </div> <!--end col--> ';
+                                                    }
+                                                   
+                                            ?>      
+                            </div>
+                       </div>
+                       <div class="card-header">
+                         <h5 class="card-title" align="center" >RESUMENES ALQUILER</h5>
+                       </div>
+                       <div class="card-body" >
+                            <div class="row justify-content-center">
                                 <div class="col-md-6 col-lg-3">
-                                    <div class="card report-card bg-danger-gradient shadow-danger">
+                                    <div class="card report-card bg-purple-gradient shadow-purple">
                                         <div class="card-body">
                                             <div class="float-right">
-                                                <i class="dripicons-clock report-main-icon bg-icon-danger"></i>
+                                                <i class="dripicons-user-group report-main-icon bg-icon-purple"></i>
                                             </div> 
-                                            <span class="badge badge-light text-danger">Avg.Sessions</span>
-                                            <h3 class="my-3">00:18</h3>
-                                            <p class="mb-0 text-truncate"><span class="text-success"><i class="mdi mdi-trending-up"></i>1.5%</span> Weekly Avg.Sessions</p>
+                                            <span class="badge badge-light text-purple">LOCALES DE ALQUILER</span>
+                                            <h3 class="my-3">
+                                                 <?php
+                                                    require "../config/Conexion.php";
+                                                    $sqlsocio="SELECT
+                                                        count(idinmueble) as cantidad
+                                                        FROM inmueble";
+                                                        $nrosocio=ejecutarConsultaSimpleFila($sqlsocio);
+                                                        echo $nrosocio['cantidad'];
+                                                        $sqlsocio="SELECT
+                                                        count(idalquiler) as cantidad
+                                                        FROM alquiler where estado='activo' group by idinmueble";
+                                                        $nrosocioActivo=ejecutarConsultaSimpleFila($sqlsocio);
+                                                ?>
+                                            </h3>
+                                            <p class="mb-0 text-truncate"><span class="text-success"><i class="mdi mdi-trending-up"> <?php ECHO $nrosocioActivo['cantidad'] ?></i>
+                                            </span>ESTAN ACTIVOS</p>
                                         </div><!--end card-body--> 
                                     </div><!--end card--> 
-                                </div> <!--end col--> 
-                                <div class="col-md-6 col-lg-3">
-                                    <div class="card bg-secondary-gradient shadow-secondary">
-                                        <div class="card-body">
-                                            <div class="float-right">
-                                                <i class="dripicons-meter report-main-icon bg-icon-secondary"></i>
-                                            </div> 
-                                            <span class="badge badge-light text-secondary">Bounce Rate</span>
-                                            <h3 class="my-3">$2400</h3>
-                                            <p class="mb-0 text-truncate"><span class="text-danger"><i class="mdi mdi-trending-down"></i>35%</span> Bounce Rate Weekly</p>
-                                        </div><!--end card-body--> 
-                                    </div><!--end card--> 
-                                </div> <!--end col--> 
-                                <div class="col-md-6 col-lg-3">
-                                    <div class="card bg-warning-gradient shadow-warning">
-                                        <div class="card-body">
-                                            <div class="float-right">
-                                                <i class="dripicons-wallet report-main-icon bg-icon-warning"></i>
-                                            </div> 
-                                            <span class="badge badge-light text-warning">Goal Completions</span>
-                                            <h3 class="my-3">85000</h3>
-                                            <p class="mb-0 text-truncate"><span class="text-success"><i class="mdi mdi-trending-up"></i>10.5%</span> Completions Weekly</p>
-                                        </div><!--end card-body--> 
-                                    </div><!--end card--> 
-                                </div> <!--end col-->                               
+                                </div> <!--end col-->
+                                            <?php
+                                                    require "../config/Conexion.php";
+                                                    $sqlTipoSocio="SELECT * FROM inmueble WHERE estado='ACTIVO' ";
+                                                    $alquileres=ejecutarConsulta($sqlTipoSocio);
+                                                    $n=1;
+                                                    while($alquiler=$alquileres->fetch_object()){
+                                                        if($n==4){
+                                                            $n=0;
+                                                            
+                                                            echo ' </div><br>
+                                                            <div class="row justify-content-center">';
+                                                        }else{
+                                                            $n++;
+                                                        }
+                                                        
+                                                        echo '<div class="col-md-6 col-lg-3">
+                                                                <div class="card report-card bg-danger-gradient shadow-danger">
+                                                                    <div class="card-body">
+                                                                        <div class="float-right">
+                                                                            <i class="dripicons-clock report-main-icon bg-icon-danger"></i>
+                                                                        </div> 
+                                                                        <span class="badge badge-light text-danger">INMUEBLE: '.$alquiler->determinacion.'</span>
+                                                                        <h3 class="my-3">OCUPADO</h3>
+                                                                        <p class="mb-0 text-truncate"><span class="text-success">
+                                                                             <i class="mdi mdi-trending-up"></i>DESDE 07/04/08 DURANTE 5 MESES </span>
+                                                                        </p>
+                                                                    </div><!--end card-body--> 
+                                                                </div><!--end card--> 
+                                                            </div> <!--end col--> ';
+                                                    }
+                                                   
+                                            ?>      
                             </div>
                        </div>
                      </div>
