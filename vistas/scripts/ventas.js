@@ -13,7 +13,7 @@ var tablaProductosEnVenta = $('#tablaProductosEnVenta').DataTable({
   });
 function init() {
     //mostrarform(true);
-    //listarRazonSocial();
+    listarRazonSocial();
     $("#formulario").on("submit", function(e) {
         guardaryeditar(e);
     })
@@ -53,25 +53,9 @@ function limpiar() {
     fechaDato=diasSemana[fecha.getDay()]+" "+fecha.getDate()+" de "+meses[fecha.getMonth()]+" "+fecha.getFullYear();
     $("#fechaActual").text(fechaDato);
 }
-function mostrarform(flag) {
-    if (flag) {
-        $("#listadoregistros").hide();
-        $("#formularioregistros").show();
-        listarProductos();
-        $("#inf-fechas").hide();
-        $("#btnGuardar").prop("disabled", false);
-        $("#BtnAgregar").hide();
-        limpiar();
-    } else {
-        $("#listadoregistros").show();
-        $("#formularioregistros").hide();
-        $("#BtnAgregar").show();
-        limpiar();
-    }
-}
+
 function cancelarform() {
     limpiar();
-    mostrarform(false);
 }
 function guardaryeditar(e) {
     let tipoVenta = $('#selectTipoVenta').val();
@@ -135,7 +119,7 @@ function guardaryeditar(e) {
 ///////////////////////////////////////////
 
 
-/*function listarRazonSocial() {
+function listarRazonSocial() {
   $.post("../ajax/usuarios.php?op=listarRazonSocial", {  }, function(data, status) {
       console.log(data);
   });
@@ -169,7 +153,7 @@ function AgregarRazonSocial(codigoCliente, razonsocial, ci) {
   $("#codigoCliente").val(idrazonsocial);
   $("#razonsocial").val(razonsocial);
   $("#ci").val(ci);
-}*/
+}
 
 
 ///////////////////////////////////////////

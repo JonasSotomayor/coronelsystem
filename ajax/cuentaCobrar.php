@@ -38,7 +38,7 @@ switch ($_GET["op"]){
         while ($reg=$rspta->fetch_object()){
 			if($reg->estado=='PENDIENTE'){
 				$estado='<span class="badge badge-warning mr-2 ml-0"><i class="dripicons-loading"></i> Pendiente</span>';
-				$opciones='<button class="btn btn-outline-success btn-round btn-xs" onclick="pagar('.$reg->id_cuenta_cobrar.', '.$reg->montoCobrar.')"><i class="fas fa-check"></i></button>
+				$opciones='<button class="btn btn-outline-success btn-round btn-xs" data-dismiss="modal" onclick="pagar('.$reg->id_cuenta_cobrar.', '.$reg->montoCobrar.')"><i class="fas fa-check"></i></button>
 				<button class="btn btn-outline-info btn-xs" data-toggle="modal"  onclick="mostrarVenta('.$reg->id_cuenta_cobrar.')"><i class="fa fa-eye" ></button>';
 			}else if($reg->estado=='CANCELADO'){
 				$opciones='<button class="btn btn-outline-info btn-xs" data-toggle="modal"  onclick="mostrarDetalle('.$reg->id_cuenta_cobrar.')"><i class="fa fa-eye"></i></button>';

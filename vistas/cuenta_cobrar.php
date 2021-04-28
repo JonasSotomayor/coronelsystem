@@ -107,7 +107,7 @@
                             <form class="needs-validation" validate name="formulario" id="formulario" method="POST" >
                                 <input type="hidden" id="codigo_Cuentas_Cobrar" name="codigo_Cuentas_Cobrar">
                                 <input type="hidden" id="detallePago" name="detallePago">
-                                <input type="hidden" id="timbrado" name="timbrado">
+                                
                                 <div class="form-row">
                                     <!--selectestilos-->
                                     <div class="form-group col-md-3">
@@ -134,7 +134,7 @@
                                     <!--selectmarca-->
                                     <div class="form-group col-md-3">
                                         <label>TIPO COMPROBANTE</label>
-                                        <select class="form-control show-tick required" data-style="btn-Light" name="tipoComprobante" id="selectTipoPago" width: 'auto' data-size="6" required>
+                                        <select class="form-control show-tick required" data-style="btn-Light" name="tipoComprobante" id="tipoComprobante" width: 'auto' data-size="6" required>
                                             <option value="RECIBO">RECIBO</option>
                                             <option value="FACTURA">FACTURA</option>
                                         </select>

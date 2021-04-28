@@ -322,6 +322,7 @@
   </div>
 </div>
 
+</div>
 
 <!-- Modal RAZON SOCIAL -->
 <div class="modal fade bd-example-modal-lg" id="modal_razonSocial" tabindex="-1" role="dialog" aria-labelledby="modal_razonSocial"

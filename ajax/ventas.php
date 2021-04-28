@@ -1,34 +1,31 @@
 <?php
 
-require_once "../models/Ventas.php";
+require_once "../modelos/ventas.php";
 
 $venta= new Ventas();
-
-$codigoVenta=isset($_POST["codigoVenta"])? limpiarCadena($_POST["codigoVenta"]):"";
-$codigoCliente=isset($_POST["codigoCliente"])? limpiarCadena($_POST["codigoCliente"]):"";
-$porcentajeCuota=isset($_POST["porcentajeCuota"])? limpiarCadena($_POST["porcentajeCuota"]):"";
-$selectTipoVenta=isset($_POST["selectTipoVenta"])? limpiarCadena($_POST["selectTipoVenta"]):"";
-$montoEntregaInicial=isset($_POST["montoEntregaInicial"])? limpiarCadena($_POST["montoEntregaInicial"]):"";
-if($montoEntregaInicial=='') $montoEntregaInicial=0;
-$montoEntregaInicial=str_replace(',','',$montoEntregaInicial);
-$cuota=isset($_POST["cuota"])? limpiarCadena($_POST["cuota"]):"";
-$detalleVentaJson=isset($_POST["detalleVenta"])? limpiarCadena($_POST["detalleVenta"]):"";
-$detalleVentaJson=str_replace('\&quot;','"',$detalleVentaJson);
-$detalleVenta=json_decode($detalleVentaJson);
-
+$razon_social=isset($_POST["razon_social"])? limpiarCadena($_POST["razon_social"]):"";
+$razon_social_ci=isset($_POST["razon_social_ci"])? limpiarCadena($_POST["razon_social_ci"]):"";
+$id_razon_social=isset($_POST["id_razon_social"])? limpiarCadena($_POST["id_razon_social"]):"";
+$tipoComprobante=isset($_POST["tipoComprobante"])? limpiarCadena($_POST["tipoComprobante"]):"";
+$detalleCobroJson=isset($_POST["detalleCobro"])? limpiarCadena($_POST["detalleCobro"]):"";
+$detalleCobroJson=str_replace('\&quot;','"',$detalleCobroJson);
+$detalleCobro=json_decode($detalleCobroJson);
+$detallePagoJson=isset($_POST["detallePago"])? limpiarCadena($_POST["detallePago"]):"";
+$detallePagoJson=str_replace('\&quot;','"',$detallePagoJson);
+$detallePago=json_decode($detallePagoJson);
 
 switch ($_GET["op"]){
 		case 'guardaryeditar':
 			if (empty($codigoVenta)){
 				$rspta=$venta->insertar(
-					$codigoCliente,
-					$selectTipoVenta,
-					$montoEntregaInicial,
-					$cuota,
-					$porcentajeCuota,
-					$detalleVenta);
-				//echo $rspta ? "Receta registrada" : "Receta no se pudo registrar";
-				echo $rspta;
+					$id_razon_social,
+					$razon_social,
+					$razon_social_ci,
+					$tipoComprobante,
+					$detalleCobro,
+					$detallePago);
+				echo $rspta ? "Receta registrada" : "Receta no se pudo registrar";
+				
 			}
 		break;
 
@@ -79,9 +76,24 @@ switch ($_GET["op"]){
 				"aaData"=>$data);
 				echo json_encode($results);
 		break;
-
-
-
+		
+		case 'listarCuentaCobrar':
+			$idcuentacobrar=$_POST['idcuentacobrar'];
+			$sql="SELECT
+				id_cuenta_cobrar,
+				tipocuenta, 
+				razonsocial.idrazonsocial, razonsocial.razonsocial, razonsocial.ci,
+				numerocuota,
+				totalcuota,
+				montoCobrar,
+				fechaCobro,
+				cuentas_cobrar.estado
+			FROM cuentas_cobrar, razonsocial
+			WHERE cuentas_cobrar.`idrazonsocial`=razonsocial.`idrazonsocial`
+			AND id_cuenta_cobrar=".$idcuentacobrar;
+			$results=ejecutarConsultaSimpleFila($sql);
+			echo json_encode($results);
+			break;
 
 }
 ?>

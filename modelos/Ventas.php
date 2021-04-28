@@ -9,65 +9,172 @@ Class Ventas
 	public function __construct(){}
 
 	//CREAMOS LA VENTA
-	public function insertar($codigoCliente,
-							$selectTipoVenta,
-							$montoEntregaInicial,
-							$cuota,
-							$porcentajeCuota,
-							$detalleVenta)
+	public function insertar(
+		$id_razon_social,
+		$razon_social,
+		$razon_social_ci,
+		$tipoComprobante,
+		$detalleCobro,
+		$detallePago)
 		{
-			$codigoUsuario=$_SESSION['codigoUsuario'];
-			$codigoSucursal=$_SESSION['codigoSucursal'];
-			$sql="INSERT INTO `ventas`
-									(`codigoUsuario`,
-									`codigoPersona`,
-									`codigo_CondicionTransaccion`,
-									`codigocotizacion`,
-									`sucursalVenta`,
-									`estadoVenta`)
-						VALUES ('1',
-								'$codigoCliente',
-								'$selectTipoVenta',
-								'1',
-								'1',
-								'1');";//enviamos valores a los sgtes campos
+			$codigoUsuario=$_SESSION['idusuario'];
+			if ($tipoComprobante=='RECIBO') {
+				$sql="SELECT * FROM timbrado where tipoTimbrado='RECIBO' AND estadoTimbrado=1";
+				$timbrado=ejecutarConsultaSimpleFilaObject($sql);	
+				var_dump($timbrado);
+				echo "\n";echo "\n";
+				$nroFactura=$timbrado->nroactualTimbrado;
+				$sql="INSERT INTO `coronelsystem`.`facturas`
+						(`codigoFacturas`,
+						`nroFacturas`,
+						`tipoFactura`,
+						`codigoTimbrado`,
+						`codigoUsuario`,
+						`idrazonsocial`,
+						`razonsocial`,
+						`ci`,
+						`estadoFacturas`)
+						VALUES
+						(0,
+						$nroFactura,
+						'RECIBO',
+						$timbrado->codigoTimbrado,
+						$codigoUsuario,
+						$id_razon_social,
+						'$razon_social',
+						'$razon_social_ci',
+						'COBRADO');";//enviamos valores a los sgtes campos	
+				///////////////////////////////
+				////ACTUALIZAMOS EL NUMERO ACTUAL DE FACTURA
+				/////////////////////////////
+				$estadoTimbrado=1;
+				$nroFactura++;
+				if($nroFactura>$timbrado->nrofinalTimbrado){
+					$estadoTimbrado=0;
+				}else{
+					$estadoTimbrado=1;
+				}
+				$sqlAumentarTimbrado="UPDATE
+				`timbrado`
+				SET
+					`nroactualTimbrado` = '$nroFactura',
+					`estadoTimbrado` = '$estadoTimbrado'
+				WHERE `codigoTimbrado` = '".$timbrado->codigoTimbrado."';";
+				echo $sqlAumentarTimbrado;
+				echo "\n";echo "\n";
+				ejecutarConsulta($sqlAumentarTimbrado);
+			} else {
+				$sql="SELECT * FROM timbrado where tipoTimbrado='FACTURA' AND estadoTimbrado=1";
+				$timbrado=ejecutarConsultaSimpleFilaObject($sql);	
+				var_dump($timbrado);
+				echo "\n";echo "\n";
+				$nroFactura=$timbrado->nroactualTimbrado;
+				$sql="INSERT INTO `coronelsystem`.`facturas`
+						(`codigoFacturas`,
+						`nroFacturas`,
+						`tipoFactura`,
+						`codigoTimbrado`,
+						`codigoUsuario`,
+						`idrazonsocial`,
+						`razonsocial`,
+						`ci`,
+						`estadoFacturas`)
+						VALUES
+						(0,
+						$nroFactura,
+						'FACTURA',
+						$timbrado->codigoTimbrado,
+						$codigoUsuario,
+						$id_razon_social,
+						'$razon_social',
+						'$razon_social_ci',
+						'COBRADO');";//enviamos valores a los sgtes campos
+				///////////////////////////////
+				////ACTUALIZAMOS EL NUMERO ACTUAL DE FACTURA
+				/////////////////////////////
+				$estadoTimbrado=1;
+				$nroFactura++;
+				if($nroFactura>$timbrado->nrofinalTimbrado){
+					$estadoTimbrado=0;
+				}else{
+					$estadoTimbrado=1;
+				}
+				$sqlAumentarTimbrado="UPDATE
+				`timbrado`
+				SET
+					`nroactualTimbrado` = '$nroFactura',
+					`estadoTimbrado` = '$estadoTimbrado'
+				WHERE `codigoTimbrado` = '".$timbrado->codigoTimbrado."';";
+				echo $sqlAumentarTimbrado;
+				var_dump($timbrado);
+				echo "\n";echo "\n";
+				ejecutarConsulta($sqlAumentarTimbrado);
+			}
 			echo $sql."\n";
 			$codigoVentanew=ejecutarConsulta_retornarID($sql);//devuelva la llave primaria autogenerada que se ha registrado
 			//$codigoVentanew=50;
 			$totalVenta=0;
 			$sw=true;
 			$totalCuota=0;
-			//echo "codigo venta nuevo:".$codigoVentanew;
+			echo "codigo venta nuevo:".$codigoVentanew;
 			/// registramo los detalle de ventas
-			foreach ($detalleVenta as $detalleProducto){
-				$sql_detalle="INSERT INTO `trentina1875`.`detalle_ventas`
-										(`codigoVentas`,
-										`codigoProductos`,
-										`cantidad_detalle_ventas`,
-										`precio_detalle_ventas`,
-										`descuento_detalle_ventas`)
-							VALUES ('$codigoVentanew',
-									'$detalleProducto->codigoProductos',
-									'$detalleProducto->cantidad',
-									'$detalleProducto->precioRealVenta',
-									'$detalleProducto->pventaProductos');";
+			foreach ($detalleCobro as $detalleProducto){
+				$sql_detalle="INSERT INTO `coronelsystem`.`detallecobro`
+								(`codigoFacturas`,
+								`id_cuenta_cobrar`,
+								`tipocuenta`,
+								`idrazonsocial`,
+								`numerocuota`,
+								`montoCobrar`)
+								VALUES ('$codigoVentanew',
+									'$detalleProducto->id_cuenta_cobrar',
+									'$detalleProducto->tipocuenta',
+									'$detalleProducto->idrazonsocial',
+									'$detalleProducto->numerocuota',
+									'$detalleProducto->montoCobrar');";
 				ejecutarConsulta($sql_detalle);
-				$totalVenta+=($detalleProducto->cantidad*$detalleProducto->pventaProductos);
+				$totalVenta+=$detalleProducto->montoCobrar;
 				echo $sql_detalle."\n\nDetalle de la venta:";
 				var_dump($detalleProducto);
 				echo "\n\n";
-				$stockSobrante=(int)$detalleProducto->stock-(int)$detalleProducto->cantidad;
-				echo "\n Stock Disponible: $stockSobrante \n";
 
-				//Actualizamos Stock de producto;
-				$sql_actualizar_stock="UPDATE `productos`
+				///////////////////////////////
+				////ACTUALIZAMOS ESTADOS DEL COBRO O SEA COLOCAMOS COMO GRABADO
+				/////////////////////////////
+				if ($detalleProducto->numerocuota==0) {
+					$verificarSql='select * from cuentas_cobrar where id_cuenta_cobrar='.$detalleProducto->id_cuenta_cobrar;
+					$detalleCobro=ejecutarConsultaSimpleFilaObject($verificarSql);
+					echo "detalle cobro";
+					var_dump($detalleCobro);
+					echo "\n";echo "\n";
+					if($detalleCobro->montoCobrar==$detalleProducto->montoCobrar){
+						$sqlActualizarCobro="UPDATE `cuentas_cobrar`
+						SET 
+						`estado` = 'COBRADO'
+						WHERE `id_cuenta_cobrar` = '.$detalleProducto->id_cuenta_cobrar.';";
+						echo $sqlActualizarCobro;
+						ejecutarConsulta($sqlActualizarCobro);
+					}else{
+						$faltante=$detalleCobro->montoCobrar-$detalleProducto->montoCobrar;
+						$sqlActualizarCobro="UPDATE `cuentas_cobrar`
+						SET 
+						montoCobrar=$faltante
+						WHERE `id_cuenta_cobrar` = '$detalleProducto->id_cuenta_cobrar';";
+						echo $sqlActualizarCobro;
+						ejecutarConsulta($sqlActualizarCobro);
+					}
+					
+				}else{
+					$sqlActualizarCobro="UPDATE `cuentas_cobrar`
 					SET 
-					`stockProductos` = '$stockSobrante'
-					WHERE `codigoProductos` = '$detalleProducto->codigoProductos';";
-				ejecutarConsulta($sql_actualizar_stock);					
-				echo $sql_actualizar_stock."\n\n";
+					`estado` = 'COBRADO'
+					WHERE `id_cuenta_cobrar` = '$detalleProducto->id_cuenta_cobrar';";
+					echo $sqlActualizarCobro;
+					ejecutarConsulta($sqlActualizarCobro);
+				}
+				
 			}
-			$dia=date('d');
+			/*$dia=date('d');
 			$mes=date('m');
 			$anho=date('Y');
 			$dia=$dia-1;
@@ -90,62 +197,11 @@ Class Ventas
 				echo $sql_cuenta."\n";
 				//en una venta al contado el numero de cuotas es 0
 				ejecutarConsulta($sql_cuenta);
-			}else{
-				echo "la venta es credito \n\n\n\n";
-				echo "entraga inicial: $montoEntregaInicial \n";
-				echo "Cuota: $cuota \n";
-				echo "Total Venta: $totalVenta \n";
-				$recargos=(float)(($totalVenta-$montoEntregaInicial)*$porcentajeCuota);
-				echo "Total recargos: $recargos \n";
-				$totalCuota=(float)(($totalVenta-$montoEntregaInicial+$recargos)/$cuota);
-				echo "Total Cuota con recargos: $totalCuota \n";
-				$totalCuota=round((String)$totalCuota, 2);
-				echo "Cuota Redondeado: $totalCuota \n";
-				$totalVenta=($totalCuota*$cuota)+$montoEntregaInicial;
-				echo "Total de Venta con cuota: $totalVenta \n";
-				if ($montoEntregaInicial>0) {//primero registramo la entrega inicial se registra como cuota 0 si es que se realizara una entrega inicial
-					$sql_cuenta="INSERT INTO `trentina1875`.`cuentas_cobrar`
-								(`codigoVentas`,
-								`numerocuota_Cuentas_Cobrar`,
-								`totalcuota_Cuentas_Cobrar`,
-								`monto_Cuentas_Cobrar`,
-											`fechaCobro`,
-								`estado_Cuentas_Cobrar`)
-					VALUES ('$codigoVentanew', '0', '$totalVenta', '$montoEntregaInicial', '$hoy', '1');";
-					echo $sql_cuenta;
-					ejecutarConsulta($sql_cuenta);
-				}
-				//seguido generamos las cuotas
-				for ($nroCuota=1; $nroCuota <= $cuota; $nroCuota++) {
-					echo "CUOTA NRO $nroCuota \n";
-					if ($mes==13) {
-						$mes=1;
-						$anho++;
-					}
-					$fecha="$anho-$mes-15"; //generamos fecha de pago
-					$sql_cuenta="INSERT INTO `cuentas_cobrar`
-								(`codigoVentas`,
-								`numerocuota_Cuentas_Cobrar`,
-								`totalcuota_Cuentas_Cobrar`,
-								`monto_Cuentas_Cobrar`,
-								`fechaCobro`,
-								`estado_Cuentas_Cobrar`)
-					VALUES ('$codigoVentanew',
-							'$nroCuota',
-							'$totalVenta',
-							'$totalCuota',
-							'$fecha',
-							'1');";
-					echo $sql_cuenta."\n";
-					ejecutarConsulta($sql_cuenta);
-					$mes++;
-				}
-				$totalVenta=($totalCuota*$nroCuota)+$montoEntregaInicial;
 			}
 			$sql="UPDATE `ventas` SET `montoVenta` = '$totalVenta' WHERE `codigoVentas` = '$codigoVentanew';";
 			echo $sql."\n";
 			ejecutarConsulta($sql);
-			//return $sw;
+			//return $sw;*/
 		}
 	///// LISTAR RAZON SOCIAL O CLIENTES PARA VENTA
 	public function listarClientes(){

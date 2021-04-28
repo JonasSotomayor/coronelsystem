@@ -37,6 +37,7 @@ function limpiar() {
     $('#detallesesioncomision').hide();
     cargarUltimoNroSocio();
 }
+
 //Función mostrar formulario
 function mostrarform(flag) {
     limpiar();
