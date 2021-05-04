@@ -511,7 +511,7 @@ if (strlen(session_id()) < 1)
                         </a>
                     </li>
                     <li>
-                        <a href="FACTURAS.php">
+                        <a href="facturas.php">
                             <i class="fa fa-money-check">
                             </i> FACTURAS
                         </a>

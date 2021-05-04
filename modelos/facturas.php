@@ -2,7 +2,7 @@
 //Incluímos inicialmente la conexión a la base de datos
 require "../config/conexion.php"; //incluimos el archivo con un require para abrir la conexion
 
-Class CuentaCobrar
+Class Facturas
 {
 	//Implementamos nuestro constructor
 	public function __construct()
@@ -11,7 +11,6 @@ Class CuentaCobrar
     }
 	public function insertar($codigo_Cuentas_Cobrar,$timbrado,$detallePagos,$codigoApertura)
     {
-      $codigoUsuario=$_SESSION['idusuario'];
         $montototal=0;
         foreach ($detallePagos as $detallePago){
             $montototal+=$detallePago->monto;
@@ -56,62 +55,23 @@ Class CuentaCobrar
         ///////////////////////////////
         ////CARGAMOS LOS DETALLES DE LA FACTURA
         /////////////////////////////
-        if ($tipoComprobante=='RECIBO') {
-          $sql="SELECT * FROM timbrado where tipoTimbrado='RECIBO' AND estadoTimbrado=1";
-          $timbrado=ejecutarConsultaSimpleFilaObject($sql);	
-          echo "\n";echo "\n";
-          $nroFactura=$timbrado->nroactualTimbrado;
-          $tipoFactura='RECIBO';
-        }else{
-          $sql="SELECT * FROM timbrado where tipoTimbrado='FACTURA' AND estadoTimbrado=1";
-          $timbrado=ejecutarConsultaSimpleFilaObject($sql);	
-          echo "\n";echo "\n";
-          $nroFactura=$timbrado->nroactualTimbrado;
-          $tipoFactura='FACTURA';
-        }
         var_dump($timbrado); 
-        $sqlcuentacobrar="SELECT Cuentas_Cobrar.* ,razonsocial, ci FROM Cuentas_Cobrar, razonsocial WHERE cuentas_cobrar.idrazonsocial=razonsocial.idrazonsocial and id_cuenta_cobrar=$codigo_Cuentas_Cobrar";
-        $cuentaCobrarDatos=ejecutarConsultaSimpleFilaObject($sqlcuentacobrar);	
         $nroFactura=$timbrado->nroactualTimbrado;
-        $sqlFactura="INSERT INTO `coronelsystem`.`facturas`
-          (`codigoFacturas`,
-          `nroFacturas`,
-          `tipoFactura`,
-          `codigoTimbrado`,
-          `codigoUsuario`,
-          `idrazonsocial`,
-          `razonsocial`,
-          `ci`,
-          `estadoFacturas`)
+        $sqlFactura="INSERT INTO `facturas` (
+            `nroFacturas`,
+            `codigoTimbrado`,
+            `id_cuenta_cobrar`,
+            `estadoFacturas`
+          )
           VALUES
             (
-              0,
-              $nroFactura,
-              '$tipoFactura',
-              $timbrado->codigoTimbrado,
-              $codigoUsuario,
-              $cuentaCobrarDatos->idrazonsocial,
-              '$cuentaCobrarDatos->razonsocial',
-              '$cuentaCobrarDatos->ci',
-						'COBRADO'
+              '$nroFactura',
+              '".$timbrado->codigoTimbrado."',
+              '".$codigo_Cuentas_Cobrar."',
+              '1'
             );";
         //echo $sqlFactura;
-        $codigoVentanew=ejecutarConsulta_retornarID($sqlFactura);
-
-        $sql_detalle="INSERT INTO `coronelsystem`.`detallecobro`
-        (`codigoFacturas`,
-        `id_cuenta_cobrar`,
-        `tipocuenta`,
-        `idrazonsocial`,
-        `numerocuota`,
-        `montoCobrar`)
-        VALUES ('$codigoVentanew',
-          '$codigo_Cuentas_Cobrar',
-          '$cuentaCobrarDatos->tipocuenta',
-          '$cuentaCobrarDatos->idrazonsocial',
-          '$cuentaCobrarDatos->numerocuota',
-          '$cuentaCobrarDatos->montoCobrar');";
-        ejecutarConsulta($sql_detalle);
+        ejecutarConsulta($sqlFactura);
         ///////////////////////////////
         ////ACTUALIZAMOS EL NUMERO ACTUAL DE FACTURA
         /////////////////////////////
@@ -141,20 +101,12 @@ Class CuentaCobrar
         ejecutarConsulta($sqlActualizarCobro);
     }
 
-  public function mostrar($codigo_Cuentas_Cobrar)
+  public function mostrar($codigoFacturas)
     { 
           ///////////////////////////////
         ////OBTENEMOS CABECERA DE VENTA
         /////////////////////////////
-      $sqlVenta="SELECT
-        `nombresPersona`,`apellidosPersona`,ciPersona,
-        `codigo_CondicionTransaccion`,
-        `fechaVentas`,
-        `montoVenta`
-      FROM ventas, persona, cuentas_cobrar
-      WHERE ventas.`codigoPersona`=persona.`codigoPersona`
-      AND cuentas_cobrar.`codigoVentas`=ventas.`codigoVentas`
-      AND cuentas_cobrar.`codigo_Cuentas_Cobrar`=$codigo_Cuentas_Cobrar";
+      $sqlVenta="SELECT * FROM facturas   WHERE codigoFacturas=$codigoFacturas";
       $venta=ejecutarConsultaSimpleFila($sqlVenta);
 
       //var_dump($venta);
@@ -162,79 +114,45 @@ Class CuentaCobrar
         ////detalle venta
         /////////////////////////////
         $sqlDetalleVentas="SELECT
-        detalle_ventas.`codigoVentas`,
-            productos.`nombreProductos`,
-            `cantidad_detalle_ventas`,
-            `precio_detalle_ventas`,
-            `descuento_detalle_ventas`
-        FROM detalle_ventas, productos, cuentas_cobrar
-        WHERE detalle_ventas.`codigoProductos`=productos.`codigoProductos`
-        AND cuentas_cobrar.`codigoVentas`=detalle_ventas.`codigoVentas`
-        AND cuentas_cobrar.`codigo_Cuentas_Cobrar`=$codigo_Cuentas_Cobrar";
+        detallecobro.* , razonsocial, ci
+        FROM detallecobro, razonsocial
+        WHERE
+        detallecobro.idrazonsocial=razonsocial.idrazonsocial
+        AND codigoFacturas=$codigoFacturas";
         $detalleVenta=ejecutarConsulta($sqlDetalleVentas);
         //echo "\n";
         $detalleVentaArray= array();
         $cantidadVenta=0;
         $codigoVenta=0;
+        $totalVenta=0;
         while($detalle=$detalleVenta->fetch_object()){
-            $codigoVenta=$detalle->codigoVentas;
             $detalleVentaArray[$cantidadVenta]=$detalle;
+            $totalVenta+=$detalle->montoCobrar;
             $cantidadVenta++;
             //var_dump($detalle);
             //echo "\n";
         }
 
-        $ventaObjeto= new Class{};
-        $ventaObjeto->razonSocial=strtoupper($venta["nombresPersona"].' '.$venta["apellidosPersona"]);
-        $ventaObjeto->ci=$venta["ciPersona"];
-        $ventaObjeto->fecha=$venta["fechaVentas"];
-        $ventaObjeto->monto=$venta["montoVenta"];
-        $ventaObjeto->tipoVenta=$venta["codigo_CondicionTransaccion"];
-        $ventaObjeto->detalle= $detalleVentaArray;
+        $facturaObjeto= new stdClass();
+        $facturaObjeto->razonSocial=strtoupper($venta["razonsocial"]);
+        $facturaObjeto->ci=$venta["ci"];
+        $facturaObjeto->fecha=$venta["fechaFacturas"];
+        $facturaObjeto->direcion='';
+        $facturaObjeto->monto=$totalVenta;
+        $facturaObjeto->codigoTimbrado=$venta["codigoTimbrado"];
+        $facturaObjeto->estadoFacturas=$venta["estadoFacturas"];
+        $facturaObjeto->nroFacturas=$venta["nroFacturas"];
+        $facturaObjeto->tipoFactura=$venta["tipoFactura"];
+        $facturaObjeto->detalle= $detalleVentaArray;
 
-        if($ventaObjeto->tipoVenta==2){
-            $numeroCuota=0;
-            $entregaInicial=0;
-            $totalCuota=0;
-          $sqlCuentaCobrar=" SELECT
-          `codigo_Cuentas_Cobrar`,
-          `codigoVentas`,
-          `numerocuota_Cuentas_Cobrar`,
-          `totalcuota_Cuentas_Cobrar`,
-          `monto_Cuentas_Cobrar`,
-          `fechaCobro`,
-          `estado_Cuentas_Cobrar`
-          FROM cuentas_cobrar WHERE codigoVentas=$codigoVenta";
-          $cuentacobrarResp=ejecutarConsulta($sqlCuentaCobrar);
-          while($cuentaCobrar=$cuentacobrarResp->fetch_object()){
-                if($cuentaCobrar->numerocuota_Cuentas_Cobrar==0){
-                    $entregaInicial=$cuentaCobrar->monto_Cuentas_Cobrar;
-                }else{
-                    $numeroCuota++;
-                    $totalCuota=$cuentaCobrar->monto_Cuentas_Cobrar;
-                }
-            }
-            $ventaObjeto->numeroCuota=$numeroCuota;
-            $ventaObjeto->totalCuota=$totalCuota;
-            $ventaObjeto->entregaInicial= $entregaInicial;
-        }
-        //var_dump($ventaObjeto);
-        return $ventaObjeto;
+        return $facturaObjeto;
     }
 
 	public function listar(){ 
       $sql="SELECT
-          id_cuenta_cobrar,
-          tipocuenta, 
-          razonsocial.idrazonsocial, razonsocial.razonsocial, razonsocial.ci,
-          numerocuota,
-          totalcuota,
-          montoCobrar,
-          fechaCobro,
-          cuentas_cobrar.estado
-      FROM cuentas_cobrar, razonsocial
-      WHERE cuentas_cobrar.`idrazonsocial`=razonsocial.`idrazonsocial`
-      ORDER BY fechaCobro ASC;";
+      *
+  FROM facturas
+  ORDER BY fechaFacturas ASC;";
       return ejecutarConsulta($sql);
     }
 
@@ -316,16 +234,16 @@ Class CuentaCobrar
             //echo "\n";
         }
 
-        $ventaObjeto= new Class{};
-        $ventaObjeto->razonSocial=strtoupper($venta["nombresPersona"].' '.$venta["apellidosPersona"]);
-        $ventaObjeto->ci=$venta["ciPersona"];
-        $ventaObjeto->fecha=$venta["fechaVentas"];
-        $ventaObjeto->direcion=$venta["direccionPersona"];
-        $ventaObjeto->monto=$venta["montoVenta"];
-        $ventaObjeto->tipoVenta=$venta["codigo_CondicionTransaccion"];
-        $ventaObjeto->detalle= $detalleVentaArray;
+        $facturaObjeto= new Class{};
+        $facturaObjeto->razonSocial=strtoupper($venta["nombresPersona"].' '.$venta["apellidosPersona"]);
+        $facturaObjeto->ci=$venta["ciPersona"];
+        $facturaObjeto->fecha=$venta["fechaVentas"];
+        $facturaObjeto->direcion=$venta["direccionPersona"];
+        $facturaObjeto->monto=$venta["montoVenta"];
+        $facturaObjeto->tipoVenta=$venta["codigo_CondicionTransaccion"];
+        $facturaObjeto->detalle= $detalleVentaArray;
 
-        if($ventaObjeto->tipoVenta==2){
+        if($facturaObjeto->tipoVenta==2){
             $numeroCuota=0;
             $entregaInicial=0;
             $totalCuota=0;
@@ -347,12 +265,12 @@ Class CuentaCobrar
                     $totalCuota=$cuentaCobrar->monto_Cuentas_Cobrar;
                 }
             }
-            $ventaObjeto->numeroCuota=$numeroCuota;
-            $ventaObjeto->totalCuota=$totalCuota;
-            $ventaObjeto->entregaInicial= $entregaInicial;
+            $facturaObjeto->numeroCuota=$numeroCuota;
+            $facturaObjeto->totalCuota=$totalCuota;
+            $facturaObjeto->entregaInicial= $entregaInicial;
         }
-        //var_dump($ventaObjeto);
-        return $ventaObjeto;
+        //var_dump($facturaObjeto);
+        return $facturaObjeto;
     }
 
 

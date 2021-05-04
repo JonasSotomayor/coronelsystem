@@ -174,34 +174,7 @@ Class Ventas
 				}
 				
 			}
-			/*$dia=date('d');
-			$mes=date('m');
-			$anho=date('Y');
-			$dia=$dia-1;
-			$hoy ="$anho-$mes-$dia";
-			if ($selectTipoVenta==1) {//venta al contado
-				echo "la venta es contado \n";
-				$sql_cuenta="INSERT INTO `trentina1875`.`cuentas_cobrar`
-							(`codigoVentas`,
-							`numerocuota_Cuentas_Cobrar`,
-							`totalcuota_Cuentas_Cobrar`,
-							`monto_Cuentas_Cobrar`,
-										`fechaCobro`,
-							`estado_Cuentas_Cobrar`)
-				VALUES ('$codigoVentanew',
-						'0',
-						'$totalVenta',
-						'$totalVenta',
-								'$hoy',
-						'1');";
-				echo $sql_cuenta."\n";
-				//en una venta al contado el numero de cuotas es 0
-				ejecutarConsulta($sql_cuenta);
-			}
-			$sql="UPDATE `ventas` SET `montoVenta` = '$totalVenta' WHERE `codigoVentas` = '$codigoVentanew';";
-			echo $sql."\n";
-			ejecutarConsulta($sql);
-			//return $sw;*/
+			
 		}
 	///// LISTAR RAZON SOCIAL O CLIENTES PARA VENTA
 	public function listarClientes(){
