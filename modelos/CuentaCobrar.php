@@ -9,7 +9,7 @@ Class CuentaCobrar
     {
     // Dejo el constructor vacio para poder crear instancias a esta clase sin enviar ningun parametro
     }
-	public function insertar($codigo_Cuentas_Cobrar,$timbrado,$detallePagos,$codigoApertura)
+	public function insertar($codigo_Cuentas_Cobrar,$timbrado,$detallePagos,$codigoApertura,$tipoFactura)
     {
       $codigoUsuario=$_SESSION['idusuario'];
         $montototal=0;
@@ -28,10 +28,10 @@ Class CuentaCobrar
               '$montototal'
             );
           ";
-        echo "$sql \n";
+        //echo "$sql \n";
         $codigoMovimiento=ejecutarConsulta_retornarID($sql);// OBTENEES EL ID DEL MOVIMIENTO
-        var_dump($detallePago);
-		echo "\n";
+        //var_dump($detallePago);
+		//echo "\n";
         ///////////////////////////////
         ////CARGAMOS LOS DETALLES DEL MOVIMIENTO
         /////////////////////////////
@@ -50,26 +50,26 @@ Class CuentaCobrar
                   '$detallePago->nroDocumento'
                 );
               ";
-              echo "$sqlDetalleMovimiento \n";
+              //echo "$sqlDetalleMovimiento \n";
               ejecutarConsulta($sqlDetalleMovimiento);
         }
         ///////////////////////////////
         ////CARGAMOS LOS DETALLES DE LA FACTURA
         /////////////////////////////
-        if ($tipoComprobante=='RECIBO') {
+        if ($tipoFactura=='RECIBO') {
           $sql="SELECT * FROM timbrado where tipoTimbrado='RECIBO' AND estadoTimbrado=1";
           $timbrado=ejecutarConsultaSimpleFilaObject($sql);	
-          echo "\n";echo "\n";
+         // echo "\n";echo "\n";
           $nroFactura=$timbrado->nroactualTimbrado;
           $tipoFactura='RECIBO';
         }else{
           $sql="SELECT * FROM timbrado where tipoTimbrado='FACTURA' AND estadoTimbrado=1";
           $timbrado=ejecutarConsultaSimpleFilaObject($sql);	
-          echo "\n";echo "\n";
+          //echo "\n";echo "\n";
           $nroFactura=$timbrado->nroactualTimbrado;
           $tipoFactura='FACTURA';
         }
-        var_dump($timbrado); 
+        //var_dump($timbrado); 
         $sqlcuentacobrar="SELECT Cuentas_Cobrar.* ,razonsocial, ci FROM Cuentas_Cobrar, razonsocial WHERE cuentas_cobrar.idrazonsocial=razonsocial.idrazonsocial and id_cuenta_cobrar=$codigo_Cuentas_Cobrar";
         $cuentaCobrarDatos=ejecutarConsultaSimpleFilaObject($sqlcuentacobrar);	
         $nroFactura=$timbrado->nroactualTimbrado;
@@ -112,6 +112,7 @@ Class CuentaCobrar
           '$cuentaCobrarDatos->numerocuota',
           '$cuentaCobrarDatos->montoCobrar');";
         ejecutarConsulta($sql_detalle);
+        //echo "codigo de venta es $codigoVentanew";
         ///////////////////////////////
         ////ACTUALIZAMOS EL NUMERO ACTUAL DE FACTURA
         /////////////////////////////
@@ -128,7 +129,7 @@ Class CuentaCobrar
             `nroactualTimbrado` = '$nroFactura',
             `estadoTimbrado` = '$estadoTimbrado'
         WHERE `codigoTimbrado` = '".$timbrado->codigoTimbrado."';";
-        echo $sqlAumentarTimbrado;
+        //echo $sqlAumentarTimbrado;
         ejecutarConsulta($sqlAumentarTimbrado);
         ///////////////////////////////
         ////ACTUALIZAMOS ESTADOS DEL COBRO O SEA COLOCAMOS COMO GRABADO
@@ -137,8 +138,9 @@ Class CuentaCobrar
         SET 
           `estado` = 'COBRADO'
         WHERE `id_cuenta_cobrar` = '$codigo_Cuentas_Cobrar';";
-        echo $sqlAumentarTimbrado;
+        //echo $sqlAumentarTimbrado;
         ejecutarConsulta($sqlActualizarCobro);
+        return $codigoVentanew;
     }
 
   public function mostrar($codigo_Cuentas_Cobrar)

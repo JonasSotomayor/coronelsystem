@@ -33,18 +33,18 @@ switch ($_GET["op"]){
 				if ($_FILES['imagenCII']['type'] == "image/jpg" || $_FILES['imagenCII']['type'] == "image/jpeg" || $_FILES['imagenCII']['type'] == "image/png")
 				{
 					$solicitudInmueble->imagenCII = round(microtime(true)) . '.' . end($ext);
-					move_uploaded_file($_FILES["imagenCII"]["tmp_name"], "../files/ciSocios/" . $imagenCII);
+					move_uploaded_file($_FILES["imagenCII"]["tmp_name"], "../files/ciArrendadores/". $solicitudInmueble->imagenCII);
 				}
 			}
 
-			if(empty($imagenCII)){
+			if(empty($solicitudInmueble->imagenCII)){
 				$solicitudInmueble->imagenCII="idcard.png";
 			}
 			//nombresolicitudsocio $cinsolicitudsocio  $equiposolicitudsocio $fechaNacimiento $ciudadsolicitudsocio  $telefonosolicitudsocio  $emailsolicitudsocio   $direccionsolicitudsocio   $emailsolicitudsocio $cargosolicitudsocio  $codigoSucursal_solicitudsocio
-			$rspta=$ConfirmarAlquiler->confirmar( $solicitudInmueble);
-			//echo $rspta ? "la solicitud socio se ha Registrado con Exito" : "1";
+			$rspta=$ConfirmarAlquiler->confirmar($solicitudInmueble);
+			echo $rspta ? "la solicitud socio se ha Registrado con Exito" : "1";
 
-			echo $rspta;
+			//echo $rspta;
 	break;
 
 	case 'desactivar':

@@ -105,7 +105,7 @@ $header = array("Cant.", "Descripcion","Precio.","Total");
 $products = array();
 $detalle='';
 foreach ($factura->detalle as $detalleVenta) {
-    if ($detalleVenta->tipocuenta='socio') {
+    if ($detalleVenta->tipocuenta=='socio') {
         $detalle="PAGO DE CUOTA DE SOCIO NRO $detalleVenta->numerocuota  DE $detalleVenta->razonsocial CON NUMERO CI $detalleVenta->ci ";
     }else{
         $detalle="PAGO DE CUOTA DE ALQUILER NRO $detalleVenta->numerocuota  DE $detalleVenta->razonsocial CON NUMERO CI $detalleVenta->ci ";

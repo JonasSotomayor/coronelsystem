@@ -517,9 +517,9 @@ if (strlen(session_id()) < 1)
                         </a>
                     </li>
                     <li>
-                        <a href="FACTURAS.php">
+                        <a href="ventas.php">
                             <i class="fa fa-credit-card">
-                            </i> RECIBOS
+                            </i> COBRANZA GENERAL
                         </a>
                     </li>
                 </ul>

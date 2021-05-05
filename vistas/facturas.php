@@ -96,6 +96,8 @@
                                     <th width="10%">Nro. Cuota</th>
                                     <th width="10%">Fecha</th>
                                     <th width="20%">Monto</th>
+                                    <th width="20%">TIPO COBRO</th>
+                                    <th width="20%">TIPO COBRO</th>
                                     <th width="20%">estado</th>
                                     <th>Estado</th>
                                 </tr>

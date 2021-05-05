@@ -6,7 +6,7 @@ $id_cuenta_cobrar=isset($_POST["codigo_Cuentas_Cobrar"])? limpiarCadena($_POST["
 $detallePagoJson=isset($_POST["detallePago"])? limpiarCadena($_POST["detallePago"]):"";
 $detallePagoJson=str_replace('\&quot;','"',$detallePagoJson);
 $detallePago=json_decode($detallePagoJson);
-
+$tipoFactura=isset($_POST["tipoComprobante"])? limpiarCadena($_POST["tipoComprobante"]):"";
 $timbradoJson=isset($_POST["timbrado"])? limpiarCadena($_POST["timbrado"]):"";
 $timbradoJson=str_replace('\&quot;','"',$timbradoJson);
 $timbrado=json_decode($timbradoJson);
@@ -16,12 +16,9 @@ $codigoUsuario=$_SESSION['idusuario'];
 $codigoApertura=isset($_SESSION["codigo_Apertura_Cierre"])? limpiarCadena($_SESSION["codigo_Apertura_Cierre"]):"";
 switch ($_GET["op"]){ 
 	case 'guardaryeditar': 
-		echo "el codigo de cuenta a pagar es:$id_cuenta_cobrar \n";
-		
-		var_dump($timbrado);
-		$rspta=$cuentacobrar->insertar($id_cuenta_cobrar,$timbrado,$detallePago,$codigoApertura);
+		$rspta=$cuentacobrar->insertar($id_cuenta_cobrar,$timbrado,$detallePago,$codigoApertura,$tipoFactura);
 		//echo $rspta ? "Pais Actualizada" : "Pais no se pudo Actualizar";
-		$datos=(object) array("estado"=>1, "cuentacobrar"=>$id_cuenta_cobrar);
+		$datos=(object) array("estado"=>1, "factura"=>$rspta);
 		echo json_encode($datos);
 	break;
 
