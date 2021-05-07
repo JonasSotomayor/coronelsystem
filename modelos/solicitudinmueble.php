@@ -94,6 +94,13 @@ Class SolicitudInmueble
 		return ejecutarConsulta($sql);
 	}
 
+	//Implementar un método para listar los registros
+	public function controlFecha($fechaActual,$plazoAlquiler,$idinmueble,$tiempocontrato)
+	{
+		$sql="SELECT * FROM solicitudalquiler WHERE estado='CONFIRMADO' and idinmueble=$idinmueble";
+		return ejecutarConsulta($sql);
+	}
+	
 
 }
 

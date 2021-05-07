@@ -1,9 +1,32 @@
 window.onload =()=>
 {
+    
+
     tipopago=document.getElementById("tipopago")
     tipopago.addEventListener('change', ()=>{
        controlCambioTipoPago()
    });
+  
+   //CAMPO NOMBRE
+   const idinmueble=document.getElementById("idinmueble")
+   idinmueble.addEventListener('change', (e)=>{
+        controlFecha()
+   });
+
+   const plazoContrato=document.getElementById("plazoContrato")
+   plazoContrato.addEventListener('keydown', (e)=>{
+       if(!controlNumeroPuro(e)){
+           alertify.error('Solo admite numeros!');
+           e.preventDefault()
+        }else{
+            controlFecha()
+        }
+       controlBtnGuardar()
+   });
+   plazoContrato.addEventListener('keyup', (e)=>{
+        controlFecha()
+   });
+
    const fechaInicio=document.getElementById("fechaInicio")
    fechaInicio.addEventListener('change', (e)=>{
         let fechaDeaful
@@ -22,20 +45,32 @@ window.onload =()=>
        if ((new Date(fechaActual).getTime() < new Date(fechaDeaful).getTime())) {
             fechaInicio.value=''
             alertify.error('Ingrese una fecha que no sea menor al de hoy!')
+        }else{
+            controlFecha()
         }
         controlBtnGuardar()
         controlFecha()
     });
 
 
-    const plazoContrato=document.getElementById("plazoContrato")
-    plazoContrato.addEventListener('keydown', (e)=>{
-        if(!controlNumeroPuro(e)){
-            alertify.error('Solo admite numeros!');
-            e.preventDefault()
+    const tiempoContrato=document.getElementById("tiempoContrato")
+    tiempoContrato.addEventListener('change', (e)=>{   
+        controlFecha()
+     });
+
+     const controlFecha=()=>{
+        idinmuebl=$("#idinmueble")
+        if (idinmuebl!='') {
+            fechaActual=fechaInicio.value
+            plazoAlquiler=plazoContrato.value
+            tiempocontra=tiempoContrato.value
+            
+            console.log("fecha"+fechaActual+"plazsoalquiler"+plazoAlquiler+"tiempocontrato"+tiempocontra)
+            $.get("../ajax/solicitudinmueble.php?op=controlFecha",{fechaActual:fechaActual,plazoAlquiler:plazoAlquiler,idinmueble:idinmueble.value,tiempocontrato:tiempocontra}, function(data, status) {
+                console.log(data)
+            })
         }
-        controlBtnGuardar()
-    });
+    }
 }
 let tabla;
 let idTipoInmueblee;
@@ -76,6 +111,7 @@ function limpiar() {
     $('#detallesMembrecia').hide();
 
 }
+
 //Función mostrar formulario
 function mostrarform(flag) {
     limpiar();
