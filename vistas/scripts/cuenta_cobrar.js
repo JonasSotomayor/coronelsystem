@@ -157,7 +157,7 @@ function guardaryeditar(e) {
             var datos = jQuery.parseJSON(datos);
             if (datos.estado==1) {
                 swal("Información", "Cobranza realizada", "success");
-                window.open("..//reportes/factura.php?cuentaCobrar="+datos.cuentacobrar,"FACTURA","width=600,height=800,scrollbars=NO")
+                mostrarfactura(datos.factura)
                 tabla.ajax.reload();
                 listar();
 
@@ -383,6 +383,10 @@ function guardarApertura(e) {
 ///////////////////////////////////////////
 ///MONTRAMOS DETALLE DE VENTA
 ///////////////////////////////////////////
+
+function mostrarfactura(codigoFacturas) {
+    window.open("../reportes/factura.php?codigoFacturas="+codigoFacturas,"FACTURA","width=600,height=800,scrollbars=NO")
+}
 function mostrarVenta(codigo_Cuentas_Cobrar) {
     window.open("http://localhost/cerveceria/reportes/factura.php?cuentaCobrar="+codigo_Cuentas_Cobrar,"FACTURA","width=600,height=800,scrollbars=NO")
                 

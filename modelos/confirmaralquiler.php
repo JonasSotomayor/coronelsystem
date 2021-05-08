@@ -14,7 +14,7 @@ Class Confirmaralquiler
 	//Implementamos un método para insertar registros
 	public function confirmar($solicitudInmueble)
 	{
-		
+		$idrazonsocial=$solicitudInmueble->idrazonsocial;
 		$sw=true;
 		$idsocio=0;
 		$fecha=date("Y-m-d");
@@ -46,11 +46,11 @@ Class Confirmaralquiler
 		$solicitudInmueble->costoAlquiler,
 		$solicitudInmueble->plazoContrato,
 		'$solicitudInmueble->tiempoContrato',
-		'$alquilerGestion->imagenCI',
+		'$solicitudInmueble->imagenCII',
 		'ACTIVO');";
-		ECHO $sql;
+		//ECHO $sql;
 		$idsocio=ejecutarConsulta_retornarID($sql);
-		echo "alquiler es= $idsocio \n";
+		//echo "alquiler es= $idsocio \n";
 		$sql3="SELECT nroContrato FROM contratoalquiler ORDER BY nroContrato DESC LIMIT 1";
 		$row=ejecutarConsultaSimpleFila($sql3);
 		$nroContrato=$row['nroContrato']+1;
@@ -73,11 +73,11 @@ Class Confirmaralquiler
 		$solicitudInmueble->idsesioncomision,
 		'ACTIVO');";
 		ejecutarConsulta($sql2);
-		echo $sql2."\n";
+		//echo $sql2."\n";
 		$sql1="UPDATE solicitudalquiler SET estado='CONFIRMADO' WHERE idsolicitudalquiler=$solicitudInmueble->idsolicitudalquiler";
 		ejecutarConsulta($sql1);
 		
-		echo $sql1."\n";
+		//echo $sql1."\n";
 		//var_dump($tiposoci);
 		$dia=date('d');
 		$mes=date('m');
@@ -86,7 +86,7 @@ Class Confirmaralquiler
 		$hoy ="$anho-$mes-$dia";
 		$tipopago=$solicitudInmueble->tipopago;
 		if ($tipopago=='ANUAL') {//venta al contado
-			echo "la venta es contado \n";
+			//echo "la venta es contado \n";
 			$sql_cuenta="INSERT INTO `cuentas_cobrar`
 			(`idrazonsocial`,
 			`tipocuenta`,
@@ -106,7 +106,7 @@ Class Confirmaralquiler
 			'$hoy',
 			'PENDIENTE');
 			";
-			echo $sql_cuenta."\n";
+			//echo $sql_cuenta."\n";
 			//en una venta al contado el numero de cuotas es 0
 			ejecutarConsulta($sql_cuenta);
 		}else{
@@ -119,7 +119,7 @@ Class Confirmaralquiler
 				$totalCuota=$tiposoci->costosemestral;
 				$totalVenta=$solicitudInmueble->costoAlquiler*$cuota;
 			}
-			echo "la venta es credito \n\n\n\n";
+			//echo "la venta es credito \n\n\n\n";
 			
 			//echo "Cuota: $cuota \n";
 			//echo "Total Venta: $totalVenta \n";
@@ -152,7 +152,7 @@ Class Confirmaralquiler
 				'$fecha',
 				'PENDIENTE');
 				";
-				echo $sql_cuenta."\n";
+				//echo $sql_cuenta."\n";
 				ejecutarConsulta($sql_cuenta);
 				if ($tipopago=='MENSUAL') {
 					$mes++;
@@ -161,7 +161,6 @@ Class Confirmaralquiler
 				}
 			}	
 		}
-		$sw=false;
 		return $sw;
 	}
 

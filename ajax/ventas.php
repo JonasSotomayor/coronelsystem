@@ -25,7 +25,6 @@ switch ($_GET["op"]){
 					$detalleCobro,
 					$detallePago);
 				echo $rspta ? "Receta registrada" : "Receta no se pudo registrar";
-				
 			}
 		break;
 

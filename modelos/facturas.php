@@ -30,7 +30,7 @@ Class Facturas
         echo "$sql \n";
         $codigoMovimiento=ejecutarConsulta_retornarID($sql);// OBTENEES EL ID DEL MOVIMIENTO
         var_dump($detallePago);
-		echo "\n";
+		   echo "\n";
         ///////////////////////////////
         ////CARGAMOS LOS DETALLES DEL MOVIMIENTO
         /////////////////////////////
@@ -106,7 +106,7 @@ Class Facturas
           ///////////////////////////////
         ////OBTENEMOS CABECERA DE VENTA
         /////////////////////////////
-      $sqlVenta="SELECT * FROM facturas   WHERE codigoFacturas=$codigoFacturas";
+      $sqlVenta="SELECT * FROM facturas WHERE codigoFacturas=$codigoFacturas";
       $venta=ejecutarConsultaSimpleFila($sqlVenta);
 
       //var_dump($venta);
