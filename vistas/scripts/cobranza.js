@@ -74,17 +74,19 @@ const guardarCobro=()=>{
         processData: false,
         success: function(datos) {
             console.warn(datos);
-            /*var datos = jQuery.parseJSON(datos);
+            var datos = jQuery.parseJSON(datos);
             if (datos.estado==1) {
                 swal("Información", "Cobranza realizada", "success");
-                window.open("..//reportes/factura.php?cuentaCobrar="+datos.cuentacobrar,"FACTURA","width=600,height=800,scrollbars=NO")
+                mostrarfactura(datos.factura)
+                tabla.ajax.reload();
+                listar();
 
             } else {
                
                 swal("Error", "Se ha Producido un Error", "error");
                 tabla.ajax.reload();
                 listar();
-            }*/
+            }
         }
     });
 }
@@ -284,6 +286,11 @@ const actualizarmontoCobro=(id_cuenta_cobrar)=>{
         actualizarTotalCobro($("#montoCobrar").val());
     }
    
+}
+
+
+function mostrarfactura(codigoFacturas) {
+    window.open("../reportes/factura.php?codigoFacturas="+codigoFacturas,"FACTURA","width=600,height=800,scrollbars=NO")
 }
 
 function actualizarTotalCobro(subtotal){

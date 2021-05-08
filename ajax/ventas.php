@@ -24,7 +24,9 @@ switch ($_GET["op"]){
 					$tipoComprobante,
 					$detalleCobro,
 					$detallePago);
-				echo $rspta ? "Receta registrada" : "Receta no se pudo registrar";
+				//echo $rspta ? "Receta registrada" : "Receta no se pudo registrar";
+				$datos=(object) array("estado"=>1, "factura"=>$rspta);
+				echo json_encode($datos);
 			}
 		break;
 

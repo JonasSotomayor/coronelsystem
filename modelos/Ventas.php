@@ -19,7 +19,56 @@ Class Ventas
 		{
 			$codigoUsuario=$_SESSION['idusuario'];
 
-			
+			$sqlAperturaCaja="SELECT * FROM aperturas_cierres where idusuario=$codigoUsuario AND estadoApertura='ACTIVO'";	
+			$aperturaCajaYcierre=ejecutarConsultaSimpleFilaObject($sqlAperturaCaja);	
+			//var_dump($aperturaCajaYcierre);
+			$montototal=0;
+			foreach ($detallePagos as $detallePago){
+				$montototal+=$detallePago->monto;
+			}
+			$sql="INSERT INTO `movimiento_caja` (
+				`codigo_Movimiento_Caja`,
+				`codigo_Apertura_Cierre`,
+				`codigo_Cuentas_Cobrar`,
+				`montoMovimiento`
+			)
+			VALUES
+				(0,
+				$aperturaCajaYcierre->codigo_Apertura_Cierre,
+				0,
+				$montototal
+				);
+			";
+			//echo "\n $sql \n";
+			$codigoMovimiento=ejecutarConsulta_retornarID($sql);// OBTENEES EL ID DEL MOVIMIENTO
+			//var_dump($detallePago);
+			//echo "\n";
+			///////////////////////////////
+			////CARGAMOS LOS DETALLES DEL MOVIMIENTO
+			/////////////////////////////
+			foreach ($detallePagos as $detallePago){
+				$sqlDetalleMovimiento="INSERT INTO `detalle_movimiento_caja` (
+					`codigo_Movimiento_Caja`,
+					`codigo_Tipo_Cobro`,
+					`monto_detalle_Movimiento_Caja`,
+					`nro_documento_cobro`
+				)
+				VALUES
+					(
+					$codigoMovimiento,
+					$detallePago->tipoPago,
+					$detallePago->monto,
+					'$detallePago->nroDocumento'
+					);
+				";
+				//echo "$sqlDetalleMovimiento \n";
+				ejecutarConsulta($sqlDetalleMovimiento);
+			}
+			///////////////////////////////
+			///////////////////////////////
+			///////////////////////////////
+			////REGISTRAMOS FACTURA Y RECIBOS
+			/////////////////////////////
 			if ($tipoComprobante=='RECIBO') {
 				$sql="SELECT * FROM timbrado where tipoTimbrado='RECIBO' AND estadoTimbrado=1";
 				$timbrado=ejecutarConsultaSimpleFilaObject($sql);	
@@ -176,52 +225,7 @@ Class Ventas
 				}
 				
 			}
-
-
-			$montototal=0;
-			foreach ($detallePagos as $detallePago){
-				$montototal+=$detallePago->monto;
-			}
-			
-			$sql="INSERT INTO `movimiento_caja` (
-				`codigo_Apertura_Cierre`,
-				`codigo_Cuentas_Cobrar`,
-				`montoMovimiento`
-			)
-			VALUES
-				(
-				'$codigoApertura',
-				'$codigo_Cuentas_Cobrar',
-				'$montototal'
-				);
-			";
-			//echo "$sql \n";
-			$codigoMovimiento=ejecutarConsulta_retornarID($sql);// OBTENEES EL ID DEL MOVIMIENTO
-			//var_dump($detallePago);
-			//echo "\n";
-			///////////////////////////////
-			////CARGAMOS LOS DETALLES DEL MOVIMIENTO
-			/////////////////////////////
-			foreach ($detallePagos as $detallePago){
-				$sqlDetalleMovimiento="INSERT INTO `detalle_movimiento_caja` (
-					`codigo_Movimiento_Caja`,
-					`codigo_Tipo_Cobro`,
-					`monto_detalle_Movimiento_Caja`,
-					`nro_documento_cobro`
-				)
-				VALUES
-					(
-					'$codigoMovimiento',
-					'$detallePago->tipoPago',
-					'$detallePago->monto',
-					'$detallePago->nroDocumento'
-					);
-				";
-				//echo "$sqlDetalleMovimiento \n";
-				ejecutarConsulta($sqlDetalleMovimiento);
-			}
-
-
+			return $codigoVentanew;
 			
 		}
 	///// LISTAR RAZON SOCIAL O CLIENTES PARA VENTA
