@@ -41,27 +41,31 @@ switch ($_GET["op"]){
 		$tiempocontrato=$_GET['tiempocontrato'];
 
 		$date = new DateTime($fechaActual);
-		echo $date->format('Y-m-d');
+		//echo $date->format('Y-m-d');
 
-		echo "fecha actual= $fechaActual plazo=$plazoAlquiler inmueble= $idinmueble tiempo=$tiempocontrato";
+		//echo "fecha actual= $fechaActual plazo=$plazoAlquiler inmueble= $idinmueble tiempo=$tiempocontrato";
 		$fecha_entrada = strtotime($date->format('Y-m-d'));
 		
 		$solicitudesdeInmueble=$SolicitudInmueble->controlFecha($fechaActual,$plazoAlquiler,$idinmueble,$tiempocontrato);
+		$CONTROLFECHA=0;
 		while ($reg=$solicitudesdeInmueble->fetch_object()){
-			var_dump($reg);
+			//var_dump($reg);
 			$date = new DateTime($reg->fechainicio);
-			echo $date->format('Y-m-d');
+			//echo $date->format('Y-m-d');
 			$fecha_actual = strtotime($date->format('Y-m-d'));
-			echo "fecha actual= $fecha_entrada fecha comparacion=".$fecha_actual;
+			//echo "fecha actual= $fecha_entrada fecha comparacion=".$fecha_actual;
 			
-			if($fecha_actual > $fecha_entrada){
-				echo "MAYOR";
-			 } elseif($fecha_actual == $fecha_entrada) {
-				echo "IGUALES";
-			 }else{ 
-				echo "MENOR";
-			 }
+			if($fecha_actual == $fecha_entrada){
+				$CONTROLFECHA=1;
+			 } 
 		}
+
+		if ($CONTROLFECHA) {
+			echo "AGENDADO";
+		} else {
+			echo "LIBRE";
+		}
+		
  		//echo $rspta;
 	break;
 

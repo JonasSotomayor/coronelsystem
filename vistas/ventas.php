@@ -181,8 +181,8 @@
                                         <div class="form-group col-md-3">
                                             <label>TIPO COMPROBANTE</label>
                                             <select class="form-control show-tick required" data-style="btn-Light" name="tipoComprobante" id="selectTipoPago" width: 'auto' data-size="6" required>
-                                                <option value="RECIBO">RECIBO</option>
                                                 <option value="FACTURA">FACTURA</option>
+                                                <option value="RECIBO">RECIBO</option>
                                             </select>
                                         </div>
                                         <!--agregar-->

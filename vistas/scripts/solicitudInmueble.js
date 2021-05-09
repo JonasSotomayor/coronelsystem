@@ -68,6 +68,10 @@ window.onload =()=>
             console.log("fecha"+fechaActual+"plazsoalquiler"+plazoAlquiler+"tiempocontrato"+tiempocontra)
             $.get("../ajax/solicitudinmueble.php?op=controlFecha",{fechaActual:fechaActual,plazoAlquiler:plazoAlquiler,idinmueble:idinmueble.value,tiempocontrato:tiempocontra}, function(data, status) {
                 console.log(data)
+                if (data=='AGENDADO') {
+                    fechaInicio.value=''
+                    swal("Error", "FECHA YA REGISTRADA", "error");
+                }
             })
         }
     }
@@ -153,15 +157,7 @@ const controlCambioTipoPago=()=>{
         $("#costoAlquiler").val(costosemestral);
     }
 }
-const controlFecha=()=>{
-    idinmueble=$("#idinmueble").val()
-    if(fechaInicio.value!='' && idinmueble!=''){
-        $.post("../ajax/solicitudInmueble.php?op=controlfecha", { fechaInicio: fechaInicio.value, idinmueble:idinmueble }, function(data, status) {
-            console.log(data)
-        })
-    }
-    
-}
+
 function listar() {
  /* $.post("../ajax/solicitudInmueble.php?op=listar", function(r) {
       console.log(r);

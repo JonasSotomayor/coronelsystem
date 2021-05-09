@@ -78,17 +78,17 @@ const guardarCobro=()=>{
             if (datos.estado==1) {
                 swal("Información", "Cobranza realizada", "success");
                 mostrarfactura(datos.factura)
-                tabla.ajax.reload();
-                listar();
-
-            } else {
+                tablaCuentaCobrar=$('#tablaCuentaCobrar').DataTable();
+                tablaCuentaCobrar.clear().draw();
+                $("#formularioregistros").show()
+                $("#formularioCobro").hide()
                
+            } else {               
                 swal("Error", "Se ha Producido un Error", "error");
-                tabla.ajax.reload();
-                listar();
             }
         }
     });
+    limpiar()
 }
 
 ///////////////////////////////////////////
@@ -265,6 +265,36 @@ $('#tblCuentasCobrar tbody').on( 'click', '.btn.btn-outline-danger', function ()
     .draw();
 });
 
+
+function limpiar() {
+    //$("#totalCobro").val("");
+    $("#formularioregistros").show()
+    $("#formularioCobro").hide()
+    $("#totalCobro").html("<h4><b>0</b></h4>");
+    $("#totalVenta").html("<h4><b>0</b></h4>");
+    $("#imagenactual").val("");
+    $("#selectTipoVenta").val(0)
+    $("#razonsocial").val("");
+    $("#ci").val("");
+    $("#codigoCliente").val("");
+    montoCobrar=0;
+    montoFatante=0;
+    cantidadTipoPago=0;
+    cantidadCobranza=0;
+    tipoCobroContado=false
+    montoCobrar=0
+    montoFatante=0
+    pagosRealizados=new Array()
+    cantidadTipoPago=0;
+    tblCuentasCobrar=$('#tblCuentasCobrar').DataTable();
+    tblCuentasCobrar.clear().draw();
+    tbCobrosTipos=$('#tbCobrosTipos').DataTable();
+    tbCobrosTipos.clear().draw();
+    pagosRealizados= new Array();
+    cobranzas= new Array();
+    listarCuentaCobrar()
+    listarRazonSocial()
+}
 
 const actualizarmontoCobro=(id_cuenta_cobrar)=>{
     

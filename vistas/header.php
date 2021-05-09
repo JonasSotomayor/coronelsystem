@@ -499,7 +499,7 @@ if (strlen(session_id()) < 1)
                         </a>
                     </li>
                 </ul>
-                <a href="#">
+                <a href="#2">
                     <i class="metismenu-icon fa fa-cash-register"></i> COBROS
                     <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
                 </a>
@@ -524,7 +524,13 @@ if (strlen(session_id()) < 1)
                     </li>
                 </ul>
             </li>
-          <li class="app-sidebar__heading">Modulo 5 - En desarrollo</li>
+          <li class="app-sidebar__heading">INFORMES</li>
+            <li  class="">
+                <a href="ingresosmensuales.php">
+                    <i class="metismenu-icon fa fa-user-friends"></i>INGRESOS MENSUALES
+                </a>
+            </li>
+            
           <li class="app-sidebar__heading">Modulo 6 - En desarrollo</li>
           <li class="app-sidebar__heading">Modulo 7 - En desarrollo</li>
 
