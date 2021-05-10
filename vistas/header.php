@@ -530,7 +530,11 @@ if (strlen(session_id()) < 1)
                     <i class="metismenu-icon fa fa-user-friends"></i>INGRESOS MENSUALES
                 </a>
             </li>
-            
+            <li  class="">
+                <a href="deudasensistema.php">
+                    <i class="metismenu-icon fa fa-user-friends"></i>DEUDA EN SISTEMA
+                </a>
+            </li>
           <li class="app-sidebar__heading">Modulo 6 - En desarrollo</li>
           <li class="app-sidebar__heading">Modulo 7 - En desarrollo</li>
 

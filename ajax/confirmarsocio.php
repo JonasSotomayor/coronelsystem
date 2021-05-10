@@ -66,7 +66,7 @@ switch ($_GET["op"]){
  			$data[]=array(
 				"0"=>'<button type="button" data-toggle="tooltip" title="CONFIRMAR SOCIO" data-placement="bottom" class="btn-shadow btn btn-success" onclick="mostrar('.$reg->idsolicitantesocio.')"><i class="fa fa-check"></i></button>'.
 				' <button type="button" class="btn-shadow btn btn-danger" data-toggle="tooltip" title="Cancelar Registro" data-placement="bottom"  onclick="desactivar('.$reg->idsolicitantesocio.')"><i class="fa fa-times-circle"></i></button>'.
-				' <a type="button" class="btn-shadow btn btn-info" data-toggle="modal" data-target="#detalleSolicitudsocio"  onclick="mostrarDetalle('.$reg->idsolicitantesocio.')"><i class="fa fa-eye" ></i></a>',
+				' <a class="btn-shadow btn btn-info"  href="../reportes/reporte_socio.php?idrazonsocial='.$reg->idsolicitantesocio.'" target="_blank" ><i class="fa fa-eye" ></i></a>',
 				"1"=>($reg->razonsocial),
 				 "2"=>($reg->ci),
 				 "3"=>($reg->socio),

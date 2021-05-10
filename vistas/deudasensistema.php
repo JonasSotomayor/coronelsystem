@@ -43,14 +43,15 @@
         <div class="col-lg-12">
             <div class="main-card mb-12 card">
                 <div class="card-body">
-                    <h5 class="card-title">INGRESO TOTAL POR MES</h5>
+                    <h5 class="card-title">DEUDA TOTAL EN SISTEMA POR PERSONA</h5>
                     <div class="table-responsive">
                       <table class="table table-striped" whith="100%" id="tbllistado">
                           <thead>
                               <tr>
-                                <th>AÑO</th>
-                                <th>MES</th>
-                                <th>INGRESO</th>
+                                <th>MONTO DEUDA</th>
+                                <th>TIPO CUENTA</th>
+                                <th>PERSONA</th>
+                                <th>CI</th>
                               </tr>
                           </thead>
                           <tbody>

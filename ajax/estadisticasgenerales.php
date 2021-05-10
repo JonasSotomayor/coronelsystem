@@ -99,12 +99,12 @@ switch ($_GET["op"]){
 		$estado='';
 		$opciones='';
         while ($reg=$rspta->fetch_object()){
-			$fecha = DateTime::createFromFormat('!m',$reg->mes );
-			$mes = strftime("%B", $fecha->getTimestamp());
+			
 			$data[]=array(
-				"0"=>$reg->anho,
-				"1"=>strtoupper($mes),
-				"2"=>number_format($reg->monto)
+				"0"=>number_format($reg->deuda),
+				"1"=>strtoupper($reg->tipocuenta),
+				"2"=>strtoupper($reg->razonsocial),
+				"3"=>strtoupper($reg->ci)
 				);
 			}
 		$results = array(
