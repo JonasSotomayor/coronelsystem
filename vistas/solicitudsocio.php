@@ -31,6 +31,7 @@
             <!----Botton y Opciones---->
             <div class="page-title-actions">
                 <div class="d-inline-block dropdown">
+                    
                     <button type="button" aria-haspopup="true" aria-expanded="false"
                         class="btn-shadow plus btn btn-info" onclick="mostrarform(true)" id="add_bt">
                         <span class="btn-icon-wrapper pr-2 opacity-7">

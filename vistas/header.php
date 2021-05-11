@@ -49,7 +49,7 @@ if (strlen(session_id()) < 1)
     
     <link href="../public/alertifyjs/css/alertify.min.css" rel="stylesheet" type="text/css" />
 
-
+    <link rel="stylesheet" type="text/css" href="../public/plugins/fullcalendar/main.css">
     <!-- DATATABLES -->
     <script src="../public/datatables/jquery.dataTables.min.js"></script>
     <script src="../public/datatables/dataTables.buttons.min.js"></script>
@@ -89,7 +89,8 @@ if (strlen(session_id()) < 1)
     <script src='../public/js/fullcalendar/fullcalendar.js'></script>
     <script src='../public/js/fullcalendar/locale/es.js'></script>
 
-
+  <!-- Bootstrap 3.3.5 -->
+  <script src="../public/plugins/fullcalendar/main.js"></script>
 
 
 
@@ -533,6 +534,11 @@ if (strlen(session_id()) < 1)
             <li  class="">
                 <a href="deudasensistema.php">
                     <i class="metismenu-icon fa fa-user-friends"></i>DEUDA EN SISTEMA
+                </a>
+            </li>
+            <li  class="">
+                <a href="calendarioeventos.php">
+                    <i class="metismenu-icon fa fa-user-friends"></i>CALENDARIO DE EVENTO
                 </a>
             </li>
           <li class="app-sidebar__heading">Modulo 6 - En desarrollo</li>
