@@ -1,14 +1,4 @@
 <?php
-  //Activamos el almacenamiento en el buffer
-  ob_start();
-  session_start();
-
-  if (!isset($_SESSION["idusuario"]))
-  {
-      header("Location: ../index.php");
-  }
-  else
-  {
   require 'header.php';
  ?>
 
@@ -123,6 +113,5 @@ body {
 <script type="text/javascript" src="scripts/calendarioevento.js"></script>
 <?php
   require 'footer.php';
-  }
-  ob_end_flush();
+
 ?>

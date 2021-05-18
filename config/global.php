@@ -9,7 +9,7 @@ define("DB_NAME", "coronelsystem");
 define("DB_USERNAME", "root");
 
 //Contraseña del usuario de db
-define("DB_PASSWORD", "");
+define("DB_PASSWORD", "12345");
 
 //Codificacion de los caracteres
 define("DB_ENCODE", "utf8");

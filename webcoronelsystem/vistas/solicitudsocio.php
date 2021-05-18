@@ -1,14 +1,5 @@
 <?php
   //Activamos el almacenamiento en el buffer
-  ob_start();
-  session_start();
-
-  if (!isset($_SESSION["idusuario"]))
-  {
-      header("Location: ../index.php");
-  }
-  else
-  {
   require 'header.php';
  ?>
 <div class="app-main__inner">
@@ -57,6 +48,7 @@
                               <div class="col-md-12">
                                 <div class="form-row" align="center">
                                     <div class="col-md-2">
+                                            <input name="idrazonsocial" id="idrazonsocial"  type="hidden" >
                                            <div class="position-relative form-group"><label for="cinEmpleado" class=""><b>Nro. Ced. de Identidad:</b></label>
                                             <input name="cinEmpleado" id="cinEmpleado" placeholder="" type="text" class="form-control" required></div>
                                     </div>
@@ -246,7 +238,7 @@
                                             class="form-control">
                                       </div>
                                       <div class="col-md-1 align-self-center">
-                                           <button class="btn btn-success" onclick="mostrarsocio()">BUSCAR SOCIO</button>
+                                           <button class="btn btn-success" type="button" onclick="mostrarsocio()">BUSCAR SOCIO</button>
                                      </div>
                                       <div class="col-md-6">
                                             <label for="loginUsuario"class=""><b>Socio PROPONENTE:</b></label>
@@ -333,7 +325,7 @@
 
 <?php
   require 'footer.php';
-  }
+  
   ob_end_flush();
 ?>
 

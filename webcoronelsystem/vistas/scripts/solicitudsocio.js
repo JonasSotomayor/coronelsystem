@@ -3,8 +3,83 @@ let tbTipoSocio=$("#tbTipoSocio").DataTable();
 idSocioo=0;
 idTiposocioo=0;
 idRazonsociallll=0;
+window.onload =()=>
+{
+    const fechaNacimiento=document.getElementById("fechaNacimiento")
+    fechaNacimiento.addEventListener('change', (e)=>{
+         let fechaDeaful
+         //fecha por defecto, que implica que la persona tendria 18 años
+         let f = new Date();
+         mes=(f.getMonth() +1)
+         console.log(mes)
+         if (parseInt(mes)<10) {
+             fechaDeaful=f.getFullYear()+"-0"+(f.getMonth() +1)+"-"+f.getDate() 
+         } else {
+             fechaDeaful=f.getFullYear()+"-"+(f.getMonth() +1)+"-"+f.getDate() 
+         }
+         let fechaActual = (fechaNacimiento.value).substr(0,10)
+         console.log(new Date(fechaActual).getTime())
+         console.log(fechaActual)
+        if ((new Date(fechaActual).getTime() > new Date(fechaDeaful).getTime())) {
+             fechaNacimiento.value=''
+             alertify.error('Ingrese una fecha que no sea mayor al dia de hoy!')
+         }
+
+     });
+
+     const cinEmpleado=document.getElementById("cinEmpleado")
+     cinEmpleado.addEventListener('keydown', (e)=>{
+        if(!controlNumeroRuc(e)){
+            alertify.error('Solo admite numeros!');
+            e.preventDefault()
+        }
+    });
+
+    const nombreEmpleado=document.getElementById("nombreEmpleado")
+    nombreEmpleado.addEventListener('keydown', (e)=>{
+        if(!controlTexto(e)){
+            alertify.error('Error solo se admite texto!');
+            e.preventDefault()
+        }
+    });
+    
+    const profesion=document.getElementById("profesion")
+    profesion.addEventListener('keydown', (e)=>{
+        if(!controlTexto(e)){
+            alertify.error('Error solo se admite texto!');
+            e.preventDefault()
+        }
+    });
+
+    const telefonoEmpleado=document.getElementById("telefonoEmpleado")
+    telefonoEmpleado.addEventListener('keydown', (e)=>{
+        if(!controlNumeroCelular(e)){
+            alertify.error('Error en formato!');
+            e.preventDefault()
+        }
+    });
+    
+    const ciudadEmpleado=document.getElementById("ciudadEmpleado")
+    ciudadEmpleado.addEventListener('keydown', (e)=>{
+        if(!controlTexto(e)){
+            alertify.error('Error solo se admite texto!');
+            e.preventDefault()
+        }
+    });
+    
+    const direccionEmpleado=document.getElementById("direccionEmpleado")
+    direccionEmpleado.addEventListener('keydown', (e)=>{
+        if(!controlTextoyNumero(e)){
+            alertify.error('Error solo se admite texto!');
+            e.preventDefault()
+        }
+    });
+
+
+}
 //Función que se ejecuta al inicio
 function init() {
+    
     listarTipoSocio()
     $("#formulario").on("submit", function(e) {
         guardaryeditar(e);
@@ -48,7 +123,7 @@ function mostrarEmpleado() {
             console.log(data);
             try {
                 data = JSON.parse(data);
-                $("#codigoEmpleado").val(data.idrazonsocial);
+                $("#idrazonsocial").val(data.idrazonsocial);
                 $("#nombreEmpleado").val(data.razonsocial);
                 $("#fechaNacimiento").val(data.fechanacimiento);
                 $("#cinEmpleado").val(data.ci);
@@ -106,8 +181,21 @@ function limpiar() {
     $("#tipopago option[value='MENSUAL'").attr("selected",true);
     idSocioo=0;
     idTiposocioo=0;
-    idRazonsociallll=0;
-
+    $("#idrazonsocial").val("");
+    $("#nombreEmpleado").val("");
+    $("#imagenactual").val("");
+    $("#cinEmpleado").val("");
+    $("#fechaNacimiento").val("");
+    $("#telefonoEmpleado").val("");
+    $("#direccionEmpleado").val("");
+    $("#ciudadEmpleado").val("");
+    $("#profesion").val("");
+    $("#emailEmpleado").val("");
+    $("#fechaIngreso").val("");
+    $("#estadocivil option[value='SOLTERO'").attr("selected",true);
+    nacionalidad=document.getElementById("fechaNacimiento")
+    nacionalidad.value=''
+    document.getElementById("cinEmpleado").disabled = false;
 }
 //Función mostrar formulario
 
@@ -120,8 +208,8 @@ function cancelarform() {
 
 
 function guardaryeditar(e) {
-    $("#btnCarga").show();
-    $("#btnGuardar").hide();
+    //$("#btnCarga").show();
+    //$("#btnGuardar").hide();
     e.preventDefault(); //No se activará la acción predeterminada del evento
     $("#btnGuardar").prop("disabled", true);
 
@@ -145,11 +233,8 @@ function guardaryeditar(e) {
                 listar();
             } else {
                 swal("Información", datos, "success");
-                mostrarform(false);
-                tabla.ajax.reload();
-                listar();
+                location.href ="registradosocio.php";
             }
-            mostrarform(false);
         }
 
     });

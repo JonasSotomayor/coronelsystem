@@ -2,28 +2,49 @@
 session_start();
 require_once "../modelos/solicitudsocio.php";
 $SolicitudSocio=new SolicitudSocio();
+require_once "../modelos/Empleados.php";
+$Empleados=new Empleados();
 //nombresolicitudsocio cinsolicitudsocio  equiposolicitudsocio fechaNacimiento fechaIngreso  telefonosolicitudsocio ciudadsolicitudsocio  emailsolicitudsocio   direccionsolicitudsocio   emailsolicitudsocio cargosolicitudsocio  codigoSucursal_solicitudsocio
 $idsolicitudsocio=isset($_POST["idsolicitudsocio"])? limpiarCadena($_POST["idsolicitudsocio"]):"";
 $idrazonsocial=isset($_POST["idrazonsocial"])? limpiarCadena($_POST["idrazonsocial"]):"";
-$razonsocial=isset($_POST["razonsocial"])? limpiarCadena($_POST["razonsocial"]):"";
 $idtiposocio=isset($_POST["idtiposocio"])? limpiarCadena($_POST["idtiposocio"]):"";
-$ci=isset($_POST["ci"])? limpiarCadena($_POST["ci"]):"";
 $proponente=isset($_POST["idproponente"])? limpiarCadena($_POST["idproponente"]):"";
 $tipopago=isset($_POST["tipopago"])? limpiarCadena($_POST["tipopago"]):"";
 $fecha=date("Y-m-d"); ;
-
+$imagenEmpleado=isset($_POST["imagenEmpleado"])? limpiarCadena($_POST["imagenEmpleado"]):"";
+$nombreEmpleado=isset($_POST["nombreEmpleado"])? limpiarCadena($_POST["nombreEmpleado"]):"";
+$cinEmpleado=isset($_POST["cinEmpleado"])? limpiarCadena($_POST["cinEmpleado"]):"";
+$fechaNacimiento=isset($_POST["fechaNacimiento"])? limpiarCadena($_POST["fechaNacimiento"]):"";
+$telefonoEmpleado=isset($_POST["telefonoEmpleado"])? limpiarCadena($_POST["telefonoEmpleado"]):"";
+$direccionEmpleado=isset($_POST["direccionEmpleado"])? limpiarCadena($_POST["direccionEmpleado"]):"";
+$ciudadEmpleado=isset($_POST["ciudadEmpleado"])? limpiarCadena($_POST["ciudadEmpleado"]):"";
+$emailEmpleado=isset($_POST["emailEmpleado"])? limpiarCadena($_POST["emailEmpleado"]):"";
+$profesion=isset($_POST["profesion"])? limpiarCadena($_POST["profesion"]):"";
+$nacionalidad=isset($_POST["nacionalidad"])? limpiarCadena($_POST["nacionalidad"]):"";
+$estadocivil=isset($_POST["estadocivil"])? limpiarCadena($_POST["estadocivil"]):"";
 switch ($_GET["op"]){
 	case 'guardaryeditar':
-
+		//echo "idrazon social $idrazonsocial";
+		if($idrazonsocial!=''){
+			$razonsocial=$nombreEmpleado;
+			$ci=$cinEmpleado;
+			$rspta=$SolicitudSocio->insertar( $idrazonsocial, $razonsocial, $ci,$idtiposocio,$proponente,$fecha,$tipopago);
+		}else{
+			$razonsocial=$nombreEmpleado;
+			$ci=$cinEmpleado;
+			$rspta=$Empleados->insertar($nombreEmpleado, $profesion, $cinEmpleado, "usernull.png", $fechaNacimiento,$telefonoEmpleado, $direccionEmpleado,$ciudadEmpleado, $emailEmpleado,$nacionalidad, $estadocivil,'');
+			$rspta=$SolicitudSocio->insertar( $rspta, $razonsocial, $ci,$idtiposocio,$proponente,$fecha,$tipopago);
+		}
+		echo $rspta ? "la solicitud socio se ha Registrado con Exito" : "1";
 //nombresolicitudsocio $cinsolicitudsocio  $equiposolicitudsocio $fechaNacimiento $ciudadsolicitudsocio  $telefonosolicitudsocio  $emailsolicitudsocio   $direccionsolicitudsocio   $emailsolicitudsocio $cargosolicitudsocio  $codigoSucursal_solicitudsocio
-		if (empty($idsolicitudsocio)){
+		/*if (empty($idsolicitudsocio)){
 			$rspta=$SolicitudSocio->insertar( $idrazonsocial, $razonsocial, $ci,$idtiposocio,$proponente,$fecha,$tipopago);
 			echo $rspta ? "la solicitud socio se ha Registrado con Exito" : "1";
 		} else {
 			$rspta=$SolicitudSocio->editar($idsolicitudsocio, $idrazonsocial, $razonsocial, $ci,$idtiposocio,$proponente,$fecha,$tipopago);
 			echo $rspta ? "LA solicitud socio se Actualizo con Exito" : "1";
 			//echo $cargosolicitudsocio.$cinsolicitudsocio.$imagensolicitudsocio.$ciudadsolicitudsocio.$emailsolicitudsocio.$equiposolicitudsocio;
-		}
+		}*/
 	break;
 
 	case 'desactivar':

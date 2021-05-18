@@ -4,12 +4,13 @@ require_once "../modelos/solicitudinmueble.php";
 require_once "../modelos/inmuebles.php";
 $SolicitudInmueble=new SolicitudInmueble();
 $inmuebles=new Inmueble();
+require_once "../modelos/Empleados.php";
+$Empleados=new Empleados();
 $solicitudInmueble= new stdClass();
 //nombresolicitudsocio cinsolicitudsocio  equiposolicitudsocio fechaNacimiento fechaIngreso  telefonosolicitudsocio ciudadsolicitudsocio  emailsolicitudsocio   direccionsolicitudsocio   emailsolicitudsocio cargosolicitudsocio  codigoSucursal_solicitudsocio
 $solicitudInmueble->idsolicitudalquiler=isset($_POST["idsolicitudalquiler"])? limpiarCadena($_POST["idsolicitudalquiler"]):"";
 $solicitudInmueble->idrazonsocial=isset($_POST["idrazonsocial"])? limpiarCadena($_POST["idrazonsocial"]):"";
 $solicitudInmueble->razonsocial=isset($_POST["razonsocial"])? limpiarCadena($_POST["razonsocial"]):"";
-$solicitudInmueble->idtiposocio=isset($_POST["idtiposocio"])? limpiarCadena($_POST["idtiposocio"]):"";
 $solicitudInmueble->ci=isset($_POST["ci"])? limpiarCadena($_POST["ci"]):"";
 $solicitudInmueble->idinmueble=isset($_POST["idinmueble"])? limpiarCadena($_POST["idinmueble"]):"";
 $solicitudInmueble->denominacion=isset($_POST["denominacion"])? limpiarCadena($_POST["denominacion"]):"";
@@ -19,19 +20,41 @@ $solicitudInmueble->fechainicio=isset($_POST["fechaInicio"])? limpiarCadena($_PO
 $solicitudInmueble->plazoContrato=isset($_POST["plazoContrato"])? limpiarCadena($_POST["plazoContrato"]):"";
 $solicitudInmueble->tiempoContrato=isset($_POST["tiempoContrato"])? limpiarCadena($_POST["tiempoContrato"]):"";
 $solicitudInmueble->fecha=date("Y-m-d"); ;
-
+$nombreEmpleado=isset($_POST["nombreEmpleado"])? limpiarCadena($_POST["nombreEmpleado"]):"";
+$cinEmpleado=isset($_POST["cinEmpleado"])? limpiarCadena($_POST["cinEmpleado"]):"";
+$fechaNacimiento=isset($_POST["fechaNacimiento"])? limpiarCadena($_POST["fechaNacimiento"]):"";
+$telefonoEmpleado=isset($_POST["telefonoEmpleado"])? limpiarCadena($_POST["telefonoEmpleado"]):"";
+$direccionEmpleado=isset($_POST["direccionEmpleado"])? limpiarCadena($_POST["direccionEmpleado"]):"";
+$ciudadEmpleado=isset($_POST["ciudadEmpleado"])? limpiarCadena($_POST["ciudadEmpleado"]):"";
+$emailEmpleado=isset($_POST["emailEmpleado"])? limpiarCadena($_POST["emailEmpleado"]):"";
+$profesion=isset($_POST["profesion"])? limpiarCadena($_POST["profesion"]):"";
+$nacionalidad=isset($_POST["nacionalidad"])? limpiarCadena($_POST["nacionalidad"]):"";
+$estadocivil=isset($_POST["estadocivil"])? limpiarCadena($_POST["estadocivil"]):"";
 switch ($_GET["op"]){
 	case 'guardaryeditar':
+		if($solicitudInmueble->idrazonsocial!=''){
+			$solicitudInmueble->razonsocial=$nombreEmpleado;
+			$solicitudInmueble->ci=$cinEmpleado;
+			$rspta=$SolicitudInmueble->insertar( $solicitudInmueble);
+		}else{
+			$solicitudInmueble->razonsocial=$nombreEmpleado;
+			$solicitudInmueble->ci=$cinEmpleado;
+			$rspta=$Empleados->insertar($nombreEmpleado, $profesion, $cinEmpleado, "usernull.png", $fechaNacimiento,$telefonoEmpleado, $direccionEmpleado,$ciudadEmpleado, $emailEmpleado,$nacionalidad, $estadocivil,'');
+			$solicitudInmueble->idrazonsocial=$rspta;
+			$rspta=$SolicitudInmueble->insertar( $solicitudInmueble);
+		}
+		echo $rspta ? "la solicitud socio se ha Registrado con Exito" : "1";
+
 
 //nombresolicitudsocio $cinsolicitudsocio  $equiposolicitudsocio $fechaNacimiento $ciudadsolicitudsocio  $telefonosolicitudsocio  $emailsolicitudsocio   $direccionsolicitudsocio   $emailsolicitudsocio $cargosolicitudsocio  $codigoSucursal_solicitudsocio
-		if (empty($solicitudInmueble->idsolicitudalquiler)){
+		/*if (empty($solicitudInmueble->idsolicitudalquiler)){
 			$rspta=$SolicitudInmueble->insertar( $solicitudInmueble);
 			echo $rspta ? "la solicitud socio se ha Registrado con Exito" : "1";
 		} else {
 			$rspta=$SolicitudInmueble->editar($solicitudInmueble);
 			echo $rspta ? "LA solicitud socio se Actualizo con Exito" : "1";
 			//echo $cargosolicitudsocio.$cinsolicitudsocio.$imagensolicitudsocio.$ciudadsolicitudsocio.$emailsolicitudsocio.$equiposolicitudsocio;
-		}
+		}*/
 	break;
 
 	case 'controlFecha':

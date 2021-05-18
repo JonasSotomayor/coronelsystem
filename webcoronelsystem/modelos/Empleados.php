@@ -16,14 +16,10 @@ Class Empleados
 		$sql="INSERT INTO `razonsocial`(`idrazonsocial`, `razonsocial`, `ci`, `direccion`, `celular`, `correo`, `nacionalidad`, `fechanacimiento`, `estadocivil`, `profesion`, `ciudad`, `estado`, `imagenRazonSocial`)
 		VALUES(0,'$nombreEmpleado', '$cinEmpleado','$direccionEmpleado',  '$telefonoEmpleado',   '$emailEmpleado', '$nacionalidad',   '$fechaNacimiento', '$estadocivil'  , '$profesion',  '$ciudadEmpleado','ACTIVO','$imagenEmpleado');";
 		$idRazonsocial=ejecutarConsulta_retornarID($sql);
-		$sw=true;
+		//$sw=true;
 		//echo $idRazonsocial;
-		foreach ($familia as $fami) {
-			$sql1="INSERT INTO familia VALUES ('$idRazonsocial','$fami->ci','$fami->nombre','$fami->parentesco')";
-			$rsFami=ejecutarConsulta($sql1);
-		}
 		//return $sw;
-		return $sw;
+		return $idRazonsocial;
 	}
 
 	//Implementamos un método para editar registros

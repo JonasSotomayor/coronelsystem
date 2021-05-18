@@ -333,8 +333,6 @@ function desactivar(idsolicitudalquiler) {
 }
 
 function mostrarDetalle(idsolicitudalquiler){
-
-
     $.post("../ajax/solicitudInmueble.php?op=mostrar", { idsolicitudalquiler: idsolicitudalquiler }, function(data, status) {
         console.log(data);
         data = JSON.parse(data);
