@@ -319,7 +319,7 @@ function activar(idgestionarsocios) {
 
 function desactivar(idgestionarsocios) {
 
-  swal({
+  /*swal({
           title: "Atención",
           text: "¿Desea rechazar esta solicitud?",
           type: "warning",
@@ -334,8 +334,27 @@ function desactivar(idgestionarsocios) {
               swal("Informacion", "El Registro se desactivo con Exito."+e, "success");
               tabla.ajax.reload();
         });
+      });*/
+      swal({
+        title: "Atención!",
+        text: "¿Desea eliminar al socio?",
+        type: "input",
+        showCancelButton: true,
+        closeOnConfirm: false,
+        inputPlaceholder: "Motivo de salida"
+      }, function (inputValue) {
+        if (inputValue === false) return false;
+        if (inputValue === "") {
+          swal.showInputError("debe ingresar un motivo!");
+          return false
+        }
+        $.post("../ajax/gestionarsocios.php?op=desactivar", { idsolicitudsocio:idgestionarsocios,motivosalida:inputValue }, function(e) {
+            console.log(e)
+            swal("Informacion", "El Registro se desactivo con Exito."+e, "success");
+            tabla.ajax.reload();
+        });
+        //swal("Nice!", "You wrote: " + inputValue, "success");
       });
-
 }
 
 function mostrarDetalle(idgestionarsocios){

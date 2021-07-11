@@ -15,62 +15,19 @@ Class Ventas
 		$razon_social_ci,
 		$tipoComprobante,
 		$detalleCobro,
-		$detallePagos)
+		$detallePagos,
+		$codigoTimbrado)
 		{
 			$codigoUsuario=$_SESSION['idusuario'];
 
-			$sqlAperturaCaja="SELECT * FROM aperturas_cierres where idusuario=$codigoUsuario AND estadoApertura='ACTIVO'";	
-			$aperturaCajaYcierre=ejecutarConsultaSimpleFilaObject($sqlAperturaCaja);	
-			//var_dump($aperturaCajaYcierre);
-			$montototal=0;
-			foreach ($detallePagos as $detallePago){
-				$montototal+=$detallePago->monto;
-			}
-			$sql="INSERT INTO `movimiento_caja` (
-				`codigo_Movimiento_Caja`,
-				`codigo_Apertura_Cierre`,
-				`codigo_Cuentas_Cobrar`,
-				`montoMovimiento`
-			)
-			VALUES
-				(0,
-				$aperturaCajaYcierre->codigo_Apertura_Cierre,
-				0,
-				$montototal
-				);
-			";
-			//echo "\n $sql \n";
-			$codigoMovimiento=ejecutarConsulta_retornarID($sql);// OBTENEES EL ID DEL MOVIMIENTO
-			//var_dump($detallePago);
-			//echo "\n";
-			///////////////////////////////
-			////CARGAMOS LOS DETALLES DEL MOVIMIENTO
-			/////////////////////////////
-			foreach ($detallePagos as $detallePago){
-				$sqlDetalleMovimiento="INSERT INTO `detalle_movimiento_caja` (
-					`codigo_Movimiento_Caja`,
-					`codigo_Tipo_Cobro`,
-					`monto_detalle_Movimiento_Caja`,
-					`nro_documento_cobro`
-				)
-				VALUES
-					(
-					$codigoMovimiento,
-					$detallePago->tipoPago,
-					$detallePago->monto,
-					'$detallePago->nroDocumento'
-					);
-				";
-				//echo "$sqlDetalleMovimiento \n";
-				ejecutarConsulta($sqlDetalleMovimiento);
-			}
+			
 			///////////////////////////////
 			///////////////////////////////
 			///////////////////////////////
 			////REGISTRAMOS FACTURA Y RECIBOS
 			/////////////////////////////
 			if ($tipoComprobante=='RECIBO') {
-				$sql="SELECT * FROM timbrado where tipoTimbrado='RECIBO' AND estadoTimbrado=1";
+				$sql="SELECT * FROM timbrado where codigoTimbrado=$codigoTimbrado";
 				$timbrado=ejecutarConsultaSimpleFilaObject($sql);	
 				//var_dump($timbrado);
 				//echo "\n";echo "\n";
@@ -89,7 +46,7 @@ Class Ventas
 						(0,
 						$nroFactura,
 						'RECIBO',
-						$timbrado->codigoTimbrado,
+						$codigoTimbrado,
 						$codigoUsuario,
 						$id_razon_social,
 						'$razon_social',
@@ -110,12 +67,12 @@ Class Ventas
 				SET
 					`nroactualTimbrado` = '$nroFactura',
 					`estadoTimbrado` = '$estadoTimbrado'
-				WHERE `codigoTimbrado` = '".$timbrado->codigoTimbrado."';";
+				WHERE `codigoTimbrado` = '".$codigoTimbrado."';";
 				//echo $sqlAumentarTimbrado;
 				//echo "\n";echo "\n";
 				ejecutarConsulta($sqlAumentarTimbrado);
 			} else {
-				$sql="SELECT * FROM timbrado where tipoTimbrado='FACTURA' AND estadoTimbrado=1";
+				$sql="SELECT * FROM timbrado where codigoTimbrado='$codigoTimbrado'";
 				$timbrado=ejecutarConsultaSimpleFilaObject($sql);	
 				//var_dump($timbrado);
 				//echo "\n";echo "\n";
@@ -134,7 +91,7 @@ Class Ventas
 						(0,
 						$nroFactura,
 						'FACTURA',
-						$timbrado->codigoTimbrado,
+						$codigoTimbrado,
 						$codigoUsuario,
 						$id_razon_social,
 						'$razon_social',
@@ -155,7 +112,7 @@ Class Ventas
 				SET
 					`nroactualTimbrado` = '$nroFactura',
 					`estadoTimbrado` = '$estadoTimbrado'
-				WHERE `codigoTimbrado` = '".$timbrado->codigoTimbrado."';";
+				WHERE `codigoTimbrado` = '".$codigoTimbrado."';";
 				//echo $sqlAumentarTimbrado;
 				//var_dump($timbrado);
 				//echo "\n";echo "\n";
@@ -209,7 +166,8 @@ Class Ventas
 						$faltante=$detalleCobro->montoCobrar-$detalleProducto->montoCobrar;
 						$sqlActualizarCobro="UPDATE `cuentas_cobrar`
 						SET 
-						montoCobrar=$faltante
+						montoCobrar=$faltante,
+						FRACCIONADO='SI'
 						WHERE `id_cuenta_cobrar` = '$detalleProducto->id_cuenta_cobrar';";
 						//echo $sqlActualizarCobro;
 						ejecutarConsulta($sqlActualizarCobro);
@@ -219,14 +177,59 @@ Class Ventas
 					$sqlActualizarCobro="UPDATE `cuentas_cobrar`
 					SET 
 					`estado` = 'COBRADO'
-					WHERE `id_cuenta_cobrar` = '$detalleProducto->id_cuenta_cobrar';";
+					WHERE `id_cuenta_cobrar` = '$codigoVentanew';";
 					//echo $sqlActualizarCobro;
 					ejecutarConsulta($sqlActualizarCobro);
 				}
 				
 			}
-			return $codigoVentanew;
 			
+			$sqlAperturaCaja="SELECT * FROM aperturas_cierres where idusuario=$codigoUsuario AND estadoApertura='ACTIVO'";	
+			$aperturaCajaYcierre=ejecutarConsultaSimpleFilaObject($sqlAperturaCaja);	
+			//var_dump($aperturaCajaYcierre);
+			$montototal=0;
+			foreach ($detallePagos as $detallePago){
+				$montototal+=$detallePago->monto;
+			}
+			$sql="INSERT INTO `movimiento_caja` (
+				`codigo_Movimiento_Caja`,
+				`codigo_Apertura_Cierre`,
+				`codigo_Cuentas_Cobrar`,
+				`montoMovimiento`
+			)
+			VALUES
+				(0,
+				$aperturaCajaYcierre->codigo_Apertura_Cierre,
+				$codigoVentanew,
+				$montototal
+				);
+			";
+			//echo "\n $sql \n";
+			$codigoMovimiento=ejecutarConsulta_retornarID($sql);// OBTENEES EL ID DEL MOVIMIENTO
+			//var_dump($detallePago);
+			//echo "\n";
+			///////////////////////////////
+			////CARGAMOS LOS DETALLES DEL MOVIMIENTO
+			/////////////////////////////
+			foreach ($detallePagos as $detallePago){
+				$sqlDetalleMovimiento="INSERT INTO `detalle_movimiento_caja` (
+					`codigo_Movimiento_Caja`,
+					`codigo_Tipo_Cobro`,
+					`monto_detalle_Movimiento_Caja`,
+					`nro_documento_cobro`
+				)
+				VALUES
+					(
+					$codigoMovimiento,
+					$detallePago->tipoPago,
+					$detallePago->monto,
+					'$detallePago->nroDocumento'
+					);
+				";
+				//echo "$sqlDetalleMovimiento \n";
+				ejecutarConsulta($sqlDetalleMovimiento);
+			}
+			return $codigoVentanew;
 		}
 	///// LISTAR RAZON SOCIAL O CLIENTES PARA VENTA
 	public function listarClientes(){
@@ -234,9 +237,10 @@ Class Ventas
 			return ejecutarConsulta($sql);
 	}
 	///// LISTAR PRODUCTOS
-	public function listarProductos(){
-			$sql="SELECT * FROM productos WHERE estadoProductos='1'";
+	public function mostrarTimbrado(){
+			$sql="SELECT * FROM timbrado WHERE estadoTimbrado='1'";
 			return ejecutarConsulta($sql);
 	}
+	
 }
 ?>

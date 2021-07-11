@@ -61,14 +61,14 @@ Class SolicitudSocio
 		WHERE solicitantesocio.idtiposocio=tiposocio.idtiposocio
 		AND solicitantesocio.proponente=socio.idsocio
 		AND socio.idsocio=razonsocial.idrazonsocial
-		AND idsolicitantesocio=$idsolicitantesocio";
+		AND solicitantesocio.idsolicitantesocio=$idsolicitantesocio";
 		return ejecutarConsultaSimpleFila($sql);
 	}
 
 	//Implementar un método para listar los registros
 	public function listar()
 	{
-		$sql="SELECT `idsolicitantesocio`,
+		$sql="SELECT solicitantesocio.`idsolicitantesocio`,
 		solicitantesocio.razonsocial,
 		solicitantesocio.ci, razonsocial.razonsocial AS 'socio',
 		tiposocio.tiposocio, solicitantesocio.estado,solicitantesocio.fecha

@@ -9,8 +9,9 @@
  <br><br>
  <br> <br><br>
  <div class="app-main__inner">
-     <!-----------Inicio Titulo----------->
+     <!-----------Inicio Titulo-----------><br><br><br><br><br><br><br><br>
      <div class="app-page-title">
+     
          <div class="page-title-wrapper">
              <div class="page-title-heading">
                  <!----Icono---->

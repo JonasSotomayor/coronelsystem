@@ -1,6 +1,22 @@
 window.onload =()=>
 {
-    
+    const controlFecha=()=>{
+        idinmuebl=$("#idinmueble")
+        if (idinmuebl!='') {
+            fechaActual=fechaInicio.value
+            plazoAlquiler=plazoContrato.value
+            tiempocontra=tiempoContrato.value
+            
+            console.log("fecha"+fechaActual+"plazsoalquiler"+plazoAlquiler+"tiempocontrato"+tiempocontra)
+            $.get("../ajax/solicitudinmueble.php?op=controlFecha",{fechaActual:fechaActual,plazoAlquiler:plazoAlquiler,idinmueble:idinmueble.value,tiempocontrato:tiempocontra}, function(data, status) {
+                console.log(data)
+                if (data=='AGENDADO') {
+                    fechaInicio.value=''
+                    swal("Error", "FECHA YA REGISTRADA", "error");
+                }
+            })
+        }
+    }
 
     tipopago=document.getElementById("tipopago")
     tipopago.addEventListener('change', ()=>{
@@ -57,24 +73,20 @@ window.onload =()=>
     tiempoContrato.addEventListener('change', (e)=>{   
         controlFecha()
      });
-
-     const controlFecha=()=>{
-        idinmuebl=$("#idinmueble")
-        if (idinmuebl!='') {
-            fechaActual=fechaInicio.value
-            plazoAlquiler=plazoContrato.value
-            tiempocontra=tiempoContrato.value
-            
-            console.log("fecha"+fechaActual+"plazsoalquiler"+plazoAlquiler+"tiempocontrato"+tiempocontra)
-            $.get("../ajax/solicitudinmueble.php?op=controlFecha",{fechaActual:fechaActual,plazoAlquiler:plazoAlquiler,idinmueble:idinmueble.value,tiempocontrato:tiempocontra}, function(data, status) {
-                console.log(data)
-                if (data=='AGENDADO') {
-                    fechaInicio.value=''
-                    swal("Error", "FECHA YA REGISTRADA", "error");
-                }
-            })
+     const controlBtnGuardar=()=>{
+    
+        if (idTipoInmueblee=='' 
+        || fechaInicio.value==''  
+        || plazoContrato.value=='') {
+            $("#btnGuardar").hide();
+        }else{
+            $("#btnGuardar").show();
         }
+        
+        $("#btnGuardar").show();
     }
+    
+     
 }
 let tabla;
 let idTipoInmueblee;
@@ -265,6 +277,34 @@ function AgregarInmueble(idinmueble, denominacion, mensual, semestral, anual) {
     controlBtnGuardar()
 }
 
-
+const controlFecha=()=>{
+    idinmuebl=$("#idinmueble")
+    if (idinmuebl!='') {
+        fechaActual=fechaInicio.value
+        plazoAlquiler=plazoContrato.value
+        tiempocontra=tiempoContrato.value
+        
+        console.log("fecha"+fechaActual+"plazsoalquiler"+plazoAlquiler+"tiempocontrato"+tiempocontra)
+        $.get("../ajax/solicitudinmueble.php?op=controlFecha",{fechaActual:fechaActual,plazoAlquiler:plazoAlquiler,idinmueble:idinmueble.value,tiempocontrato:tiempocontra}, function(data, status) {
+            console.log(data)
+            if (data=='AGENDADO') {
+                fechaInicio.value=''
+                swal("Error", "FECHA YA REGISTRADA", "error");
+            }
+        })
+    }
+}
+const controlBtnGuardar=()=>{
+    
+    if (idTipoInmueblee=='' 
+    || fechaInicio.value==''  
+    || plazoContrato.value=='') {
+        $("#btnGuardar").hide();
+    }else{
+        $("#btnGuardar").show();
+    }
+    
+    $("#btnGuardar").show();
+}
 
 init();

@@ -194,7 +194,7 @@ function desactivar(iddeporte) {
           closeOnConfirm: false
       },
       function() {
-        $.post("../ajax/deporte.php?op=desactivar", { iddeporte: iddeporte }, function(e) {
+        $.post("../ajax/deporte.php?op=desactivar", { id_factura: id_factura }, function(e) {
 
               swal("Informacion", "El Registro se desactivo con Exito."+e, "success");
               tabla.ajax.reload();

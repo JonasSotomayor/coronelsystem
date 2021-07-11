@@ -15,13 +15,7 @@ session_start();
 $codigoUsuario=$_SESSION['idusuario'];
 $codigoApertura=isset($_SESSION["codigo_Apertura_Cierre"])? limpiarCadena($_SESSION["codigo_Apertura_Cierre"]):"";
 switch ($_GET["op"]){ 
-	case 'guardaryeditar': 
-		$rspta=$EstadisticasGenerales->insertar($id_cuenta_cobrar,$timbrado,$detallePago,$codigoApertura,$tipoFactura);
-		//echo $rspta ? "Pais Actualizada" : "Pais no se pudo Actualizar";
-		$datos=(object) array("estado"=>1, "factura"=>$rspta);
-		echo json_encode($datos);
-	break;
-
+	
 	case 'mostrar':
 		$rspta=$EstadisticasGenerales->mostrar($id_cuenta_cobrar);
 		echo json_encode($rspta);

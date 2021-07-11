@@ -43,6 +43,19 @@
         <div class="col-lg-12">
             <div class="main-card mb-12 card">
                 <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-10">
+                        </div>
+                        <div class="col-lg-2">
+                            <button type="button" aria-haspopup="true" aria-expanded="false"
+                                class="btn-shadow plus btn btn-warning" onclick="imprimirlista()" id="imprimir">
+                                <span class="btn-icon-wrapper pr-2 opacity-7">
+                                    <i class="fa fa-eye fa-w-20"></i>
+                                </span>
+                                IMPRIMIR 
+                            </button>
+                        </div>
+                    </div>
                     <h5 class="card-title">INGRESO TOTAL POR MES</h5>
                     <div class="table-responsive">
                       <table class="table table-striped" whith="100%" id="tbllistado">
@@ -111,7 +124,40 @@
         </div>
     </div><!----cierre app-page-title---->
     <!---------Fin listado de Registros------>
-    
+     <!---------Fin listado de Registros------>
+  <div id="listadoregistrosSocio" name="listadoregistrosSocio">
+        <div class="col-lg-12">
+            <div class="main-card mb-12 card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-8">
+                            <h5 class="card-title">DETERMINAR ALCANCE DE INGRESO</h5>
+                        </div>
+                        <div class="col-sm-2">
+                            <input type="date" name="fechaInicio" id="fechaInicio" class="form-control">
+                        </div>
+                        <div class="col-sm-2">w
+                            <input type="date" name="fechaInicio" id="fechaInicio" class="form-control">
+                        </div>
+                    </div>
+                   
+                   
+                    <div class="table-responsive">
+                      <table class="table table-striped" whith="100%" id="tbllistadoSocio">
+                          <thead>
+                              <tr>
+                                <th>ALCANCE</th>
+                                <th>INGRESO</th>
+                              </tr>
+                          </thead>
+                          <tbody>
+                          </tbody>
+                      </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div><!----cierre app-page-title---->
     
 </div><!---------fin app-main__inner------>    
       

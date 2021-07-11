@@ -203,7 +203,7 @@ if (strlen(session_id()) < 1)
                     <a class="nav-link" href="solicitudsocio.php">SOLICITUD DE SOCIO</a>
                     </li>
                     <li class="nav-item">
-                    <a class="nav-link disabled" href="solicitudAlquiler.php">SOLICITUD DE ALQUILER</a>
+                    <a class="nav-link" href="solicitudInmueble.php">SOLICITUD DE ALQUILER</a>
                     </li>
                 </ul>
                 </div>

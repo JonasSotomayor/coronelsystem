@@ -1,32 +1,48 @@
 <?php
-ob_start();
-session_start();
-require "../config/general.php";
-if (!isset($_SESSION["codigoUsuario"]))
-    {
-        header("Location: ../index.php");
-    }
-else
-    {
-        require 'header.php';
-        if($_SESSION["$mod2"]==1){
-?>
+  //Activamos el almacenamiento en el buffer
+  ob_start();
+  session_start();
+
+  if (!isset($_SESSION["idusuario"]))
+  {
+      header("Location: ../index.php");
+  }
+  else
+  {
+  require 'header.php';
+ ?> 
+ <br><br>
+  <div class="app-page-title">
+        <div class="page-title-wrapper">
+            <div class="page-title-heading">
+                <!----Icono---->
+                <div class="page-title-icon">
+                    <i class="pe-7s-menu icon-gradient bg-mean-fruit">
+                    </i>
+                </div>
+                <!----Titulo y descripcion---->
+                <div>TIMBRADO
+                    <div class="page-title-subheading">Gestione de timbrado
+                    </div>
+                </div>
+                <!----Fin titulo y descripcion---->
+            </div><!----cierre page-title-heading---->
+            <!----Botton y Opciones---->
+            <div class="page-title-actions">
+                <div class="d-inline-block dropdown">
+                        <button class="btn btn-warning px-4 float-right mt-0 mb-3 btn-xs"
+                            data-animation="bounce" id="BtnAgregar" onclick="mostrarform(true)">
+                            <i class="mdi mdi-plus-circle-outline mr-2"></i>Nuevo Registro
+                        </button><!--id="btnagregar" onclick="mostrarform(true)"-->
+                </div>
+            </div><!----cierre page-title-actions---->
+            <!----Fin botton y Opciones---->
+        </div><!----cierre page-title-wrapper---->
+    </div><!----cierre app-page-title---->
+    <!-------Fin Titulo------->
             <!-- Page Content-->
             <div class="page-content">
                     <div class="container-fluid">
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <div class="page-title-box">
-                                    <div class="float-left">
-                                        <ol class="breadcrumb">
-                                            <li class="breadcrumb-item">Administración</li>
-                                            <li class="breadcrumb-item">Medios Financieros</li>
-                                            <li class="breadcrumb-item active">Timbrado</li>
-                                        </ol>
-                                    </div>
-                                </div><!--end page-title-box-->
-                            </div><!--end col-->
-                        </div>
                         <div class="row" id="listadoregistros" name="listadoregistros">
                             <div class="col-12">
                                 <div class="card">
@@ -81,6 +97,12 @@ else
                                                                 <input class="form-control" type="date" name="vctoTimbrado" id="vctoTimbrado">
                                                             </div>
                                                             <div class="form-group col-md-3">
+                                                                <label class="col-sm-6 col-form-label text-left">PREFIJO</label>
+                                                                <input type="text"  class="form-control" name="prefijoTimbrado" id="prefijoTimbrado" required>
+                                                                <div class="valid-tooltip">Perfecto!</div>
+                                                                <div class="invalid-tooltip"> Por favor, Nro Actual.</div>
+                                                            </div>
+                                                            <div class="form-group col-md-3">
                                                                 <label class="col-sm-6 col-form-label text-left">Nro Actual</label>
                                                                 <input type="number"  class="form-control" name="nroactualTimbrado" id="nroactualTimbrado" required>
                                                                 <div class="valid-tooltip">Perfecto!</div>
@@ -98,11 +120,20 @@ else
                                                                     <div class="valid-tooltip">Perfecto!</div>
                                                                     <div class="invalid-tooltip"> Por favor, Nro Final.</div>
                                                             </div>
+                                                            <div class="form-group col-md-3">
+                                                                <label class="col-sm-6 col-form-label text-left">TIPO FACTURA</label>
+                                                                    <select name="tipoTimbrado" id="tipoTimbrado"  class="form-control">
+                                                                        <option value="FACTURA">FACTURA</option>
+                                                                        <option value="RECIBO">RECIBO</option>
+                                                                    </select>
+                                                                    <div class="valid-tooltip">Perfecto!</div>
+                                                                    <div class="invalid-tooltip"> Por favor, Nro Final.</div>
+                                                            </div>
                                                         </div>
                                                         <br>
                                                         <div align="center">
-                                                            <button class="btn btn-gradient-success" type="submit"  id="btnGuardar"><i class="fas fa-save"></i> Guardar</button>
-                                                            <button class="btn btn-gradient-danger" type="button" onclick="cancelarform()"><i class="fas fa-caret-left"></i> Cancelar</button>
+                                                            <button class="btn btn-success" type="submit"  id="btnGuardar"><i class="fas fa-save"></i> Guardar</button>
+                                                            <button class="btn btn-danger" type="button" onclick="cancelarform()"><i class="fas fa-caret-left"></i> Cancelar</button>
                                                         </div>
                                                     </form>
                                                 </div>
@@ -113,17 +144,12 @@ else
                             </div><!--end row-->
                         <!--///SPA-->
                 </div><!-- container -->
-        <?php
-            }else
-                {
-                    require 'noacceso.php';
-                }
-            require 'footer.php';
-        ?>
+                <?php
+  require 'footer.php';
+  }
+  ob_end_flush();
+?>
 
 <script type="text/javascript" src="scripts/timbrado.js"></script>
 
-    <?php
-    }
-ob_end_flush();
-    ?>
+   

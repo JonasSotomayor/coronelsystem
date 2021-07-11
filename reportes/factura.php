@@ -142,7 +142,10 @@ $yposdinamic = 85 + (count($products)*10);
 
 $pdf->setY($yposdinamic);
 $pdf->setX(235);
-    $pdf->Ln();
+    $pdf->Ln(); $pdf->Ln();
+$formatterES = new NumberFormatter("es", NumberFormatter::SPELLOUT);    
+$pdf->Cell(5,$textypos,"Total a pagar  GUARANIES ".strtoupper($formatterES->format($total)));
+
 /////////////////////////////
 $header = array("", "");
 $data2 = array(

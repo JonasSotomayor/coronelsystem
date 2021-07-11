@@ -87,13 +87,31 @@ function listar() {
   tabla = $('#tblListadoEmpleados').dataTable({
       "aProcessing": true, //Activamos el procesamiento del datatables
       "aServerSide": true, //Paginación y filtrado realizados por el servidor
-      dom: 'Bfrtip', //Definimos los elementos del control de tabla
-      buttons: [
-          'copyHtml5',
-          'excelHtml5',
-          'csvHtml5',
-          'pdf'
-      ],
+      dom: 'Bfrtip', //Definimos los elementos del controlc de tabla
+        "language": {
+            "sInfo": "Mostrando del _START_ al _END_ de un total de _TOTAL_ registros",
+            "sInfoEmpty": "Mostrando del 0 al 0 de un total de 0 registros",
+            "sSearch": "Buscar:",
+            "oPaginate": {
+                "sFirst": "Primero",
+                "sLast": "Último",
+                "sNext": "Siguiente",
+                "sPrevious": "Anterior"
+            },
+        },
+        buttons: [{
+                extend: 'pdf',
+                title: 'Listado de Paises',
+                filename: 'listado_Paises',
+                text: '<button class="btn btn-outline-danger waves-effect waves-light btn-xs">Exportar a PDF <i class="fa fa-file-pdf"></i></button>'
+            },
+            {
+                extend: 'excelHtml5',
+                title: 'Listado de Paises',
+                filename: 'listado_Paises',
+                text: '<button class="btn btn-outline-success waves-effect waves-light btn-xs">Exportar a Excel <i class="fa fa-file-excel"></i></button>'
+            }
+        ],
       "ajax": {
           url: '../ajax/solicitudsocio.php?op=listar',
           type: "get",
@@ -146,6 +164,7 @@ function guardaryeditar(e) {
     });
     limpiar();
 }
+
 
 function mostrar(idsolicitudsocio) {
     $("#lista").hide();
@@ -250,8 +269,29 @@ function listarRazonSocial() {
         "aProcessing": true, //Activamos el procesamiento del datatables
         "aServerSide": true, //Paginación y filtrado realizados por el servidor
         dom: 'Bfrtip', //Definimos los elementos del controlc de tabla
-        buttons: [
-
+        "language": {
+            "sInfo": "Mostrando del _START_ al _END_ de un total de _TOTAL_ registros",
+            "sInfoEmpty": "Mostrando del 0 al 0 de un total de 0 registros",
+            "sSearch": "Buscar:",
+            "oPaginate": {
+                "sFirst": "Primero",
+                "sLast": "Último",
+                "sNext": "Siguiente",
+                "sPrevious": "Anterior"
+            },
+        },
+        buttons: [{
+                extend: 'pdf',
+                title: 'Listado de Paises',
+                filename: 'listado_Paises',
+                text: '<button class="btn btn-outline-danger waves-effect waves-light btn-xs">Exportar a PDF <i class="fa fa-file-pdf"></i></button>'
+            },
+            {
+                extend: 'excelHtml5',
+                title: 'Listado de Paises',
+                filename: 'listado_Paises',
+                text: '<button class="btn btn-outline-success waves-effect waves-light btn-xs">Exportar a Excel <i class="fa fa-file-excel"></i></button>'
+            }
         ],
         "ajax": {
             url: '../ajax/usuarios.php?op=listarRazonSocial',
@@ -335,7 +375,9 @@ function AgregarSocio(idsocio, socio, cisocio) {
         $("#btnGuardar").show();
     }
 }
-
+const imprimirlista=()=>{
+    window.open("..//reportes/listadesolicitante.php?idrazonsocial="+3,"LISTA SOLICITANTE","width=1200,height=2000,scrollbars=NO")
+}
 
 
 
@@ -349,8 +391,29 @@ function listarTipoSocio() {
         "aProcessing": true, //Activamos el procesamiento del datatables
         "aServerSide": true, //Paginación y filtrado realizados por el servidor
         dom: 'Bfrtip', //Definimos los elementos del controlc de tabla
-        buttons: [
-
+        "language": {
+            "sInfo": "Mostrando del _START_ al _END_ de un total de _TOTAL_ registros",
+            "sInfoEmpty": "Mostrando del 0 al 0 de un total de 0 registros",
+            "sSearch": "Buscar:",
+            "oPaginate": {
+                "sFirst": "Primero",
+                "sLast": "Último",
+                "sNext": "Siguiente",
+                "sPrevious": "Anterior"
+            },
+        },
+        buttons: [{
+                extend: 'pdf',
+                title: 'Listado de Paises',
+                filename: 'listado_Paises',
+                text: '<button class="btn btn-outline-danger waves-effect waves-light btn-xs">Exportar a PDF <i class="fa fa-file-pdf"></i></button>'
+            },
+            {
+                extend: 'excelHtml5',
+                title: 'Listado de Paises',
+                filename: 'listado_Paises',
+                text: '<button class="btn btn-outline-success waves-effect waves-light btn-xs">Exportar a Excel <i class="fa fa-file-excel"></i></button>'
+            }
         ],
         "ajax": {
             url: '../ajax/solicitudsocio.php?op=listarTipoSocio',

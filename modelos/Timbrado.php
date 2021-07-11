@@ -14,28 +14,48 @@ Class Timbrado
 	public function insertar($nrotimbradovigente,
 								$vctoTimbrado,
 								$nroactualTimbrado,
+								$prefijoTimbrado,
 								$nroinicialTimbrado,
 								$nrofinalTimbrado,
-								$sucursalT)//recibimos estos parametros
+								$tipoTimbrado
+								)//recibimos estos parametros
 		{
-			$sql="INSERT INTO timbrado (nrotimbradovigente,vctoTimbrado,nroactualTimbrado,nroinicialTimbrado,nrofinalTimbrado,sucursalTimbrado)
-			VALUES ($nrotimbradovigente,$vctoTimbrado,$nroactualTimbrado,$nroinicialTimbrado,$nrofinalTimbrado,$sucursalT)";//enviamos valores a los sgtes campos
-			//return ejecutarConsulta($sql);
+			$sql="INSERT INTO timbrado (`codigoTimbrado`,
+			`nrotimbradovigente`,
+			`vctoTimbrado`,
+			`prefijoTimbrado`,
+			`nroactualTimbrado`,
+			`nroinicialTimbrado`,
+			`nrofinalTimbrado`,
+			`tipoTimbrado`,
+			`estadoTimbrado`)
+			VALUES (0,$nrotimbradovigente,
+			'$vctoTimbrado','$prefijoTimbrado',$nroactualTimbrado,$nroinicialTimbrado,$nrofinalTimbrado,'$tipoTimbrado',1)";//enviamos valores a los sgtes campos
+			
 			//echo 'hola mundo';
-			echo $sql;
+			//echo $sql;
+			return ejecutarConsulta($sql);
 		}
 
 	//Implementamos un método para editar registros
-	public function editar($codigoTimbrado,$nrotimbradovigente,$nroactualTimbrado,$vctoTimbrado,$nroinicialTimbrado,$nrofinalTimbrado,$sucursalT)
+	public function editar($codigoTimbrado,$nrotimbradovigente,
+	$vctoTimbrado,
+	$nroactualTimbrado,
+	$prefijoTimbrado,
+	$nroinicialTimbrado,
+	$nrofinalTimbrado,
+	$tipoTimbrado)
 		{
-			$sql="UPDATE timbrado SET 
-                nrotimbradovigente='$nrotimbradovigente',
-				nroactualTimbrado='$nroactualTimbrado',
-                vctoTimbrado='$vctoTimbrado',
-                nroinicialTimbrado='$nroinicialTimbrado',
-                nrofinalTimbrado='$nrofinalTimbrado',
-                sucursalTimbrado='$sucursalT'
-                WHERE codigoTimbrado='$codigoTimbrado'";
+			$sql="UPDATE `timbrado`
+			SET
+			`nrotimbradovigente` = $nrotimbradovigente,
+			`vctoTimbrado` = $vctoTimbrado,
+			`prefijoTimbrado` = $prefijoTimbrado,
+			`nroactualTimbrado` = $nroactualTimbrado,
+			`nroinicialTimbrado` = $nroinicialTimbrado,
+			`nrofinalTimbrado` =$nrofinalTimbrado,
+			`tipoTimbrado` = '$tipoTimbrado'
+			WHERE `codigoTimbrado` ='$codigoTimbrado'";
 			return ejecutarConsulta($sql);
 		}
 
@@ -48,9 +68,9 @@ Class Timbrado
 			return ejecutarConsultaSimpleFila($sql);
 		}
 
-    public function listar($sucursal)
+    public function listar()
         {
-            $sql="SELECT * FROM `timbrado` WHERE `sucursalTimbrado`='$sucursal'";
+            $sql="SELECT * FROM `timbrado`";
             return ejecutarConsulta($sql);		
         }
 

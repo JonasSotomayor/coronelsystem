@@ -51,6 +51,7 @@
                               <tr>
                                 <th>Opciones</th>
                                 <th>Monto</th>
+                                <th>NRO</th>
                                 <th>Personas</th>
                                 <th>C.I</th>
                                 <th>Fecha</th>

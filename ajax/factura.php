@@ -6,7 +6,7 @@ $id_cuenta_cobrar=isset($_POST["codigo_Cuentas_Cobrar"])? limpiarCadena($_POST["
 $detallePagoJson=isset($_POST["detallePago"])? limpiarCadena($_POST["detallePago"]):"";
 $detallePagoJson=str_replace('\&quot;','"',$detallePagoJson);
 $detallePago=json_decode($detallePagoJson);
-
+$id_factura=isset($_POST["id_factura"])? limpiarCadena($_POST["id_factura"]):"";
 $timbradoJson=isset($_POST["timbrado"])? limpiarCadena($_POST["timbrado"]):"";
 $timbradoJson=str_replace('\&quot;','"',$timbradoJson);
 $timbrado=json_decode($timbradoJson);
@@ -37,19 +37,20 @@ switch ($_GET["op"]){
 		$opciones='';
         while ($reg=$rspta->fetch_object()){
 			if($reg->estadoFacturas=='COBRADO'){
-				$opciones='<button class="btn btn-outline-info btn-xs" data-toggle="modal"  onclick="mostrarVenta('.$reg->codigoFacturas.')"><i class="fa fa-eye"></i></button>';
+				$opciones='<button class="btn btn-outline-info btn-xs" data-toggle="modal"  onclick="mostrarVenta('.$reg->codigoFacturas.')"><i class="fa fa-eye"></i></button>  <button type="button" data-toggle="tooltip" title="Desactivar" data-placement="bottom" class="btn-shadow mr-3 btn btn-danger" onclick="desactivar('.$reg->codigoFacturas.')"><i class="fa fa-times-circle"></i></button>';
 				$estado='<span class="badge badge-success mr-2 ml-0"><i class="dripicons-thumbs-up"></i> Pagado</span>';
 			}else{
 				$opciones='<button class="btn btn-outline-info btn-xs" data-toggle="modal"  onclick="mostrarDetalle('.$reg->codigoFacturas.')"><i class="fa fa-eye"></i></button>';
-				$estado='<span class="badge badge-danger mr-2 ml-0"><i class="dripicons-thumbs-up"></i> Cancelado</span>';
+				$estado='<span class="badge badge-danger mr-2 ml-0"><i class="dripicons-thumbs-up"></i> ANULADO</span>';
 			}
 			$data[]=array("0"=>$opciones,
-				"1"=>number_format(0),
-				"2"=>strtoupper($reg->razonsocial),
-				"3"=>($reg->ci),
-				"4"=>$reg->fechaFacturas,
-				"5"=>$reg->tipoFactura,
-				"6"=>$estado
+				"1"=>number_format($reg->MONTO),
+				"2"=>($reg->nroFacturas),
+				"3"=>strtoupper($reg->razonsocial),
+				"4"=>($reg->ci),
+				"5"=>$reg->fechaFacturas,
+				"6"=>$reg->tipoFactura,
+				"7"=>$estado
 				);
 			}
 		$results = array(
@@ -79,5 +80,9 @@ switch ($_GET["op"]){
 		echo $rspta;
 	break;
 
+	case 'anular':
+		$rspta=$FacturaModel->anular($id_factura);
+		echo $rspta;
+	break;
 }
 ?>

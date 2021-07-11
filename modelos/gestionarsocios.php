@@ -19,7 +19,7 @@ Class GestionarSocio
 		$password="cco"+$ci;
 		$idsocio=0;
 		$fecha=date("Y-m-d");
-		$sql="INSERT INTO socio	VALUES (0,'$SocioNro','$idrazonsocial','$idtiposocio','$usuario','$password','$idsesioncomision','$tipopago','ACTIVO','$imagenCI')";
+		$sql="INSERT INTO socio	VALUES (0,'$SocioNro','$idrazonsocial','$idtiposocio','$usuario','$password','$idsesioncomision','$tipopago','ACTIVO','$imagenCI','',$idsolicitudsocio)";
 		$idsocio=ejecutarConsulta_retornarID($sql);
 
 		$sql3="SELECT nroContrato FROM contrato ORDER BY nroContrato DESC LIMIT 1";
@@ -49,10 +49,10 @@ Class GestionarSocio
 	}
 
 	//Implementamos un método para desactivar categorías
-	public function desactivar($idsocio){
+	public function desactivar($idsocio,$motivosalida){
 		$sw=true;
 
-		$sql="UPDATE `socio` SET estado='CANCELADO' WHERE idsocio=".$idsocio;
+		$sql="UPDATE `socio` SET estado='CANCELADO', motivosalida='$motivosalida' WHERE idsocio=".$idsocio;
 		ejecutarConsulta($sql) or $sw = false;
 		$sql1="SELECT * FROM `contrato` WHERE idsocio='".$idsocio."' ORDER BY idcontrato DESC LIMIT 1";
 		$contrato=ejecutarConsultaSimpleFila($sql1);
@@ -83,21 +83,21 @@ Class GestionarSocio
 	{
 		$sql="SELECT solicitantesocio.*, razonsocial.ci AS 'cisocio',
 		razonsocial.razonsocial AS 'socio',
-		tiposocio.idtiposocio,tiposocio.tiposocio,socio.imagenCi,socio.nrosocio,
+		tiposocio.idtiposocio,tiposocio.tiposocio,socio.imagenCi,socio.nrosocio,socio.motivosalida,
 		sesioncomision.idsesioncomision,sesioncomision.periodo, sesioncomision.fecha AS fechasesion,
 		socio.idsocio FROM solicitantesocio,socio,tiposocio,razonsocial,sesioncomision
 		WHERE solicitantesocio.idtiposocio=tiposocio.idtiposocio
 		AND solicitantesocio.proponente=socio.idsocio
 		AND socio.idsocio=razonsocial.idrazonsocial
 		AND socio.idsesioncomision=sesioncomision.idsesioncomision
-		AND idsolicitantesocio=$idsolicitantesocio";
+		AND solicitantesocio.idsolicitantesocio=$idsolicitantesocio";
 		return ejecutarConsultaSimpleFila($sql);
 	}
 
 	//Implementar un método para listar los registros
 	public function listar()
 	{
-		$sql="SELECT DISTINCTROW socio.idsocio, contrato.fechaContrato, razonsocial.razonsocial, razonsocial.ci, tiposocio.tiposocio , socio.nrosocio, socio.estado,socio.idrazonsocial FROM socio, contrato, razonsocial, tiposocio
+		$sql="SELECT DISTINCTROW socio.idsocio, contrato.fechaContrato, razonsocial.razonsocial, razonsocial.ci, tiposocio.tiposocio , socio.nrosocio, socio.estado,socio.idrazonsocial, socio.idsolicitantesocio FROM socio, contrato, razonsocial, tiposocio
 		WHERE socio.idsocio=contrato.idsocio AND socio.idrazonsocial=razonsocial.idrazonsocial AND socio.tiposocio=tiposocio.idtiposocio GROUP BY socio.idsocio";
 		return ejecutarConsulta($sql);
 	}

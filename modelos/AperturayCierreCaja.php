@@ -118,6 +118,7 @@
                         tipo_cobro 
                     WHERE 
                         movimiento_caja.`codigo_Apertura_Cierre`=$codigo_Apertura_Cierre AND
+                         movimiento_caja.estado='ACTIVO'AND
                         detalle_movimiento_caja.`codigo_Movimiento_Caja`=movimiento_caja.`codigo_Movimiento_Caja` AND
                         detalle_movimiento_caja.`codigo_Tipo_Cobro`=tipo_cobro.`codigo_Tipo_Cobro`";
                 //echo $sql;  

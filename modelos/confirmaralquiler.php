@@ -116,7 +116,7 @@ Class Confirmaralquiler
 				$totalVenta=$solicitudInmueble->costoAlquiler*$cuota;
 			}else{
 				$cuota=2;
-				$totalCuota=$tiposoci->costosemestral;
+				$totalCuota=$solicitudInmueble->costoAlquiler;
 				$totalVenta=$solicitudInmueble->costoAlquiler*$cuota;
 			}
 			//echo "la venta es credito \n\n\n\n";

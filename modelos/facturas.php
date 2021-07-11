@@ -150,9 +150,11 @@ Class Facturas
 
 	public function listar(){ 
       $sql="SELECT
-      *
-  FROM facturas
-  ORDER BY fechaFacturas ASC;";
+      facturas.*,SUM(detallecobro.montoCobrar) AS MONTO
+      FROM facturas, detallecobro
+      where facturas.codigoFacturas=detallecobro.codigoFacturas
+      GROUP BY facturas.codigoFacturas
+		ORDER BY fechaFacturas asc;";
       return ejecutarConsulta($sql);
     }
 
@@ -166,28 +168,66 @@ Class Facturas
         return ejecutarConsulta($sql);		
     }
 
-  public function desactivar($codigo_Cuentas_Cobrar){
-    
-    $sqlActualizarVenta="UPDATE ventas set estadoVenta=0 where CodigoVentas=(SELECT codigoVentas FROM cuentas_cobrar where codigo_Cuentas_Cobrar=".$codigo_Cuentas_Cobrar.")";
-     ejecutarConsulta($sqlActualizarVenta);
-    $sqlCargarProductos="select codigoProductos, cantidad_detalle_ventas, detalle_ventas.codigoVentas
-    FROM detalle_ventas
-    where codigoVentas=(SELECT codigoVentas FROM cuentas_cobrar where codigo_Cuentas_Cobrar=".$codigo_Cuentas_Cobrar.")";
-      $detalleVenta=ejecutarConsulta($sqlCargarProductos);
-      echo "\n";
-      $detalleVentaArray= array();
-      $cantidadVenta=0;
-      $codigoVenta=0;
-      while($detalle=$detalleVenta->fetch_object()){
-        var_dump($detalle);
-        echo $detalle->codigoProductos;
-        $codigoVenta=$detalle->codigoVentas;
-        $sqlActualizarProducto="update productos set stockProductos=stockProductos+".$detalle->cantidad_detalle_ventas." where codigoProductos=".$detalle->codigoProductos;
-        echo $sqlActualizarProducto;
-        ejecutarConsulta($sqlActualizarProducto);
+  public function anular($id_factura){
+    $sqlActualizarFactura="UPDATE facturas set estadoFacturas='ANULADO' where codigoFacturas=".$id_factura;
+    ejecutarConsulta($sqlActualizarFactura);	
+    $sqlObtenerDetalleFactura="SELECT * FROM detallecobro WHERE codigoFacturas=$id_factura";
+    $rspta=ejecutarConsulta($sqlObtenerDetalleFactura);
+    while ($reg=$rspta->fetch_object()){
+      $FACCIONADO_CUENTA_COBRAR="SELECT FRACCIONADO,montoCobrar FROM cuentas_cobrar WHERE id_cuenta_cobrar=$reg->id_cuenta_cobrar";
+      $fracRespuesta=ejecutarConsultaSimpleFilaObject($FACCIONADO_CUENTA_COBRAR);
+      if ($fracRespuesta->FRACCIONADO=='SI') {
+        $total=(int)$fracRespuesta->montoCobrar+(int)$reg->montoCobrar;
+        $sqlActualizarCuentaCobrar="UPDATE cuentas_cobrar set montoCobrar=$total, estado='PENDIENTE' where id_cuenta_cobrar=".$reg->id_cuenta_cobrar;
+        ejecutarConsulta($sqlActualizarCuentaCobrar);	
+      }else{
+        $sqlActualizarCuentaCobrar="UPDATE cuentas_cobrar set estado='PENDIENTE' where id_cuenta_cobrar=".$reg->id_cuenta_cobrar;
+        ejecutarConsulta($sqlActualizarCuentaCobrar);	
       }
-      $sqlActualizarCuentaCobrar="UPDATE cuentas_cobrar set Estado_Cuentas_Cobrar=0 where codigoVentas=".$codigoVenta;
-      ejecutarConsulta($sqlActualizarCuentaCobrar);	
+			
+		}
+    $sqlActualizarCuentaCobrar="UPDATE movimiento_caja set estado='ANULADO' where codigo_Cuentas_Cobrar=".$id_factura;
+    ejecutarConsulta($sqlActualizarCuentaCobrar);	
+    $sqlObtenerDetalleFactura="SELECT detalle_movimiento_caja.* FROM detalle_movimiento_caja, movimiento_caja WHERE
+    detalle_movimiento_caja.codigo_Movimiento_Caja=movimiento_caja.codigo_Movimiento_Caja 
+    AND  movimiento_caja.codigo_Cuentas_Cobrar=$id_factura";
+    $rspta=ejecutarConsulta($sqlObtenerDetalleFactura);
+    $montoTotalEfec=$montoTotalCheque=$montoTotalTarjeta=0;
+    $idaperturaycierre=0;
+    while ($reg=$rspta->fetch_object()){
+      $sqlEliminarMovimiento="UPDATE detalle_movimiento_caja set estado='ANULADO' where codigo_Movimiento_Caja=".$reg->codigo_Movimiento_Caja;
+      ejecutarConsulta($sqlEliminarMovimiento);
+      // ACTUALIZAMOS LA APERTURA Y CIERRE DE CAJA
+      switch ($reg->codigo_Tipo_Cobro) {
+        case '1':
+          $montoTotalEfec+=(int)$reg->monto_detalle_Movimiento_Caja;
+          break;
+        case '2':
+          $montoTotalTarjeta+=(int)$reg->monto_detalle_Movimiento_Caja;
+          break;
+        case '3':
+          $montoTotalCheque+=(int)$reg->monto_detalle_Movimiento_Caja;
+          break;
+      }
+		}
+    
+    $totalRestar=$montoTotalEfec+$montoTotalCheque+$montoTotalTarjeta;
+    $sqlapertura_cierre="SELECT aperturas_cierres.montoCierre,aperturas_cierres.codigo_Apertura_Cierre 
+    FROM aperturas_cierres,movimiento_caja 
+    WHERE aperturas_cierres.codigo_Apertura_Cierre=movimiento_caja.codigo_Apertura_Cierre 
+    AND movimiento_caja.codigo_Cuentas_Cobrar=$id_factura";
+    $resp=ejecutarConsultaSimpleFilaObject($sqlapertura_cierre);
+    $montoCierre=(int)$resp->montoCierre-$totalRestar;
+    $sql="UPDATE `aperturas_cierres` SET `montoCierre` = '$montoCierre'
+    WHERE `codigo_Apertura_Cierre` = '$resp->codigo_Apertura_Cierre';";
+    $respbd=ejecutarConsulta($sql);
+    $sql="UPDATE `arqueo_caja`
+    SET
+    `totalcheque_Arqueo_Caja` = totalcheque_Arqueo_Caja-$montoTotalCheque,
+    `totaltarjeta_Arqueo_Caja` = totaltarjeta_Arqueo_Caja-$montoTotalTarjeta,
+    `totalefectivo_Arqueo_Caja` = totalefectivo_Arqueo_Caja-$montoTotalEfec
+    WHERE `codigo_Apertura_Cierre` = '$resp->codigo_Apertura_Cierre';";
+    $respbd=ejecutarConsulta($sql);
   }
 
   public function mostrarFactura($codigo_Cuentas_Cobrar)
