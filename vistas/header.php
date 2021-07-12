@@ -499,6 +499,18 @@ if (strlen(session_id()) < 1)
                             </i> GESTION DE CAJA
                         </a>
                     </li>
+                    <li>
+                        <a href="arqueoCaja.php">
+                            <i class="fa fa-user-alt">
+                            </i> ARQUEO CAJA
+                        </a>
+                    </li>
+                    <li>
+                        <a href="timbrado.php">
+                            <i class="fa fa-user-alt">
+                            </i> TIMBRADO
+                        </a>
+                    </li>
                 </ul>
                 <a href="#2">
                     <i class="metismenu-icon fa fa-cash-register"></i> COBROS

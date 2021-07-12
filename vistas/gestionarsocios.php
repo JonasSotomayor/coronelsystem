@@ -290,7 +290,7 @@
               </div>
           </form>
     </div>
-</div><!---------fin app-main__inner------>
+
 
 <!---------fin registro empleado------>
 

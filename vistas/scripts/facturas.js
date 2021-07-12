@@ -181,6 +181,7 @@ function AgregarTipoPago() {
 function controlBotonGuardar(){
     if (montoFatante<=0)
     {
+      
       $("#btnGuardar").show();
     }
     else
@@ -252,39 +253,18 @@ function mostrarVenta(codigoFacturas) {
     window.open("../reportes/factura.php?codigoFacturas="+codigoFacturas,"FACTURA","width=600,height=800,scrollbars=NO")
 }
 //Función para desactivar registros
-function desactivar(codigo_Cuentas_Cobrar) {
-    const swalWithBootstrapButtons = swal.mixin({
-        customClass: {
-        confirmButton: 'btn btn-success',
-        cancelButton: 'btn btn-danger'
-        },
-        buttonsStyling: false
-    })
-    swalWithBootstrapButtons({
-        title: 'Atención',
-        text: "¿Desea Anular este Registro?!",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Si, Anular el Registro!',
-        cancelButtonText: 'No, Cancelar!',
-        reverseButtons: true
-    }).then((result) => {
-        if (result.value) {
-            $.post("../ajax/cuentaCobrar.php?op=desactivar", { codigo_Cuentas_Cobrar: codigo_Cuentas_Cobrar }, function(e) {
-                swalWithBootstrapButtons("Informacion", "El Registro se Anulo con Exito.", "success");
-                tabla.ajax.reload();
-                console.log(e);
-            })
-        } else if (
-        /* Read more about handling dismissals below */
-        result.dismiss === swal.DismissReason.cancel
-        ) {
-        swalWithBootstrapButtons(
-            'Cancelado',
-            'El Registro no se Anulo :)',
-            'error'
-        )
-        }
-    })
+function desactivar(id_factura) {
+
+    alertify.confirm("Desea anular la factura?",
+    function(){
+        $.post("../ajax/factura.php?op=anular", { id_factura: id_factura }, function(e) {
+            swal("Informacion", "El documento se anulo con Exito."+e, "success");
+            tabla.ajax.reload();
+            });
+        //alertify.success('SI');
+    },
+    function(){
+        alertify.error('Cancel');
+    });
 }
 init(); //referencia inicial a la funcion init

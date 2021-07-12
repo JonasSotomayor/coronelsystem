@@ -149,7 +149,6 @@
                                 <form class="needs-validation" validate name="formularioCobros" id="formularioCobros" method="POST" >
                                     <input type="hidden" id="codigo_Cuentas_Cobrar" name="codigo_Cuentas_Cobrar">
                                     <input type="hidden" id="detallePago" name="detallePago">
-                                    <input type="hidden" id="timbrado" name="timbrado">
                                     <input type="hidden" id="detalleCobro" name="detalleCobro">
                                     <input type="hidden" id="id_razon_social" name="id_razon_social">
                                     <input type="hidden" id="razon_social" name="razon_social">
@@ -171,28 +170,44 @@
                                             </div>
                                         </div>
                                         <!--selectmarca-->
-                                        <div class="form-group col-md-2">
+                                        <div class="form-group col-md-3">
                                             <label>Nro. documento registro</label>
                                             <div class="input-group-prepend">
                                                 <input type="number" step="any" class="form-control" name="nrnroDocumento" id="nroDocumento" required>
                                             </div>
                                         </div>
-                                        <!--selectmarca-->
-                                        <div class="form-group col-md-3">
-                                            <label>TIPO COMPROBANTE</label>
-                                            <select class="form-control show-tick required" data-style="btn-Light" name="tipoComprobante" id="selectTipoPago" width: 'auto' data-size="6" required>
-                                                <option value="FACTURA">FACTURA</option>
-                                                <option value="RECIBO">RECIBO</option>
-                                            </select>
-                                        </div>
-                                        <!--agregar-->
-                                        <div class="form-group col-md-1 align-self-center ">
+                                         <!--agregar-->
+                                         <div class="form-group col-md-3 align-self-center ">
                                             <div class="input-group-prepend">
                                                 <button type="button" class="btn btn-warning" onclick="AgregarTipoPago()"><span class="fa fa-plus"></span></button>
                                                 
                                             </div>
                                         </div>
-
+                                        
+                                    </div>
+                                    <div class="form-row">
+                                       <!--selectmarca-->
+                                       <div class="form-group col-md-3">
+                                            <label>TIPO COMPROBANTE</label>
+                                            <select class="form-control show-tick required" data-style="btn-Light" name="tipoComprobante" id="tipoComprobante" width: 'auto' data-size="6" required>
+                                                <option value="FACTURA">FACTURA</option>
+                                                <option value="RECIBO">RECIBO</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group col-md-3">
+                                            <label>TIMBRADOS DISPONIBLES</label>
+                                            <select class="form-control show-tick required" data-style="btn-Light" name="codigoTimbrado" id="codigoTimbrado" width: 'auto' data-size="6" required>
+                                                
+                                            </select>
+                                        </div>  
+                                        <div class="form-group col-md-2">
+                                            <label>PREFIJO DOCUMENTO</label>
+                                            <input type="text" step="any" class="form-control" name="prefijotimbrado" id="prefijotimbrado" readonly>
+                                        </div> 
+                                        <div class="form-group col-md-2">
+                                            <label>NUMERO DOCUMENTO</label>
+                                            <input type="text" step="any" class="form-control" name="numeroDocumento" id="numeroDocumento" readonly>
+                                        </div>  
                                     </div>
 
                                     <hr>

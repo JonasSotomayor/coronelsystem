@@ -80,11 +80,12 @@
                                                         count(idsocio) as cantidad
                                                         FROM socio";
                                                         $nrosocio=ejecutarConsultaSimpleFila($sqlsocio);
-                                                        echo $nrosocio['cantidad'];
+                                                        echo ((int)$nrosocio['cantidad']-1);
                                                         $sqlsocio="SELECT
                                                         count(idsocio) as cantidad
                                                         FROM socio where estado='ACTIVO'";
                                                         $nrosocioActivo=ejecutarConsultaSimpleFila($sqlsocio);
+                                                        $nrosocioActivo['cantidad']=(int)$nrosocioActivo['cantidad']-1
                                                 ?>
                                             </h3>
                                             <p class="mb-0 text-truncate"><span class="text-success"><i class="mdi mdi-trending-up"> <?php ECHO $nrosocioActivo['cantidad'] ?></i>
@@ -170,6 +171,15 @@
                                                     $alquileres=ejecutarConsulta($sqlTipoSocio);
                                                     $n=1;
                                                     while($alquiler=$alquileres->fetch_object()){
+                                                        $sqlAlquiler="SELECT * FROM alquiler WHERE idinmueble=$alquiler->idinmueble AND estado='ACTIVO'";
+                                                        $alqui=ejecutarConsulta($sqlAlquiler);
+                                                        $estadoAlquiler='';
+                                                        if ($alqui->fetch_object()) {
+                                                            $estadoAlquiler='OCUPADO';
+                                                            
+                                                        }else{
+                                                            $estadoAlquiler='SIN OCUPACION';
+                                                        }
                                                         if($n==4){
                                                             $n=0;
                                                             
@@ -186,7 +196,7 @@
                                                                             <i class="dripicons-clock report-main-icon bg-icon-danger"></i>
                                                                         </div> 
                                                                         <span class="badge badge-light text-danger">INMUEBLE: '.$alquiler->determinacion.'</span>
-                                                                        <h3 class="my-3">OCUPADO</h3>
+                                                                        <h3 class="my-3">'.$estadoAlquiler.'</h3>
                                                                         <p class="mb-0 text-truncate"><span class="text-success">
                                                                              <i class="mdi mdi-trending-up"></i>DESDE 07/04/08 DURANTE 5 MESES </span>
                                                                         </p>

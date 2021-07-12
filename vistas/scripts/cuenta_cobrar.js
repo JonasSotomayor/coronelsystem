@@ -277,7 +277,7 @@ $('#tbCobrosTipos tbody').on( 'click', '.btn.btn-outline-danger', function () {
 ///////////////////////////////////////////
 function actualizarTotal(subtotal){
     let total=0;
-    total=parseInt($("#totalCobro").text().replace('.',''));
+    total=parseInt($("#totalCobro").text().replace(/\./g,''));
     totalGeneralVenta=total+parseInt(subtotal);
     $("#totalCobro").html('<h4><b>'+formatearMiljs(Math.abs(totalGeneralVenta))+'</b></h4></th>');
     controlBotonGuardar();

@@ -1,3 +1,43 @@
+window.onload =()=>
+{
+    let timbrados
+    let tipoComprobante=document.getElementById("tipoComprobante")
+    const actulizarTimbrado=()=>{
+        $.post("../ajax/ventas.php?op=mostrarTimbrado", {  }, function(data, status) {
+            timbradoAgregar=''
+            timbrados=jQuery.parseJSON(data);
+            timbrados.forEach((timbrado) =>{
+               if (timbrado.tipoTimbrado==tipoComprobante.value) {
+                    timbradoAgregar+="<option value='"+timbrado.codigoTimbrado+"'>"+timbrado.nrotimbradovigente+"</option>"
+               }
+            });
+            $("#codigoTimbrado").html(timbradoAgregar)
+            actulizarNroDocumento()
+        });
+       
+    }
+    let codigoTimbrado=document.getElementById("codigoTimbrado")
+    const actulizarNroDocumento=()=>{
+        $.post("../ajax/ventas.php?op=mostrarTimbrado", {  }, function(data, status) {
+            timbradoAgregar=''
+            timbrados=jQuery.parseJSON(data);
+            timbrados.forEach((timbrado) =>{
+                if (timbrado.codigoTimbrado==codigoTimbrado.value) {
+                    prefijotimbrado.value=timbrado.nrotimbradovigente
+                    numeroDocumento.value=timbrado.nroactualTimbrado
+                }
+            });
+        });
+        
+    }
+       
+    tipoComprobante.addEventListener('change', (e)=>{
+        actulizarTimbrado()
+    })
+    codigoTimbrado.addEventListener('change', (e)=>{
+        actulizarNroDocumento()
+    })
+}
 let tblRazonSocial=$('#tblRazonSocial').DataTable({});
 let tablaCuentaCobrar=$('#tbllistadoCuentaCobrar').DataTable({});
 let tablaCobros=$('#tblCuentasCobrar').DataTable({
@@ -14,11 +54,15 @@ let clickEnBoton=false
 let montoFatante=0
 let pagosRealizados= new Array()
 let cantidadTipoPago=0;
+let timbrados;
+let tipoComprobante=document.getElementById("tipoComprobante")
 var tbCobrosTipos=$('#tbCobrosTipos').DataTable({
     "searching": false,
     "paging":   false
     });
 function init() {
+    cargarTimbrados()
+    actulizarTimbrado()
     listarRazonSocial();
     listarCuentaCobrar();
     $.post("../ajax/cuentaCobrar.php?op=selectTipoPago", function(tipoCobro) {
@@ -55,7 +99,29 @@ function init() {
         }
     })
 }
-
+const actulizarTimbrado=()=>{
+    $.post("../ajax/ventas.php?op=mostrarTimbrado", {  }, function(data, status) {
+        timbradoAgregar=''
+        timbrados=jQuery.parseJSON(data);
+        timbrados.forEach((timbrado) =>{
+           if (timbrado.tipoTimbrado==tipoComprobante.value) {
+                timbradoAgregar+="<option value='"+timbrado.codigoTimbrado+"'>"+timbrado.nrotimbradovigente+"</option>"
+           }
+        });
+        $("#codigoTimbrado").html(timbradoAgregar)
+        actulizarNroDocumento()
+    });
+   
+}
+let codigoTimbrado=document.getElementById("codigoTimbrado")
+const actulizarNroDocumento=()=>{
+    timbrados.forEach((timbrado) =>{
+        if (timbrado.codigoTimbrado==codigoTimbrado.value) {
+            prefijotimbrado.value=timbrado.nrotimbradovigente
+            numeroDocumento.value=timbrado.nroactualTimbrado
+        }
+    });
+}
 const guardarCobro=()=>{
     detallePago = JSON.stringify(pagosRealizados)
     detalleCobro= JSON.stringify(cobranzas)
@@ -89,6 +155,17 @@ const guardarCobro=()=>{
         }
     });
     limpiar()
+}
+
+///////////////////////////////////////////
+///cargar timbrados
+///////////////////////////////////////////
+function cargarTimbrados() {
+    $.post("../ajax/ventas.php?op=mostrarTimbrado", {  }, function(data, status) {
+
+        console.warn(data);
+        timbrados=jQuery.parseJSON(data);
+    });
 }
 
 ///////////////////////////////////////////
@@ -307,8 +384,12 @@ const actualizarmontoCobro=(id_cuenta_cobrar)=>{
         }
     });
     clickEnBoton=true
-    if (cobranzas[idvector].montoCobrar<$("#montoCobrar").val()) {
+
+    console.log("monto total="+cobranzas[idvector].montoCobrar)
+    console.log("monto cobrar="+$("#montoCobrar").val())
+    if (cobranzas[idvector].montoCobrar>$("#montoCobrar").val()) {
         swal("Error", "el monto mayor a lo que se debe cobrar", "error");
+        $("#montoCobrar").val(cobranzas[idvector].montoCobrar)
     }else{
         subtotal=cobranzas[idvector].montoCobrar
         actualizarTotalCobro(-subtotal);
@@ -424,8 +505,10 @@ $('#tbCobrosTipos tbody').on( 'click', '.btn.btn-outline-danger', function () {
 ///////////////////////////////////////////
 function actualizarTotal(subtotal){
     let total=0;
-    total=parseInt($("#totalCobro").text().replace('.',''));
-    totalGeneralVenta=total+parseInt(subtotal);
+    
+    total=desformatearformatearMiljs(parseInt($("#totalCobro").text().replace(/,/g,'')));
+    console.warn("el total de pago es="+total)
+    totalGeneralVenta=parseInt(total)+parseInt(subtotal);
     
     $("#totalCobro").html('<h4><b>'+formatearMiljs(Math.abs(totalGeneralVenta))+'</b></h4></th>');
     $("#faltante").html('<h4><b>'+formatearMiljs(Math.abs(montoFatante))+'</b></h4></th>');

@@ -21,6 +21,7 @@
                     <i class="pe-7s-add-user icon-gradient bg-mean-fruit">
                     </i>
                 </div>
+                
                 <!----Titulo y descripcion---->
                 <div>CONFIRMACION DE SOLICITUD DE SOCIO
                     <div class="page-title-subheading">Gestione la solicitud de socio desde esta sección
@@ -32,12 +33,18 @@
         </div><!----cierre page-title-wrapper---->
     </div><!----cierre app-page-title---->
     <!-------Fin Titulo------->
+    <div class="page-title-actions">
+        <div class="d-inline-block dropdown">
+          
+        </div>
+    </div><!----cierre page-title-actions---->
     <!---------Listado de Registros------>
     <div id="lista" name="lista">
         <div class="col-lg-12">
             <div class="main-card mb-12 card">
                 <div class="card-body">
                     <h5 class="card-title">Listado de Solicitud de socio</h5>
+                    
                     <div class="table-responsive">
                       <table class="table table-striped" whith="100%" id="tblListadoEmpleados">
                           <thead>
@@ -54,6 +61,14 @@
                           </tbody>
                       </table>
                     </div>
+                    <button type="button" aria-haspopup="true" aria-expanded="false"
+                        class="btn-shadow plus btn btn-warning" onclick="imprimirlista()" id="imprimir">
+                        <span class="btn-icon-wrapper pr-2 opacity-7">
+                            <i class="fa fa-eye fa-w-20"></i>
+                        </span>
+                        IMPRIMIR LISTA
+                    </button>
+                    
                 </div>
             </div>
         </div>

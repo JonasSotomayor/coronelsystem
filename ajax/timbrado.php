@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-require_once "../models/Timbrado.php";
+require_once "../modelos/Timbrado.php";
 $timbrado = new Timbrado();
 
 $codigoTimbrado=isset($_POST["codigoTimbrado"])? limpiarCadena($_POST["codigoTimbrado"]):"";
@@ -10,9 +10,10 @@ $vctoTimbrado=isset($_POST["vctoTimbrado"])? limpiarCadena($_POST["vctoTimbrado"
 $nroactualTimbrado=isset($_POST["nroactualTimbrado"])? limpiarCadena($_POST["nroactualTimbrado"]):"";
 $nroinicialTimbrado=isset($_POST["nroinicialTimbrado"])? limpiarCadena($_POST["nroinicialTimbrado"]):"";
 $nrofinalTimbrado=isset($_POST["nrofinalTimbrado"])? limpiarCadena($_POST["nrofinalTimbrado"]):"";
+$tipoTimbrado=isset($_POST["tipoTimbrado"])? limpiarCadena($_POST["tipoTimbrado"]):"";
 
-$sucursalT=isset($_POST["sucursalT"])? limpiarCadena($_POST["sucursalT"]):"";
-$sucursal=$_SESSION['codigoSucursal'];
+$prefijoTimbrado=isset($_POST["prefijoTimbrado"])? limpiarCadena($_POST["prefijoTimbrado"]):"";
+
 
 switch ($_GET["op"]){
 	case 'guardaryeditar':
@@ -21,20 +22,21 @@ switch ($_GET["op"]){
 			$rspta=$timbrado->insertar($nrotimbradovigente,
 									$vctoTimbrado,
 									$nroactualTimbrado,
+									$prefijoTimbrado,
 									$nroinicialTimbrado,
 									$nrofinalTimbrado,
-									$sucursalT);
+									$tipoTimbrado);
 			echo $rspta ? "Timbrado registrada" : "Timbrado no se pudo registrar";
 			//echo $rspta;
 		}
 		else {
 			$rspta=$timbrado->editar($codigoTimbrado,
-									$nrotimbradovigente,
-									$nroactualTimbrado,
-									$vctoTimbrado,
-									$nroinicialTimbrado,
-									$nrofinalTimbrado,
-									$sucursalT);
+			$vctoTimbrado,
+			$nroactualTimbrado,
+			$prefijoTimbrado,
+			$nroinicialTimbrado,
+			$nrofinalTimbrado,
+			$tipoTimbrado);
 			echo $rspta ? "Timbrado actualizada" : "Timbrado no se pudo actualizar";
 		}
 	break;
@@ -46,15 +48,15 @@ switch ($_GET["op"]){
     break;
 
 	case 'listar':
-		$rspta=$timbrado->listar($sucursal);
+		$rspta=$timbrado->listar();
 		$data= Array();
         while ($reg=$rspta->fetch_object()){
 		$data[]=array(
-                    "0"=>($reg->estadoTimbrado)?'<button class="btn btn-outline-warning btn-xs" onclick="mostrar('.$reg->codigoTimbrado.')"><i class="far fa-edit"></i></button>':
+                    "0"=>($reg->estadoTimbrado)?'<button class="btn btn-outline-warning btn-xs" onclick="mostrarEditar('.$reg->codigoTimbrado.')"><i class="fas fa-edit"></i></button>':
                    // ' <button class="btn btn-outline-danger btn-xs" onclick="eliminar('.$reg->codigoTimbrado.')"><i class="far fa-trash-alt"></i></button>',
                     //' <button class="btn btn-outline-info btn-xs" data-toggle="modal" data-target="#modal-cliente" onclick="modal('.$reg->codigoTimbrado.')"><i class="fas fa-id-card"></i></button>'.
 					//' <button class="btn btn-outline-pink btn-round btn-xs" onclick="desactivar('.$reg->codigoTimbrado.')"><i class="ti-close"></i></button>':
-					'<button class="btn btn-outline-danger waves-effect waves-light btn-xs" onclick="mostrar('.$reg->codigoTimbrado.')"><i class="ti-pencil-alt"></i></button>',
+					'<button class="btn btn-outline-danger waves-effect waves-light btn-xs" onclick="mostrar('.$reg->codigoTimbrado.')"><i class="fa fa-eye"></i></button>',
 					//' <button class="btn btn-outline-success btn-round btn-xs" onclick="activar('.$reg->codigoTimbrado.')"><i class="fas fa-check"></i></button>',
                     "1"=>$reg->nrotimbradovigente,
                     "2"=>$reg->vctoTimbrado,

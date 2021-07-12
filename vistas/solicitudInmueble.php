@@ -184,22 +184,26 @@
                             </div>
                           </div><!----cierre card-body---->
                       </div><!---------main-card mb-3 card------>
-                   <center>
-                          <button class="btn btn-success" type="submit" id="btnGuardar"><i class="fa fa-save"></i>
-                              Guardar</button>
-                          <button class="btn btn-primary text-nowrap" type="button" id="btnCarga">
-                              <span class="spinner-border spinner-border-sm mr-2"></span>
-                              Enviando datos...
-                          </button>
+                      <br><br>
+                      <center>
+                        <button class="btn btn-success" type="submit" id="btnGuardar"><i class="fa fa-save"></i>
+                            Guardar</button>
+                        <button class="btn btn-primary text-nowrap" type="button" id="btnCarga">
+                            <span class="spinner-border spinner-border-sm mr-2"></span>
+                            Enviando datos...
+                        </button>
 
-                          <button class="btn btn-danger" onclick="cancelarform()" type="button"><i class="fa fa-arrow-circle-left"></i>
-                              Cancelar</button>
-                   </center>
+                        <button class="btn btn-danger" onclick="cancelarform()" type="button"><i class="fa fa-arrow-circle-left"></i>
+                            Cancelar</button>
+                </center>
+                </form>
                 <br>
                 <br>
               </div>
-          </form>
+              
+         
     </div>
+    
 </div><!---------fin app-main__inner------>
 
 <!---------fin registro empleado------>

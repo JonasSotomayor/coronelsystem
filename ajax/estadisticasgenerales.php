@@ -10,18 +10,13 @@ $tipoFactura=isset($_POST["tipoComprobante"])? limpiarCadena($_POST["tipoComprob
 $timbradoJson=isset($_POST["timbrado"])? limpiarCadena($_POST["timbrado"]):"";
 $timbradoJson=str_replace('\&quot;','"',$timbradoJson);
 $timbrado=json_decode($timbradoJson);
-
+$fechaInicio=isset($_POST["fechaInicio"])? limpiarCadena($_POST["fechaInicio"]):"";
+$fechaFin=isset($_POST["fechaFin"])? limpiarCadena($_POST["fechaFin"]):"";
 session_start();
 $codigoUsuario=$_SESSION['idusuario'];
 $codigoApertura=isset($_SESSION["codigo_Apertura_Cierre"])? limpiarCadena($_SESSION["codigo_Apertura_Cierre"]):"";
 switch ($_GET["op"]){ 
-	case 'guardaryeditar': 
-		$rspta=$EstadisticasGenerales->insertar($id_cuenta_cobrar,$timbrado,$detallePago,$codigoApertura,$tipoFactura);
-		//echo $rspta ? "Pais Actualizada" : "Pais no se pudo Actualizar";
-		$datos=(object) array("estado"=>1, "factura"=>$rspta);
-		echo json_encode($datos);
-	break;
-
+	
 	case 'mostrar':
 		$rspta=$EstadisticasGenerales->mostrar($id_cuenta_cobrar);
 		echo json_encode($rspta);
@@ -178,6 +173,79 @@ switch ($_GET["op"]){
 	case 'desactivar':
 		$rspta=$EstadisticasGenerales->desactivar($id_cuenta_cobrar);
 		echo $rspta;
+	break;
+
+	case 'ingresosEnLimites':
+		$rspta=$EstadisticasGenerales->IngresoxFecha($fechaInicio,$fechaFin);
+		echo json_encode($rspta);
+		//echo $rspta;
+		//echo 'chola';
+	break;
+
+	case 'deudaEnLimites':
+		$fechaInicio=$_GET["fechaInicio"];
+		$fechaFin=$_GET["fechaFin"];
+		$rspta=$EstadisticasGenerales->deudaEnLimites($fechaInicio,$fechaFin);
+		$data=[];
+		while ($reg=$rspta->fetch_object()){
+			
+			$data[]=array(
+				"0"=>number_format($reg->deuda),
+				"1"=>strtoupper($reg->tipocuenta),
+				"2"=>strtoupper($reg->razonsocial),
+				"3"=>strtoupper($reg->ci)
+				);
+			}
+		$results = array(
+			"sEcho"=>1,
+			"iTotalRecords"=>count($data),
+			"iTotalDisplayRecords"=>count($data),
+			"aaData"=>$data);
+			echo json_encode($results);
+	break;
+
+	case 'DEUDAXMESALQUILER':
+		$rspta=$EstadisticasGenerales->DEUDAXMESALQUILER();
+		$data= Array(); 
+		$estado='';
+		$opciones='';
+        while ($reg=$rspta->fetch_object()){
+			$fecha = DateTime::createFromFormat('!m',$reg->mes );
+			$mes = strftime("%B", $fecha->getTimestamp());
+			$data[]=array(
+				"0"=>$reg->anho,
+				"1"=>strtoupper($mes),
+				"2"=>number_format($reg->deuda)
+				);
+			}
+		$results = array(
+			"sEcho"=>1,
+			"iTotalRecords"=>count($data),
+			"iTotalDisplayRecords"=>count($data),
+			"aaData"=>$data);
+			echo json_encode($results);
+	break;
+
+	case 'DEUDAXMESSOCIO':
+		$rspta=$EstadisticasGenerales->DEUDAXMESSOCIO();
+		$data= Array(); 
+		$estado='';
+		$opciones='';
+        while ($reg=$rspta->fetch_object()){
+			$fecha = DateTime::createFromFormat('!m',$reg->mes );
+			$mes = strftime("%B", $fecha->getTimestamp());
+			$data[]=array(
+				"0"=>$reg->anho,
+				"1"=>strtoupper($mes),
+				"2"=>number_format($reg->deuda)
+				);
+			}
+		$results = array(
+			"sEcho"=>1,
+			"iTotalRecords"=>count($data),
+			"iTotalDisplayRecords"=>count($data),
+			"aaData"=>$data);
+			echo json_encode($results);
 	break;
 
 }

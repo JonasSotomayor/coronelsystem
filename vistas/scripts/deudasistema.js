@@ -1,10 +1,101 @@
+window.onload =()=>
+{
+    let fechaInicio=document.getElementById("fechaInicio")
+    let fechaFin=document.getElementById("fechaFin")
+    const controlFecha=()=>{
+
+        console.log('la fecha de inicio es='+fechaInicio.value+' la fecha final es='+fechaFin.value)
+        /*$.post( "../ajax/estadisticasgenerales.php?op=deudaEnLimites", { fechaInicio: fechaInicio.value,fechaFin:fechaFin.value  }, function( data ) {
+            console.log(data)
+            montoData=JSON.parse(data)
+            console.log("el monto es"+montoData.montoLimite)
+            tblIngresoLimite=$('#tblIngresoLimite').DataTable()
+            tblIngresoLimite.clear().draw();
+            cargarTabla(fechaInicio.value+' AL '+fechaFin.value,'TOTAL',(montoData.montoLimite.monto!=null)?montoData.montoLimite.monto:0)
+            cargarTabla(fechaInicio.value+' AL '+fechaFin.value,'ALQUILER',(montoData.montoAlquiler.monto!=null)?montoData.montoAlquiler.monto:0)
+            cargarTabla(fechaInicio.value+' AL '+fechaFin.value,'SOCIO',(montoData.montoSocio.monto!=null)?montoData.montoSocio.monto:0)
+         });*/
+         tabla = $('#tbllistadoDeuda').dataTable({
+            "aProcessing": true,
+            "aServerSide": true,
+            dom: 'Bfrtip',
+            "language": {
+                "sInfo": "Mostrando del _START_ al _END_ de un total de _TOTAL_ registros",
+                "sInfoEmpty": "Mostrando del 0 al 0 de un total de 0 registros",
+                "sSearch": "Buscar:",
+                "oPaginate": {
+                    "sFirst": "Primero",
+                    "sLast": "Último",
+                    "sNext": "Siguiente",
+                    "sPrevious": "Anterior"
+                },
+            },
+            buttons: [
+            ],
+            "ajax": {
+                url: '../ajax/estadisticasgenerales.php?op=deudaEnLimites&fechaInicio='+fechaInicio.value+'&fechaFin='+fechaFin.value,
+                type: "POST",
+                dataType: "json",
+                error: function(e) {
+                    console.log(e.responseText);
+                }
+            },
+            "bDestroy": true,
+            "iDisplayLength": 10,
+            "order": [
+                [0, "desc"]
+            ]
+        }).DataTable();
+    }
+    
+    fechaInicio.addEventListener('change', (e)=>{
+        let fecha = new Date();
+        if (fecha.getTime()>new Date(fechaInicio.value).getTime()) {
+            if(fechaFin.value!=''){
+                if(new Date(fechaInicio.value).getTime()<new Date(fechaFin.value).getTime()){
+                    controlFecha()
+                } else {
+                    fechaFin.value=''
+                    alertify.error('Error la fecha de inicio no puede ser mayor a la fecha fin')
+                }
+            }
+        }else{
+            fechaInicio.value=''
+            alertify.error('Ingrese una fecha que no sea mayor al dia de hoy!')
+        }
+    })
+    
+    fechaFin.addEventListener('change', (e)=>{
+        let fecha = new Date();
+        if (fecha.getTime()>new Date(fechaFin.value).getTime()) {
+            if(fechaInicio.value!=''){
+                if(new Date(fechaInicio.value).getTime()<new Date(fechaFin.value).getTime()){
+                    controlFecha()
+                } else {
+                    fechaFin.value=''
+                    alertify.error('Error la fecha de inicio no puede ser mayor a la fecha fin')
+                }
+            }else{
+                alertify.error('No se ha identificado la fecha de inicio!')
+            }
+            
+        }else{
+            fechaFin.value=''
+            alertify.error('Ingrese una fecha que no sea mayor al dia de hoy!')
+        }
+    })
+}
 var tabla;
 
 
 function init() {
     listar();
+<<<<<<< HEAD
     mostrarTimbrado();
     listarDeporte();
+=======
+    listarAlquiler();
+>>>>>>> 2a4104848400878860eaf8964e009426f09aa5e9
     listarSocio();
    
     $("#ventasDetalle").on('hidden.bs.modal', function () {
@@ -41,45 +132,6 @@ function init() {
     });
 }
 
-function limpiar() {
-    //$("#totalCobro").val("");
-    $("#totalCobro").html("<h4><b>0</b></h4>");
-    $("#imagenactual").val("");
-    $("#selectTipoVenta").val(0)
-    controlAperturaCaja();
-    montoCobrar=0;
-    montoFatante=0;
-    cantidadTipoPago=0;
-    tbCobrosTipos=$('#tbCobrosTipos').DataTable();
-    tbCobrosTipos.clear().draw();
-    pagosRealizados= new Array();
-
-}
-
-function mostrarTimbrado() {
-    $.post("../ajax/cuentaCobrar.php?op=mostrarTimbrado", function(timbradoSelec) {
-        console.log(timbradoSelec);
-        controlCadena=true;
-        try {
-            JSON.parse(timbradoSelec);
-        } catch (e) {
-            console.log("no es json");
-            controlCadena=false;
-        }
-        if(controlCadena){
-            timbrado = jQuery.parseJSON(timbradoSelec);
-            $("#codigoTimbrado").val(timbrado.codigoTimbrado);
-            $("#nrotimbradovigente").val(timbrado.nrotimbradovigente);
-            $("#timbradoActual").val(timbrado.prefijoTimbrado+'-'+timbrado.nroactualTimbrado);
-        }else{
-            swal("Error", "Error en sistema!, por favor vuelva a intentar luego", "error");
-        }
-    });
-}
-
-function cancelarform() {
-    limpiar();
-}
 
 function listar() {
     tabla = $('#tbllistado').dataTable({
@@ -97,6 +149,7 @@ function listar() {
                 "sPrevious": "Anterior"
             },
         },
+<<<<<<< HEAD
         buttons: [{
                 extend: 'pdf',
                 filename: 'DEUDA DE SISTEMA',
@@ -110,6 +163,9 @@ function listar() {
                 },
                 title: 'LISTADO DE DEUDAS EN TODO EL SISTEMA'
             }
+=======
+        buttons: [
+>>>>>>> 2a4104848400878860eaf8964e009426f09aa5e9
         ],
         "ajax": {
             url: '../ajax/estadisticasgenerales.php?op=DEUDATOTALSOCIO',
@@ -158,7 +214,7 @@ function listarSocio() {
             }
         ],
         "ajax": {
-            url: '../ajax/estadisticasgenerales.php?op=INGRESOXMESSOCIO',
+            url: '../ajax/estadisticasgenerales.php?op=DEUDAXMESSOCIO',
             type: "get",
             dataType: "json",
             error: function(e) {
@@ -204,7 +260,11 @@ function listarDeporte() {
         }
     ],
         "ajax": {
+<<<<<<< HEAD
             url: '../ajax/estadisticasgenerales.php?op=deudaEnDeporte',
+=======
+            url: '../ajax/estadisticasgenerales.php?op=DEUDAXMESALQUILER',
+>>>>>>> 2a4104848400878860eaf8964e009426f09aa5e9
             type: "get",
             dataType: "json",
             error: function(e) {
@@ -219,150 +279,6 @@ function listarDeporte() {
     }).DataTable();
 }
 
-function guardaryeditar(e) {
-    e.preventDefault();
-    let detallePago = JSON.stringify(pagosRealizados);
-    let timbradoSle= JSON.stringify(timbrado);
-    $("#timbrado").val(timbradoSle);
-    $("#detallePago").val(detallePago)
-    $("#btnGuardar").prop("disabled", false);
-    var formData = new FormData($("#formulario")[0]);
-    $.ajax({
-        url: "../ajax/cuentaCobrar.php?op=guardaryeditar",
-        type: "POST",
-        data: formData,
-        contentType: false,
-        processData: false,
-        success: function(datos) {
-            console.warn(datos);
-            var datos = jQuery.parseJSON(datos);
-            if (datos.estado==1) {
-                swal("Información", "Cobranza realizada", "success");
-                mostrarfactura(datos.factura)
-                tabla.ajax.reload();
-                listar();
-
-            } else {
-               
-                swal("Error", "Se ha Producido un Error", "error");
-                tabla.ajax.reload();
-                listar();
-            }
-        }
-    });
-    limpiar();
-}
-
-///////////////////////////////////////////
-///PAGAR OPCIONES
-///////////////////////////////////////////
-function pagar(codigo_Cuentas_Cobrar, monto) {
-    $("#codigo_Cuentas_Cobrar").val(codigo_Cuentas_Cobrar);
-    $("#totalCobrarh2").html("TOTAL A COBRAR: "+formatearMiljs(monto))
-    mostrarform(true);
-    montoCobrar=monto;
-    montoFatante=monto;
-}
-
-function mostrarform(flag) {
-    if (flag) {
-        $("#listadoregistros").hide();
-        $("#formularioregistros").show();
-        $("#btnGuardar").prop("disabled", false);
-        $("#btnGuardar").hide();
-    } else {
-        $("#listadoregistros").show();
-        $("#formularioregistros").hide();
-        $("#BtnAgregar").show();
-        listar();
-    }
-}
-
-function AgregarTipoPago() {
-    denominacionPago="";
-    tipoPago=$("#selectTipoPago").val();
-    monto=$("#montoCobrar").val();
-    nroDocumento=$("#nroDocumento").val();
-    if (tipoPago==0 || monto==0 || monto>montoFatante || monto<0){
-        swal("Error", "Seleccione un monto, un tipo de pago y el monto no debe superar el pago total", "error");
-        $("#montoCobrar").val(0);
-    }else{
-        
-        if (nroDocumento=='') {
-            nroDocumento=0;
-        }
-        let pago={
-            'nroDocumento':nroDocumento,
-            'monto':monto,
-            'tipoPago':tipoPago,
-            'denominacionPago':denominacionPago
-          };
-          pagosRealizados[cantidadTipoPago]=pago;
-        denominacionPago=$("#selectTipoPago option:selected").text();
-        tbCobrosTipos.row.add( [
-            '<button type="button" class="btn btn-outline-danger waves-effect waves-light btn-xs" onclick="eliminarDetalle('+nroDocumento+')">X</button>',
-            denominacionPago,
-            formatearMiljs(monto),
-            nroDocumento
-        ] ).draw( false );
-        denominacionPago="";
-        $("#montoCobrar").val(0);
-        $("#nroDocumento").val(0);
-        actualizarTotal(monto);
-        montoFatante-=monto;
-        cantidadTipoPago++;
-        controlBotonGuardar();
-    }
-}
-
-function controlBotonGuardar(){
-    if (montoFatante<=0)
-    {
-      $("#btnGuardar").show();
-    }
-    else
-    {
-      $("#btnGuardar").hide();
-    }
-}
-///////////////////////////////////////////
-///ELIMINAR PAGO
-///////////////////////////////////////////
-function eliminarDetalle(nroDocumento){
-    idvector=null;
-    $.each(pagosRealizados, function (ind, detallePago) {
-        if (detallePago!=null) {
-          if (detallePago.nroDocumento==nroDocumento) {
-            idvector=ind;
-            console.log('detalle :'+ind+'!');
-          }
-        }
-    });
-    console.log(pagosRealizados[idvector]);
-    subtotal=pagosRealizados[idvector].monto;
-    montoFatante+=parseInt(subtotal);
-    actualizarTotal(-subtotal);
-    //delete pagosRealizados[idvector];
-    pagosRealizados.splice(idvector, 1);
-   // calcularTotales();
-    controlBotonGuardar();
-    console.log("eliminado");
-}
-$('#tbCobrosTipos tbody').on( 'click', '.btn.btn-outline-danger', function () {
-    tbCobrosTipos.row( $(this).parents('tr') )
-    .remove()
-    .draw();
-});
-///////////////////////////////////////////
-///actualizar el total
-///////////////////////////////////////////
-function actualizarTotal(subtotal){
-    let total=0;
-    total=parseInt($("#totalCobro").text().replace('.',''));
-    totalGeneralVenta=total+parseInt(subtotal);
-    $("#totalCobro").html('<h4><b>'+formatearMiljs(Math.abs(totalGeneralVenta))+'</b></h4></th>');
-    controlBotonGuardar();
-  }
 //formatear en mil cualquier numero
 function formatearMiljs(input) {
     var num = input;
@@ -382,171 +298,12 @@ function formatearMiljs(input) {
     }
   }
 
+  const imprimirlista=()=>{
+
+    window.open("..//reportes/duedaEnSistema.php?fechaInicio="+$("#fechaInicio").val()+"&fechaFin="+$("#fechaFin").val(),"informesIngresos","width=1200,height=2000,scrollbars=NO")
+    }
   ///////////////////////////////////////////
 ///CONTROL APERTURA Y CIERREEEE
 ///////////////////////////////////////////
 
-///////////////////////////////////////////
-///CONTROLAMOS LA APERTURA DE CAJA
-///////////////////////////////////////////
-function controlAperturaCaja(){
-   
-    $.post("../ajax/aparturaycierreCaja.php?op=controlAperturaCaja", function(controlApertura) {
-        controlCadena=true;
-        console.log((controlApertura));
-        try {
-            JSON.parse(controlApertura);
-        } catch (e) {
-            console.log("no es json");
-            controlCadena=false;
-        }
-        if(controlCadena){
-            var detalleCierreCaja = jQuery.parseJSON(controlApertura);
-            if(detalleCierreCaja.estado==0){
-                $("#listadoregistros").hide();
-                $("#formularioregistros").hide();
-                
-                cargarSelectCaja();
-                $("#aperturacaja").show();
-            }else{
-                $("#formularioAperturacaja").hide();
-                 mostrarform(false);
-             
-            }
-        }else{
-            swal("Error", "Error en sistema!, por favor vuelva a intentar luego", "error");
-        }
-    });
-}
-///////////////////////////////////////////
-///Cargar el select para identificar la caja
-///////////////////////////////////////////
-function cargarSelectCaja() {
-    $.post("../ajax/aparturaycierreCaja.php?op=selectCaja", function(r) {
-        console.log(r);
-        $("#selectCaja").html(r);
-    });
-}
-///////////////////////////////////////////
-///GUARDAMOS LA APERTURA DE CAJA
-///////////////////////////////////////////
-function guardarApertura(e) {
-   
-    var montoApertura = $('#montoApertura').val().replace('.','');
-    var selectCaja = $('#selectCaja').val();
-    console.log("monto de apertura:"+montoApertura+"caja seleccionada:"+selectCaja);
-    if (montoApertura.trim() == '' || selectCaja.trim() == '0') {
-        swal("Error", "Se ha Producido un Error debe rellenar todos los campos", "error");
-        return false;
-    } else {
-        e.preventDefault();
-        $("#btnGuardar").prop("disabled", false);
-        var formData = new FormData($("#formularioApertura")[0]);
-        $.ajax({
-            url: "../ajax/aparturaycierreCaja.php?op=guardaryeditar",
-            type: "POST",
-            data: formData,
-            contentType: false,
-            processData: false,
-            success: function(datos) {
-                if (datos == 1) {
-                    console.warn(datos);
-                    swal("Error", "Se ha Producido un Error:", "error");
-                } else {
-                    swal("Información", datos, "success");
-                    controlAperturaCaja();
-                }
-            }
-        });
-    }
-    limpiar();
-}
-///////////////////////////////////////////
-///MONTRAMOS DETALLE DE VENTA
-///////////////////////////////////////////
-
-function mostrarfactura(codigoFacturas) {
-    window.open("../reportes/factura.php?codigoFacturas="+codigoFacturas,"FACTURA","width=600,height=800,scrollbars=NO")
-}
-function mostrarVenta(codigo_Cuentas_Cobrar) {
-    window.open("http://localhost/cerveceria/reportes/factura.php?cuentaCobrar="+codigo_Cuentas_Cobrar,"FACTURA","width=600,height=800,scrollbars=NO")
-                
-    /*
-    $.post("../ajax/cuentaCobrar.php?op=mostrar", { codigo_Cuentas_Cobrar: codigo_Cuentas_Cobrar }, function(data, status) {
-        console.log(data);
-        controlCadena=true;
-        try {
-            JSON.parse(data);
-        } catch (e) {
-            console.log("no es json");
-            controlCadena=false;
-        }
-        if(controlCadena){
-            var venta = jQuery.parseJSON(data);
-            $("#fechaVenta").text(venta.fecha);
-            if(venta.tipoVenta==1){
-                tipoVenta= "CONTADO";
-                $("#detalleCredito").hide();
-                $("#determinarTotalCuota").hide();
-            }else{
-                tipoVenta="CREDITO";
-                $("#detalleCredito").show();
-                $("#determinarTotalCuota").show();
-                $("#montoEntregaInicial").text(venta.entregaInicial);
-                $("#cuota").text(venta.numeroCuota);
-                $("#totalCuota").text(venta.totalCuota);
-            }
-            $("#selectTipoVenta").text(tipoVenta);
-            $("#razonsocial").text(venta.razonSocial);
-            $("#ci").text(venta.ci);
-            $.each(venta.detalle, function (indice, detalleVenta) {
-                tablaProductosEnVenta.row.add( [
-                    detalleVenta.nombreProductos,
-                    detalleVenta.cantidad_detalle_ventas,
-                    detalleVenta.descuento_detalle_ventas,
-                    detalleVenta.cantidad_detalle_ventas*detalleVenta.descuento_detalle_ventas
-                ] ).draw( false );
-            });
-            $("#totalVenta").text(venta.monto);
-        }else{
-            swal("Error", "Error en sistema!, por favor vuelva a intentar luego", "error");
-        }
-    })*/
-}
-//Función para desactivar registros
-function desactivar(codigo_Cuentas_Cobrar) {
-    const swalWithBootstrapButtons = swal.mixin({
-        customClass: {
-        confirmButton: 'btn btn-success',
-        cancelButton: 'btn btn-danger'
-        },
-        buttonsStyling: false
-    })
-    swalWithBootstrapButtons({
-        title: 'Atención',
-        text: "¿Desea Anular este Registro?!",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Si, Anular el Registro!',
-        cancelButtonText: 'No, Cancelar!',
-        reverseButtons: true
-    }).then((result) => {
-        if (result.value) {
-            $.post("../ajax/cuentaCobrar.php?op=desactivar", { codigo_Cuentas_Cobrar: codigo_Cuentas_Cobrar }, function(e) {
-                swalWithBootstrapButtons("Informacion", "El Registro se Anulo con Exito.", "success");
-                tabla.ajax.reload();
-                console.log(e);
-            })
-        } else if (
-        /* Read more about handling dismissals below */
-        result.dismiss === swal.DismissReason.cancel
-        ) {
-        swalWithBootstrapButtons(
-            'Cancelado',
-            'El Registro no se Anulo :)',
-            'error'
-        )
-        }
-    })
-}
 init(); //referencia inicial a la funcion init

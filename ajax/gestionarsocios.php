@@ -14,6 +14,7 @@ $tipopago=isset($_POST["tipopago"])? limpiarCadena($_POST["tipopago"]):"";
 $fecha=date("Y-m-d");
 $SocioNro=isset($_POST["SocioNro"])? limpiarCadena($_POST["SocioNro"]):"";;
 $imagenCI=isset($_POST["imagenCI"])? limpiarCadena($_POST["imagenCI"]):"";
+$motivosalida=isset($_POST["motivosalida"])? limpiarCadena($_POST["motivosalida"]):"";
 switch ($_GET["op"]){
 	case 'guardaryeditar':
 			//IMAGEN DE USUARIO
@@ -42,7 +43,7 @@ switch ($_GET["op"]){
 	break;
 
 	case 'desactivar':
-		$rspta=$gestionarsocio->desactivar($idsolicitudsocio);
+		$rspta=$gestionarsocio->desactivar($idsolicitudsocio,$motivosalida);
  		echo $rspta ? "solicitudsocio Desactivado" : "solicitudsocio no se puede desactivar";
 		echo $rspta;
 	break;
@@ -70,8 +71,8 @@ switch ($_GET["op"]){
  			$data[]=array(
 				"0"=>$estado?'<button type="button" data-toggle="tooltip" title="MODIFICAR DATOS SOCIO" data-placement="bottom" class="btn-shadow btn btn-warning" onclick="mostrar('.$reg->idrazonsocial.')"><i class="fa fa fa-pen"></i></button>'.
 				' <button type="button" class="btn-shadow btn btn-danger" data-toggle="tooltip" title="CANCELAR MEMBRECIA" data-placement="bottom"  onclick="desactivar('.$reg->idsocio.')"><i class="fa fa-times-circle"></i></button>'.
-				' <a type="button" class="btn-shadow btn btn-info" data-toggle="modal" data-target="#detalleSolicitudsocio"  onclick="mostrarDetalle('.$reg->idsocio.')"><i class="fa fa-eye" ></i></a>':
-				' <a type="button" class="btn-shadow btn btn-info" data-toggle="modal" data-target="#detalleSolicitudsocio"  onclick="mostrarDetalle('.$reg->idsocio.')"><i class="fa fa-eye" ></i></a>',
+				' <a type="button" class="btn-shadow btn btn-info" data-toggle="modal" data-target="#detalleSolicitudsocio"  onclick="mostrarDetalle('.$reg->idsolicitantesocio.')"><i class="fa fa-eye" ></i></a>':
+				' <a type="button" class="btn-shadow btn btn-info" data-toggle="modal" data-target="#detalleSolicitudsocio"  onclick="mostrarDetalle('.$reg->idsolicitantesocio.')"><i class="fa fa-eye" ></i></a>',
 				"1"=>($reg->razonsocial),
 				 "2"=>($reg->ci),
 				 "3"=>($reg->nrosocio),

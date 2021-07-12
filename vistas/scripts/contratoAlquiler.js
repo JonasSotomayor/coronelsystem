@@ -149,7 +149,7 @@ function guardaryeditar(e) {
 }
 
 function mostrar(idcontratoAlquiler) {
-    alert(idcontratoAlquiler)
+    //alert(idcontratoAlquiler)
     $("#lista").hide();
     $("#formularioregistros").hide();
     $("#cargando-div").show();

@@ -16,43 +16,7 @@ Class CuentaCobrar
         foreach ($detallePagos as $detallePago){
             $montototal+=$detallePago->monto;
         }
-        $sql="INSERT INTO `movimiento_caja` (
-            `codigo_Apertura_Cierre`,
-            `codigo_Cuentas_Cobrar`,
-            `montoMovimiento`
-          )
-          VALUES
-            (
-              '$codigoApertura',
-              '$codigo_Cuentas_Cobrar',
-              '$montototal'
-            );
-          ";
-        //echo "$sql \n";
-        $codigoMovimiento=ejecutarConsulta_retornarID($sql);// OBTENEES EL ID DEL MOVIMIENTO
-        //var_dump($detallePago);
-		//echo "\n";
-        ///////////////////////////////
-        ////CARGAMOS LOS DETALLES DEL MOVIMIENTO
-        /////////////////////////////
-        foreach ($detallePagos as $detallePago){
-            $sqlDetalleMovimiento="INSERT INTO `detalle_movimiento_caja` (
-                `codigo_Movimiento_Caja`,
-                `codigo_Tipo_Cobro`,
-                `monto_detalle_Movimiento_Caja`,
-                `nro_documento_cobro`
-              )
-              VALUES
-                (
-                  '$codigoMovimiento',
-                  '$detallePago->tipoPago',
-                  '$detallePago->monto',
-                  '$detallePago->nroDocumento'
-                );
-              ";
-              //echo "$sqlDetalleMovimiento \n";
-              ejecutarConsulta($sqlDetalleMovimiento);
-        }
+        
         ///////////////////////////////
         ////CARGAMOS LOS DETALLES DE LA FACTURA
         /////////////////////////////
@@ -96,7 +60,7 @@ Class CuentaCobrar
 						'COBRADO'
             );";
         //echo $sqlFactura;
-        $codigoVentanew=ejecutarConsulta_retornarID($sqlFactura);
+        $codigoFactura=ejecutarConsulta_retornarID($sqlFactura);
 
         $sql_detalle="INSERT INTO `coronelsystem`.`detallecobro`
         (`codigoFacturas`,
@@ -105,19 +69,56 @@ Class CuentaCobrar
         `idrazonsocial`,
         `numerocuota`,
         `montoCobrar`)
-        VALUES ('$codigoVentanew',
+        VALUES ('$codigoFactura',
           '$codigo_Cuentas_Cobrar',
           '$cuentaCobrarDatos->tipocuenta',
           '$cuentaCobrarDatos->idrazonsocial',
           '$cuentaCobrarDatos->numerocuota',
           '$cuentaCobrarDatos->montoCobrar');";
         ejecutarConsulta($sql_detalle);
-        //echo "codigo de venta es $codigoVentanew";
+        //echo "codigo de venta es $codigoFactura";
         ///////////////////////////////
         ////ACTUALIZAMOS EL NUMERO ACTUAL DE FACTURA
         /////////////////////////////
         $estadoTimbrado=1;
         $nroFactura++;
+        $sql="INSERT INTO `movimiento_caja` (
+          `codigo_Apertura_Cierre`,
+          `codigo_Cuentas_Cobrar`,
+          `montoMovimiento`
+        )
+        VALUES
+          (
+            '$codigoApertura',
+            '$codigoFactura',
+            '$montototal'
+          );
+        ";
+      //echo "$sql \n";
+      $codigoMovimiento=ejecutarConsulta_retornarID($sql);// OBTENEES EL ID DEL MOVIMIENTO
+      //var_dump($detallePago);
+  //echo "\n";
+      ///////////////////////////////
+      ////CARGAMOS LOS DETALLES DEL MOVIMIENTO
+      /////////////////////////////
+      foreach ($detallePagos as $detallePago){
+          $sqlDetalleMovimiento="INSERT INTO `detalle_movimiento_caja` (
+              `codigo_Movimiento_Caja`,
+              `codigo_Tipo_Cobro`,
+              `monto_detalle_Movimiento_Caja`,
+              `nro_documento_cobro`
+            )
+            VALUES
+              (
+                '$codigoMovimiento',
+                '$detallePago->tipoPago',
+                '$detallePago->monto',
+                '$detallePago->nroDocumento'
+              );
+            ";
+            //echo "$sqlDetalleMovimiento \n";
+            ejecutarConsulta($sqlDetalleMovimiento);
+      }
         if($nroFactura>$timbrado->nrofinalTimbrado){
             $estadoTimbrado=0;
         }else{

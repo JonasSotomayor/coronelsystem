@@ -167,7 +167,7 @@ Class SolicitudSocio
 	//Implementar un método para listar los registros
 	public function listar()
 	{
-		$sql="SELECT `idsolicitantesocio`,
+		$sql="SELECT solicitantesocio.`idsolicitantesocio`,
 		solicitantesocio.razonsocial,
 		solicitantesocio.ci, razonsocial.razonsocial AS 'socio',
 		tiposocio.tiposocio, solicitantesocio.estado,solicitantesocio.fecha

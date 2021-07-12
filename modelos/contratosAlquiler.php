@@ -15,7 +15,7 @@ Class ContratosAlquiler
 	public function actualizar($idcontratoAlquiler,$escaneo){
 		$sw=true;
 		$sql="UPDATE `contratoalquiler` SET contratoScaneo='$escaneo' WHERE idcontratoAlquiler='$idcontratoAlquiler'";
-		echo $sql;
+		//echo $sql;
 		ejecutarConsulta($sql) or $sw = false;
 		return $sw;
 	}

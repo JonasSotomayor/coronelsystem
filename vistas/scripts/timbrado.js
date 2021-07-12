@@ -17,6 +17,7 @@ function limpiar() {
     $("#vctoTimbrado").val('');
     $("#nroinicialTimbrado").val('');
     $("#nrofinalTimbrado").val('');
+    $("#prefijoTimbrado").val('');
 }
 
 function mostrarform(flag) {
@@ -24,7 +25,6 @@ function mostrarform(flag) {
     if (flag) {
         $("#listadoregistros").hide();
         $("#formularioregistros").show();
-        $("#inf-fechas").hide();
         $("#btnGuardar").prop("disabled", false);
         $("#BtnAgregar").hide();
     } else {
@@ -74,7 +74,7 @@ function listar() {
 
         ],
         "ajax": {
-            url: '../controllers/timbrado.php?op=listar',
+            url: '../ajax/timbrado.php?op=listar',
             type: "get",
             dataType: "json",
             error: function(e) {
@@ -105,7 +105,7 @@ function guardaryeditar(e) {
         $("#btnGuardar").prop("disabled", false);
         var formData = new FormData($("#formulario")[0]);
         $.ajax({
-            url: "../controllers/timbrado.php?op=guardaryeditar",
+            url: "../ajax/timbrado.php?op=guardaryeditar",
             type: "POST",
             data: formData,
             contentType: false,
@@ -113,13 +113,12 @@ function guardaryeditar(e) {
             success: function(datos) {
               console.log("Respuesta:"+datos);
                 if (datos == 1) {
-                    Swal.fire("Error", "Se ha Producido un Error", "error");
+                    swal("Error", "Se ha Producido un Error", "error");
                     mostrarform(false);
                     tabla.ajax.reload();
                     listar();
                 } else {
-
-                    Swal.fire("Información", datos, "success");
+                    swal("Información", "datos", "success");
                     mostrarform(false);
                     tabla.ajax.reload();
                     listar();
@@ -132,7 +131,27 @@ function guardaryeditar(e) {
 }
 
 function mostrar(codigoTimbrado) {
-    $.post("../controllers/timbrado.php?op=mostrar", { codigoTimbrado: codigoTimbrado }, function(data, status) {
+    $.post("../ajax/timbrado.php?op=mostrar", { codigoTimbrado: codigoTimbrado }, function(data, status) {
+        data = JSON.parse(data);
+        mostrarform(true);
+        $("#nrotimbradovigente").val(data.nrotimbradovigente);
+        document.getElementById('nrotimbradovigente').disabled=true
+        $("#nroactualTimbrado").val(data.nroactualTimbrado);
+        document.getElementById('nroactualTimbrado').disabled=true
+        $("#vctoTimbrado").val(data.vctoTimbrado);
+        document.getElementById('vctoTimbrado').disabled=true
+        $("#nroinicialTimbrado").val(data.nroinicialTimbrado);
+        document.getElementById('nroinicialTimbrado').disabled=true
+        $("#nrofinalTimbrado").val(data.nrofinalTimbrado);
+        document.getElementById('nrofinalTimbrado').disabled=true
+        $("#prefijoTimbrado").val(data.prefijoTimbrado);
+        document.getElementById('prefijoTimbrado').disabled=true
+        document.getElementById('btnGuardar').disabled=true
+        document.getElementById('tipoTimbrado').disabled=true
+    })
+}
+function mostrarEditar(codigoTimbrado) {
+    $.post("../ajax/timbrado.php?op=mostrar", { codigoTimbrado: codigoTimbrado }, function(data, status) {
         data = JSON.parse(data);
         mostrarform(true);
         $("#codigoTimbrado").val(codigoTimbrado);
@@ -141,6 +160,15 @@ function mostrar(codigoTimbrado) {
         $("#vctoTimbrado").val(data.vctoTimbrado);
         $("#nroinicialTimbrado").val(data.nroinicialTimbrado);
         $("#nrofinalTimbrado").val(data.nrofinalTimbrado);
+        $("#prefijoTimbrado").val(data.prefijoTimbrado);
+        document.getElementById('nrotimbradovigente').disabled=false
+        document.getElementById('nroactualTimbrado').disabled=false
+        document.getElementById('vctoTimbrado').disabled=false
+        document.getElementById('nroinicialTimbrado').disabled=false
+        document.getElementById('nrofinalTimbrado').disabled=false
+        document.getElementById('prefijoTimbrado').disabled=false
+        document.getElementById('tipoTimbrado').disabled=false
+        document.getElementById('btnGuardar').disabled=false
     })
 }
 init();
