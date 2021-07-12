@@ -33,124 +33,67 @@ Class EstadisticasGenerales
     return ejecutarConsulta($sql);
   }
  
-  public function mostrarTimbrado(){
-        $sql="SELECT * FROM timbrado where estadoTimbrado=1";
-        return ejecutarConsultaSimpleFila($sql);		
+
+    public function IngresoxFecha($fechaInicio,$fechaFin){
+      //$sql="SELECT SUM(montoMovimiento) AS monto FROM movimiento_caja WHERE movimiento_caja.estado='ACTIVO' AND  fechaMovimiento>'$fechaInicio' AND fechaMovimiento<'$fechaFin'";
+     // echo $sql;
+      //return ejecutarConsultaSimpleFila($sql);	
+      $informe = new stdClass();
+      $sql="SELECT SUM(montoMovimiento) AS monto FROM movimiento_caja WHERE movimiento_caja.estado='ACTIVO' AND  fechaMovimiento>'$fechaInicio' AND fechaMovimiento<'$fechaFin'";
+      $informe->montoLimite=ejecutarConsultaSimpleFila($sql);
+      //echo $sql;
+      $sqlAlqui="SELECT SUM(montoCobrar) AS monto, tipocuenta FROM facturas, detallecobro 
+      WHERE facturas.codigoFacturas=detallecobro.codigoFacturas 
+      AND tipocuenta='ALQUILER' 
+      AND facturas.estadoFacturas='COBRADO'
+      AND  fechaFacturas>'$fechaInicio' AND fechaFacturas<'$fechaFin' ;";
+      $informe->montoAlquiler=ejecutarConsultaSimpleFila($sqlAlqui);
+      //echo $sqlAlqui;
+      $sqlSocio="SELECT SUM(montoCobrar) AS monto,tipocuenta FROM facturas, detallecobro 
+      WHERE facturas.codigoFacturas=detallecobro.codigoFacturas 
+      AND tipocuenta='SOCIO' 
+      AND facturas.estadoFacturas='COBRADO' 
+      AND  fechaFacturas>'$fechaInicio' 
+      AND fechaFacturas<'$fechaFin'";
+      //echo $sqlSocio;
+      $informe->montoSocio=ejecutarConsultaSimpleFila($sqlSocio); 
+      return $informe;
     }
 
-  public function selectTipoPago(){
-        $sql="SELECT * FROM Tipo_Cobro WHERE estado_Tipo_Cobro=1";
-        return ejecutarConsulta($sql);		
+    public function deudaEnLimites($fechaInicio,$fechaFin){
+      //$sql="SELECT SUM(montoMovimiento) AS monto FROM movimiento_caja WHERE movimiento_caja.estado='ACTIVO' AND  fechaMovimiento>'$fechaInicio' AND fechaMovimiento<'$fechaFin'";
+     // echo $sql;
+      //return ejecutarConsultaSimpleFila($sql);	
+      //$informe = new stdClass();
+      $sql="SELECT sum(montoCobrar) as deuda, tipocuenta,razonsocial,ci  
+      FROM cuentas_cobrar, razonsocial 
+      WHERE razonsocial.idrazonsocial=cuentas_cobrar.idrazonsocial 
+      and cuentas_cobrar.estado='PENDIENTE' 
+      AND fechaCobro>'$fechaInicio' 
+      AND fechaCobro<'$fechaFin'
+      group by cuentas_cobrar.idrazonsocial, tipocuenta 
+      order by deuda desc";
+      return ejecutarConsulta($sql); 
     }
-
-  public function desactivar($codigo_Cuentas_Cobrar){
-    
-    $sqlActualizarVenta="UPDATE ventas set estadoVenta=0 where CodigoVentas=(SELECT codigoVentas FROM cuentas_cobrar where codigo_Cuentas_Cobrar=".$codigo_Cuentas_Cobrar.")";
-     ejecutarConsulta($sqlActualizarVenta);
-    $sqlCargarProductos="select codigoProductos, cantidad_detalle_ventas, detalle_ventas.codigoVentas
-    FROM detalle_ventas
-    where codigoVentas=(SELECT codigoVentas FROM cuentas_cobrar where codigo_Cuentas_Cobrar=".$codigo_Cuentas_Cobrar.")";
-      $detalleVenta=ejecutarConsulta($sqlCargarProductos);
-      echo "\n";
-      $detalleVentaArray= array();
-      $cantidadVenta=0;
-      $codigoVenta=0;
-      while($detalle=$detalleVenta->fetch_object()){
-        var_dump($detalle);
-        echo $detalle->codigoProductos;
-        $codigoVenta=$detalle->codigoVentas;
-        $sqlActualizarProducto="update productos set stockProductos=stockProductos+".$detalle->cantidad_detalle_ventas." where codigoProductos=".$detalle->codigoProductos;
-        echo $sqlActualizarProducto;
-        ejecutarConsulta($sqlActualizarProducto);
-      }
-      $sqlActualizarCuentaCobrar="UPDATE cuentas_cobrar set Estado_Cuentas_Cobrar=0 where codigoVentas=".$codigoVenta;
-      ejecutarConsulta($sqlActualizarCuentaCobrar);	
-  }
-
-  public function mostrarFactura($codigo_Cuentas_Cobrar)
-    { 
-          ///////////////////////////////
-        ////OBTENEMOS CABECERA DE VENTA
-        /////////////////////////////
-      $sqlVenta="SELECT
-        `nombresPersona`,`apellidosPersona`, direccionPersona, ciPersona,
-        `codigo_CondicionTransaccion`,
-        `fechaVentas`,
-        `montoVenta`,
-        `montoVenta`
-      FROM ventas, persona, cuentas_cobrar
-      WHERE ventas.`codigoPersona`=persona.`codigoPersona`
-      AND cuentas_cobrar.`codigoVentas`=ventas.`codigoVentas`
-      AND cuentas_cobrar.`codigo_Cuentas_Cobrar`=$codigo_Cuentas_Cobrar";
-      $venta=ejecutarConsultaSimpleFila($sqlVenta);
-
-      //var_dump($venta);
-        ///////////////////////////////
-        ////detalle venta
-        /////////////////////////////
-        $sqlDetalleVentas="SELECT
-        detalle_ventas.`codigoVentas`,
-            productos.`nombreProductos`,
-            `cantidad_detalle_ventas`,
-            `precio_detalle_ventas`,
-            `descuento_detalle_ventas`
-        FROM detalle_ventas, productos, cuentas_cobrar
-        WHERE detalle_ventas.`codigoProductos`=productos.`codigoProductos`
-        AND cuentas_cobrar.`codigoVentas`=detalle_ventas.`codigoVentas`
-        AND cuentas_cobrar.`codigo_Cuentas_Cobrar`=$codigo_Cuentas_Cobrar";
-        $detalleVenta=ejecutarConsulta($sqlDetalleVentas);
-        //echo "\n";
-        $detalleVentaArray= array();
-        $cantidadVenta=0;
-        $codigoVenta=0;
-        while($detalle=$detalleVenta->fetch_object()){
-            $codigoVenta=$detalle->codigoVentas;
-            $detalleVentaArray[$cantidadVenta]=$detalle;
-            $cantidadVenta++;
-            //var_dump($detalle);
-            //echo "\n";
-        }
-
-        $ventaObjeto= new Class{};
-        $ventaObjeto->razonSocial=strtoupper($venta["nombresPersona"].' '.$venta["apellidosPersona"]);
-        $ventaObjeto->ci=$venta["ciPersona"];
-        $ventaObjeto->fecha=$venta["fechaVentas"];
-        $ventaObjeto->direcion=$venta["direccionPersona"];
-        $ventaObjeto->monto=$venta["montoVenta"];
-        $ventaObjeto->tipoVenta=$venta["codigo_CondicionTransaccion"];
-        $ventaObjeto->detalle= $detalleVentaArray;
-
-        if($ventaObjeto->tipoVenta==2){
-            $numeroCuota=0;
-            $entregaInicial=0;
-            $totalCuota=0;
-          $sqlCuentaCobrar=" SELECT
-          `codigo_Cuentas_Cobrar`,
-          `codigoVentas`,
-          `numerocuota_Cuentas_Cobrar`,
-          `totalcuota_Cuentas_Cobrar`,
-          `monto_Cuentas_Cobrar`,
-          `fechaCobro`,
-          `estado_Cuentas_Cobrar`
-          FROM cuentas_cobrar WHERE codigoVentas=$codigoVenta";
-          $cuentacobrarResp=ejecutarConsulta($sqlCuentaCobrar);
-          while($cuentaCobrar=$cuentacobrarResp->fetch_object()){
-                if($cuentaCobrar->numerocuota_Cuentas_Cobrar==0){
-                    $entregaInicial=$cuentaCobrar->monto_Cuentas_Cobrar;
-                }else{
-                    $numeroCuota++;
-                    $totalCuota=$cuentaCobrar->monto_Cuentas_Cobrar;
-                }
-            }
-            $ventaObjeto->numeroCuota=$numeroCuota;
-            $ventaObjeto->totalCuota=$totalCuota;
-            $ventaObjeto->entregaInicial= $entregaInicial;
-        }
-        //var_dump($ventaObjeto);
-        return $ventaObjeto;
+    public function DEUDAXMESALQUILER(){ 
+      $sql=" SELECT sum(montoCobrar) as deuda, tipocuenta, YEAR(fechaCobro) as anho , MONTH(fechaCobro) as mes 
+      FROM cuentas_cobrar
+      WHERE cuentas_cobrar.estado='PENDIENTE' 
+      AND tipocuenta='Alquiler'
+      group by 
+     MONTH(fechaCobro), YEAR(fechaCobro) 
+      order by deuda DESC";
+      return ejecutarConsulta($sql);
     }
-
-
-
+    public function DEUDAXMESSOCIO(){ 
+      $sql="SELECT sum(montoCobrar) as deuda, tipocuenta, YEAR(fechaCobro) as anho , MONTH(fechaCobro) as mes 
+      FROM cuentas_cobrar
+      WHERE cuentas_cobrar.estado='PENDIENTE' 
+      AND tipocuenta='socio'
+      group by 
+     MONTH(fechaCobro), YEAR(fechaCobro) 
+      order by deuda DESC";
+      return ejecutarConsulta($sql);
+    }
 }
 ?>

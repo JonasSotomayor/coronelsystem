@@ -31,7 +31,7 @@ class PDF extends FPDF
   }
     
   
-   
+    $mes = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
     $pdf = new PDF();
     $pdf->AliasNbPages();
     $pdf->AddPage();
@@ -43,107 +43,342 @@ class PDF extends FPDF
     $pdf->SetTextColor(255,255,255);
     $pdf->Cell(190,8,utf8_decode(''),1,400,'C',true);
     /////Definicion de datos sucursal y empleado
-    $sql="SELECT solicitantesocio.`idsolicitantesocio`,
-		solicitantesocio.razonsocial,
-		solicitantesocio.ci, razonsocial.razonsocial AS 'socio',
-		tiposocio.tiposocio, solicitantesocio.estado,solicitantesocio.fecha, solicitantesocio.idrazonsocial
-		FROM `solicitantesocio`,socio,tiposocio,razonsocial
-		WHERE solicitantesocio.idtiposocio=tiposocio.idtiposocio
-		AND solicitantesocio.proponente=socio.idsocio
-		AND socio.idsocio=razonsocial.idrazonsocial
-    AND solicitantesocio.estado='ACTIVO'";
+    $sql="SELECT SUM(montoMovimiento) AS monto, YEAR(fechaMovimiento) as anho , MONTH(fechaMovimiento) as mes FROM movimiento_caja WHERE movimiento_caja.estado='ACTIVO' group by MONTH(fechaMovimiento), YEAR(fechaMovimiento) ORDER BY anho";
 		$rspta=ejecutarConsulta($sql);
-    $solicitantes= Array();
+    $ingresoMes= Array();
     while ($reg=$rspta->fetch_object()){
-      $solicitantes[]=$reg;
+      $ingresoMes[]=$reg;
     }
-    $idrazonsocial=$_GET["idrazonsocial"];
-    $sql="SELECT * FROM razonsocial WHERE idrazonsocial=$idrazonsocial";
-    $razonsocial=ejecutarConsultaSimpleFilaObject($sql);
-    $c=true;
     ///Diseño de encabezado
     
-   
-   
     $pdf->ln(-9);
-    $pdf->Cell(190,10,utf8_decode('LISTA DE SOLICITANTE'),0,0,'C');
+    $pdf->Cell(190,10,utf8_decode('LISTA DE INGRESO MENSUALES'),0,0,'C');
     $pdf->ln(12);
     $pdf->SetTextColor(0,0,0);
     $pdf->SetFont('Arial','',10);
-    $pdf->Cell(40,8,utf8_decode('CI'),1,0,'L');
-    $pdf->Cell(90,8,utf8_decode('Nombre y Apellido '),1,0,'L');
-    $pdf->Cell(60,8,utf8_decode('TIPO MEMBRESIA '),1,0,'L');
+    $pdf->Cell(45,8,'',0,0,'L');
+    $pdf->Cell(30,8,utf8_decode('AÑO'),1,0,'L');
+    $pdf->Cell(20,8,utf8_decode('MES'),1,0,'L');
+    $pdf->Cell(50,8,utf8_decode('INGRESO'),1,0,'L');
     $pdf->ln(8);
-    foreach($solicitantes as $solicitante){
-      $pdf->Cell(40,8,utf8_decode($solicitante->ci),1,0,'L');
-      $pdf->Cell(90,8,utf8_decode($solicitante->razonsocial),1,0,'L');
-      $pdf->Cell(60,8,utf8_decode($solicitante->tiposocio),1,0,'L');
+    $ingresoTotal=0;
+    $ingresoAnhos=Array();
+    $ingresoAnhos[1]= array(
+      "anho" => "",
+      "monto" => 0,
+    );
+    $c=1;
+    foreach($ingresoMes as $ingreso){
+      $ingresoTotal+=(int)$ingreso->monto;
+      $pdf->Cell(45,8,'',0,0,'L');
+      $pdf->Cell(30,8,utf8_decode($ingreso->anho),1,0,'L');
+      $pdf->Cell(20,8,strtoupper($mes[((int)$ingreso->mes-1)]),1,0,'L');
+      $pdf->Cell(50,8,number_format($ingreso->monto),1,0,'L');
       $pdf->ln(8);
+      if ($ingresoAnhos[$c]['anho']=='') {
+        $ingresoAnhos[$c]['anho']=$ingreso->anho;
+        $ingresoAnhos[$c]['monto']+=$ingreso->monto;
+      }else{
+        if ($ingresoAnhos[$c]['anho']==$ingreso->anho) {
+          $ingresoAnhos[$c]['monto']+=$ingreso->monto;
+        } else {
+          $ingresoAnhos[]= array(
+            "anho" => $ingreso->anho,
+            "monto" => $ingreso->monto
+          );
+          $c++;
+          
+          
+        }
+        
+      }
+     
     }
 
-    foreach($solicitantes as $solicitante){
+    $pdf->ln(8);
+    $pdf->Cell(45,8,'',0,0,'L');
+    $pdf->Cell(50,8,'TOTAL INGRESO ',1,0,'L');
+    $pdf->Cell(50,8,number_format($ingresoTotal),1,0,'L');
+    $pdf->ln(15);
+   
+    $pdf->SetFont('Arial','B',10);
+    $pdf->ln(5);
+    $pdf->ln(4);
+    $pdf->SetFillColor(0,0,0);
+    $pdf->SetTextColor(255,255,255);
+    $pdf->Cell(190,8,utf8_decode(''),1,400,'C',true);
+    $pdf->ln(-9);
+    $pdf->Cell(190,10,utf8_decode('LISTA DE INGRESO ANUALES'),0,0,'C');
+    $pdf->ln(12);
+    $pdf->SetTextColor(0,0,0);
+    $pdf->SetFont('Arial','',10);
+    $pdf->Cell(45,8,'',0,0,'L');
+    $pdf->Cell(50,8,utf8_decode('AÑO'),1,0,'L');
+    $pdf->Cell(50,8,utf8_decode('INGRESO'),1,0,'L');
+    $pdf->ln(8);
+    $ingresoTotal=0;
+    
+    foreach($ingresoAnhos as $ingresoAnho){
+      $ingresoTotal+=(int)$ingreso->monto;
+      $pdf->Cell(45,8,'',0,0,'L');
+      $pdf->Cell(50,8,utf8_decode($ingresoAnho['anho']),1,0,'L');
+      $pdf->Cell(50,8,number_format($ingresoAnho['monto']),1,0,'L');
+      $pdf->ln(8);
+      
+    }
+
+    $pdf->AddPage();
+    $pdf->SetFont('Arial','B',10);
+    $pdf->Cell(190,0,utf8_decode(''),1,400,'C');
+    $pdf->ln(5);
+    $pdf->ln(4);
+    $pdf->SetFillColor(0,0,0);
+    $pdf->SetTextColor(255,255,255);
+    $pdf->Cell(190,8,utf8_decode(''),1,400,'C',true);
+    /////Definicion de datos sucursal y empleado
+    $sql="SELECT SUM(montoCobrar) AS monto, YEAR(fechaFacturas) as anho, MONTH(fechaFacturas) as mes,tipocuenta FROM facturas, detallecobro WHERE facturas.codigoFacturas=detallecobro.codigoFacturas AND tipocuenta='ALQUILER' AND facturas.estadoFacturas='COBRADO' group by MONTH(fechaFacturas), YEAR(fechaFacturas) ;";
+		$rspta=ejecutarConsulta($sql);
+    $ingresoMes= Array();
+    while ($reg=$rspta->fetch_object()){
+      $ingresoMes[]=$reg;
+    }
+    ///Diseño de encabezado
+    
+    $pdf->ln(-9);
+    $pdf->Cell(190,10,utf8_decode('LISTA DE INGRESO MENSUALES EN ALQUILERES'),0,0,'C');
+    $pdf->ln(12);
+    $pdf->SetTextColor(0,0,0);
+    $pdf->SetFont('Arial','',10);
+    $pdf->Cell(45,8,'',0,0,'L');
+    $pdf->Cell(30,8,utf8_decode('AÑO'),1,0,'L');
+    $pdf->Cell(20,8,utf8_decode('MES'),1,0,'L');
+    $pdf->Cell(50,8,utf8_decode('INGRESO'),1,0,'L');
+    $pdf->ln(8);
+    $ingresoTotal=0;
+    $ingresoAnhos=Array();
+    $ingresoAnhos[1]= array(
+      "anho" => "",
+      "monto" => 0,
+    );
+    $c=1;
+    foreach($ingresoMes as $ingreso){
+      $ingresoTotal+=(int)$ingreso->monto;
+      $pdf->Cell(45,8,'',0,0,'L');
+      $pdf->Cell(30,8,utf8_decode($ingreso->anho),1,0,'L');
+      $pdf->Cell(20,8,strtoupper($mes[((int)$ingreso->mes-1)]),1,0,'L');
+      $pdf->Cell(50,8,number_format($ingreso->monto),1,0,'L');
+      $pdf->ln(8);
+      if ($ingresoAnhos[$c]['anho']=='') {
+        $ingresoAnhos[$c]['anho']=$ingreso->anho;
+        $ingresoAnhos[$c]['monto']+=$ingreso->monto;
+      }else{
+        if ($ingresoAnhos[$c]['anho']==$ingreso->anho) {
+          $ingresoAnhos[$c]['monto']+=$ingreso->monto;
+        } else {
+          $ingresoAnhos[]= array(
+            "anho" => $ingreso->anho,
+            "monto" => $ingreso->monto
+          );
+          $c++;
+          
+          
+        }
+        
+      }
+     
+    }
+
+    $pdf->ln(8);
+    $pdf->Cell(45,8,'',0,0,'L');
+    $pdf->Cell(50,8,'TOTAL INGRESO ',1,0,'L');
+    $pdf->Cell(50,8,number_format($ingresoTotal),1,0,'L');
+    $pdf->ln(15);
+   
+    $pdf->SetFont('Arial','B',10);
+    $pdf->ln(5);
+    $pdf->ln(4);
+    $pdf->SetFillColor(0,0,0);
+    $pdf->SetTextColor(255,255,255);
+    $pdf->Cell(190,8,utf8_decode(''),1,400,'C',true);
+    $pdf->ln(-9);
+    $pdf->Cell(190,10,utf8_decode('LISTA DE INGRESO ANUALES EN ALQUILER'),0,0,'C');
+    $pdf->ln(12);
+    $pdf->SetTextColor(0,0,0);
+    $pdf->SetFont('Arial','',10);
+    $pdf->Cell(45,8,'',0,0,'L');
+    $pdf->Cell(50,8,utf8_decode('AÑO'),1,0,'L');
+    $pdf->Cell(50,8,utf8_decode('INGRESO'),1,0,'L');
+    $pdf->ln(8);
+    $ingresoTotal=0;
+    
+    foreach($ingresoAnhos as $ingresoAnho){
+      $ingresoTotal+=(int)$ingreso->monto;
+      $pdf->Cell(45,8,'',0,0,'L');
+      $pdf->Cell(50,8,utf8_decode($ingresoAnho['anho']),1,0,'L');
+      $pdf->Cell(50,8,number_format($ingresoAnho['monto']),1,0,'L');
+      $pdf->ln(8);
+      
+    }
+
+
+
+
+
+
+
+    
+    $pdf->AddPage();
+    $pdf->SetFont('Arial','B',10);
+    $pdf->Cell(190,0,utf8_decode(''),1,400,'C');
+    $pdf->ln(5);
+    $pdf->ln(4);
+    $pdf->SetFillColor(0,0,0);
+    $pdf->SetTextColor(255,255,255);
+    $pdf->Cell(190,8,utf8_decode(''),1,400,'C',true);
+    /////Definicion de datos sucursal y empleado
+    $sql="SELECT SUM(montoCobrar) AS monto, YEAR(fechaFacturas) as anho, MONTH(fechaFacturas) as mes,tipocuenta FROM facturas, detallecobro WHERE facturas.codigoFacturas=detallecobro.codigoFacturas AND tipocuenta='SOCIO' AND facturas.estadoFacturas='COBRADO' group by MONTH(fechaFacturas), YEAR(fechaFacturas);";
+		$rspta=ejecutarConsulta($sql);
+    $ingresoMes= Array();
+    while ($reg=$rspta->fetch_object()){
+      $ingresoMes[]=$reg;
+    }
+    ///Diseño de encabezado
+    
+    $pdf->ln(-9);
+    $pdf->Cell(190,10,utf8_decode('LISTA DE INGRESO MENSUALES EN SOCIOS'),0,0,'C');
+    $pdf->ln(12);
+    $pdf->SetTextColor(0,0,0);
+    $pdf->SetFont('Arial','',10);
+    $pdf->Cell(45,8,'',0,0,'L');
+    $pdf->Cell(30,8,utf8_decode('AÑO'),1,0,'L');
+    $pdf->Cell(20,8,utf8_decode('MES'),1,0,'L');
+    $pdf->Cell(50,8,utf8_decode('INGRESO'),1,0,'L');
+    $pdf->ln(8);
+    $ingresoTotal=0;
+    $ingresoAnhos=Array();
+    $ingresoAnhos[1]= array(
+      "anho" => "",
+      "monto" => 0,
+    );
+    $c=1;
+    foreach($ingresoMes as $ingreso){
+      $ingresoTotal+=(int)$ingreso->monto;
+      $pdf->Cell(45,8,'',0,0,'L');
+      $pdf->Cell(30,8,utf8_decode($ingreso->anho),1,0,'L');
+      $pdf->Cell(20,8,strtoupper($mes[((int)$ingreso->mes-1)]),1,0,'L');
+      $pdf->Cell(50,8,number_format($ingreso->monto),1,0,'L');
+      $pdf->ln(8);
+      if ($ingresoAnhos[$c]['anho']=='') {
+        $ingresoAnhos[$c]['anho']=$ingreso->anho;
+        $ingresoAnhos[$c]['monto']+=$ingreso->monto;
+      }else{
+        if ($ingresoAnhos[$c]['anho']==$ingreso->anho) {
+          $ingresoAnhos[$c]['monto']+=$ingreso->monto;
+        } else {
+          $ingresoAnhos[]= array(
+            "anho" => $ingreso->anho,
+            "monto" => $ingreso->monto
+          );
+          $c++;
+          
+          
+        }
+        
+      }
+     
+    }
+
+    $pdf->ln(8);
+    $pdf->Cell(45,8,'',0,0,'L');
+    $pdf->Cell(50,8,'TOTAL INGRESO ',1,0,'L');
+    $pdf->Cell(50,8,number_format($ingresoTotal),1,0,'L');
+    $pdf->ln(15);
+   
+    $pdf->SetFont('Arial','B',10);
+    $pdf->ln(5);
+    $pdf->ln(4);
+    $pdf->SetFillColor(0,0,0);
+    $pdf->SetTextColor(255,255,255);
+    $pdf->Cell(190,8,utf8_decode(''),1,400,'C',true);
+    $pdf->ln(-9);
+    $pdf->Cell(190,10,utf8_decode('LISTA DE INGRESO ANUALES EN SOCIOS'),0,0,'C');
+    $pdf->ln(12);
+    $pdf->SetTextColor(0,0,0);
+    $pdf->SetFont('Arial','',10);
+    $pdf->Cell(45,8,'',0,0,'L');
+    $pdf->Cell(50,8,utf8_decode('AÑO'),1,0,'L');
+    $pdf->Cell(50,8,utf8_decode('INGRESO'),1,0,'L');
+    $pdf->ln(8);
+    $ingresoTotal=0;
+    
+    foreach($ingresoAnhos as $ingresoAnho){
+      $ingresoTotal+=(int)$ingreso->monto;
+      $pdf->Cell(45,8,'',0,0,'L');
+      $pdf->Cell(50,8,utf8_decode($ingresoAnho['anho']),1,0,'L');
+      $pdf->Cell(50,8,number_format($ingresoAnho['monto']),1,0,'L');
+      $pdf->ln(8);
+      
+    }
+
+
+
+
+
+
+
+
+
+
+    $fechaInicio=isset($_GET["fechaInicio"])? limpiarCadena($_GET["fechaInicio"]):"";
+    $fechaFin=isset($_GET["fechaFin"])? limpiarCadena($_GET["fechaFin"]):"";
+    if ($fechaInicio!='' && $fechaFin!='') {
       $pdf->AddPage();
-      /////Definicion de datos sucursal y empleado
-      
-      $idrazonsocial=$solicitante->idrazonsocial;
-      $sql="SELECT * FROM razonsocial WHERE idrazonsocial=$idrazonsocial";
-      $razonsocial=ejecutarConsultaSimpleFilaObject($sql);
-      $c=true;
-      ///Diseño de encabezado
-      
-      $pdf->ln(6);
-      $pdf->SetFillColor(0,0,0);
-      $pdf->SetTextColor(255,255,255);
-      $pdf->Cell(190,8,utf8_decode(''),1,400,'C',true);
-
-      
-      $pdf->ln(-9);
-      $pdf->Cell(190,10,utf8_decode('DATOS PERSONALES'),0,0,'C');
-      $pdf->ln(12);
-      $pdf->SetTextColor(0,0,0);
-      $pdf->SetFont('Arial','',10);
-      $pdf->Cell(55,8,utf8_decode('Documento N°: '.$razonsocial->ci),1,0,'L');
-      $pdf->Cell(103,8,utf8_decode('Nombre y Apellido: '.$razonsocial->razonsocial),1,0,'L');
-      $pdf->Cell(32,32,utf8_decode(''),1,0,'L');
-      $pdf->Image('../files/empleados/'.$razonsocial->imagenRazonSocial,168,50,32,32);
-      $pdf->ln(8);
-      $pdf->Cell(79,8,utf8_decode('Fecha de Nacimiento: '.$razonsocial->fechanacimiento),1,0,'L');
-      $pdf->Cell(79,8,utf8_decode('Ciudad:  '.$razonsocial->ciudad),1,0,'L');
-      $pdf->ln(8);
-      $pdf->Cell(79,8,utf8_decode('Celular: '.$razonsocial->celular),1,0,'L');
-      $pdf->Cell(79,8,utf8_decode('Email:  '.$razonsocial->correo),1,0,'L');
-      $pdf->ln(8);
-      $pdf->Cell(79,8,utf8_decode('Dirección: '.$razonsocial->direccion),1,0,'L');
-      $pdf->Cell(79,8,utf8_decode('Profesión: '.$razonsocial->profesion),1,0,'L');
-      $pdf->ln(8);
-      $pdf->Cell(79,8,utf8_decode('Nacionalidad: '.$razonsocial->nacionalidad),1,0,'L');
-      $pdf->Cell(79,8,utf8_decode('Estado civil: '.$razonsocial->estadocivil),1,0,'L');
-      $pdf->ln(8);
-      $pdf->Cell(190,8,utf8_decode(' '),0,0,'L');
-      $pdf->ln(12);
-
-      ////////////////descripcion del puesto///////////////////////////////////
+      $pdf->SetFont('Arial','B',10);
       $pdf->Cell(190,0,utf8_decode(''),1,400,'C');
+      $pdf->ln(5);
       $pdf->ln(4);
       $pdf->SetFillColor(0,0,0);
       $pdf->SetTextColor(255,255,255);
       $pdf->Cell(190,8,utf8_decode(''),1,400,'C',true);
-
+      /////Definicion de datos sucursal y empleado
+      $sql="SELECT SUM(montoMovimiento) AS monto FROM movimiento_caja WHERE movimiento_caja.estado='ACTIVO' AND  fechaMovimiento>'$fechaInicio' AND fechaMovimiento<'$fechaFin'";
+      $montoLimite=ejecutarConsultaSimpleFila($sql);
+      $sqlAlqui="SELECT SUM(montoCobrar) AS monto, tipocuenta FROM facturas, detallecobro 
+      WHERE facturas.codigoFacturas=detallecobro.codigoFacturas 
+      AND tipocuenta='ALQUILER' 
+      AND facturas.estadoFacturas='COBRADO'
+      AND  fechaFacturas>'$fechaInicio' AND fechaFacturas<'$fechaFin' ;";
+      $montoAlquiler=ejecutarConsultaSimpleFila($sqlAlqui);
+      $sqlSocio="SELECT SUM(montoCobrar) AS monto,tipocuenta FROM facturas, detallecobro 
+      WHERE facturas.codigoFacturas=detallecobro.codigoFacturas 
+      AND tipocuenta='SOCIO' 
+      AND facturas.estadoFacturas='COBRADO' 
+      AND  fechaFacturas>'$fechaInicio' 
+      AND fechaFacturas<'$fechaFin'";
+      $montoSocio=ejecutarConsultaSimpleFila($sqlSocio); 
+      ///Diseño de encabezado
       
       $pdf->ln(-9);
-      $pdf->Cell(190,10,utf8_decode('DATOS FAMILIARES'),0,0,'C');
-      $pdf->ln(8);
+      $pdf->Cell(190,10,utf8_decode('LISTA DE INGRESO DURANTE LAS FECHAS DE '.$fechaInicio.' Y '.$fechaFin),0,0,'C');
+      $pdf->ln(12);
       $pdf->SetTextColor(0,0,0);
       $pdf->SetFont('Arial','',10);
-      $sql="SELECT * FROM familia WHERE idrazonsocial=$idrazonsocial";
-      $respt=ejecutarConsulta($sql);
-      while ($familia=$respt->fetch_object()){
-        $pdf->Cell(20,8,utf8_decode($familia->cifamiliar),1,0,'L');
-        $pdf->Cell(120,8,utf8_decode($familia->razonsocial),1,0,'L');
-        $pdf->Cell(50,8,utf8_decode($familia->parentesco),1,0,'L');
-        $pdf->ln(8);
-      }
-
+      $pdf->Cell(45,8,'',0,0,'L');
+      $pdf->Cell(50,8,utf8_decode('TIPO'),1,0,'L');
+      $pdf->Cell(50,8,utf8_decode('MONTO'),1,0,'L');
+      $pdf->ln(8);
+      $pdf->Cell(45,8,'',0,0,'L');
+      $pdf->Cell(50,8,'TOTAL',1,0,'L');
+      $pdf->Cell(50,8,number_format($montoLimite["monto"]),1,0,'L');
+      $pdf->ln(8);
+      $pdf->Cell(45,8,'',0,0,'L');
+      $pdf->Cell(50,8,'ALQUILER',1,0,'L');
+      $pdf->Cell(50,8,number_format($montoAlquiler["monto"]),1,0,'L');
+      $pdf->ln(8);
+      $pdf->Cell(45,8,'',0,0,'L');
+      $pdf->Cell(50,8,'SOCIO',1,0,'L');
+      $pdf->Cell(50,8,($montoSocio["monto"]!='')?number_format($montoSocio["monto"]):0,1,0,'L');
+      $pdf->ln(8);
     }
    
 
