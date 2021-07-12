@@ -98,7 +98,7 @@ Class GestionarSocio
 	public function listar()
 	{
 		$sql="SELECT DISTINCTROW socio.idsocio, contrato.fechaContrato, razonsocial.razonsocial, razonsocial.ci, tiposocio.tiposocio , socio.nrosocio, socio.estado,socio.idrazonsocial FROM socio, contrato, razonsocial, tiposocio
-		WHERE socio.idsocio=contrato.idsocio AND socio.idrazonsocial=razonsocial.idrazonsocial AND socio.tiposocio=tiposocio.idtiposocio GROUP BY socio.idsocio";
+		WHERE socio.idsocio=contrato.idsocio AND socio.idrazonsocial=razonsocial.idrazonsocial AND socio.tiposocio=tiposocio.idtiposocio ";
 		return ejecutarConsulta($sql);
 	}
 

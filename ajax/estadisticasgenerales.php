@@ -115,10 +115,55 @@ switch ($_GET["op"]){
 			echo json_encode($results);
 	break;
 
+	case 'deudaEnDeporte':
+		$rspta=$EstadisticasGenerales->deudaEnDeporte();
+		$data= Array(); 
+		$estado='';
+		$opciones='';
+        while ($reg=$rspta->fetch_object()){
+			
+			$data[]=array(
+				"0"=>number_format($reg->deuda),
+				"1"=>strtoupper($reg->tipocuenta),
+				"2"=>strtoupper($reg->razonsocial),
+				"3"=>strtoupper($reg->ci)
+				);
+			}
+		$results = array(
+			"sEcho"=>1,
+			"iTotalRecords"=>count($data),
+			"iTotalDisplayRecords"=>count($data),
+			"aaData"=>$data);
+			echo json_encode($results);
+	break;
+	
 
 	case 'mostrarTimbrado':
 		$rspta=$EstadisticasGenerales->mostrarTimbrado();
 		echo json_encode($rspta);
+	break;
+
+	case 'ingresoEnDeporte':
+		$rspta=$EstadisticasGenerales->ingresoEnDeporte();
+		$data= Array(); 
+		$estado='';
+		$opciones='';
+        while ($reg=$rspta->fetch_object()){
+			$fecha = DateTime::createFromFormat('!m',$reg->mes );
+			$mes = strftime("%B", $fecha->getTimestamp());
+			$data[]=array(
+				"0"=>strtoupper($reg->anho),
+				"1"=>strtoupper($mes),
+				"2"=>number_format($reg->ingreso),
+				"3"=>strtoupper($reg->deporte)
+				);
+			}
+		$results = array(
+			"sEcho"=>1,
+			"iTotalRecords"=>count($data),
+			"iTotalDisplayRecords"=>count($data),
+			"aaData"=>$data);
+			echo json_encode($results);
 	break;
 
 	case 'selectTipoPago':

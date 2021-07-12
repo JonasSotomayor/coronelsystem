@@ -537,10 +537,21 @@ if (strlen(session_id()) < 1)
                 </a>
             </li>
             <li  class="">
+                <a href="ingresosDeporte.php">
+                    <i class="metismenu-icon fa fa-user-friends"></i>INGRESO DEPORTE
+                </a>
+            </li>
+            <li  class="">
+                <a href="deportista.php">
+                    <i class="metismenu-icon fa fa-user-friends"></i>DEPORTISTA
+                </a>
+            </li>
+            <li  class="">
                 <a href="calendarioeventos.php">
                     <i class="metismenu-icon fa fa-user-friends"></i>CALENDARIO DE EVENTO
                 </a>
             </li>
+
           <li class="app-sidebar__heading">Modulo 6 - En desarrollo</li>
           <li class="app-sidebar__heading">Modulo 7 - En desarrollo</li>
 
